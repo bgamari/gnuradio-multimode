@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Multimode
-# Generated: Mon May 14 19:16:14 2012
+# Generated: Mon May 14 19:21:25 2012
 ##################################################
 
 from gnuradio import audio
@@ -376,7 +376,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.connect((self.gr_complex_to_mag_squared_0, 0), (self.low_pass_filter_4, 0))
 		self.connect((self.low_pass_filter_4, 0), (self.gr_multiply_const_vxx_0_0_0, 0))
 		self.connect((self.gr_add_xx_0, 0), (self.gr_fractional_interpolator_xx_0, 0))
-		self.connect((self.gr_fractional_interpolator_xx_0, 0), (self.gr_wavfile_sink_0, 0))
+		self.connect((self.gr_add_xx_0, 0), (self.gr_wavfile_sink_0, 0))
 
 	def get_devinfo(self):
 		return self.devinfo
