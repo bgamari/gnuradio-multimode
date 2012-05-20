@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Multimode
-# Generated: Sat May 19 16:40:19 2012
+# Generated: Sun May 20 19:49:19 2012
 ##################################################
 
 from gnuradio import audio
@@ -25,7 +25,7 @@ import wx
 
 class multimode(grc_wxgui.top_block_gui):
 
-	def __init__(self, devinfo="rtl=0", ahw="default", freq=150.0e6, ppm=0.0, vol=1.0, ftune=0.0, xftune=0.0, offs=50.e3, mthresh=-10.0, mbw=2.0e3, arate=int(48.0e3)):
+	def __init__(self, devinfo="rtl=0", ahw="default", freq=150.0e6, ppm=0.0, vol=1.0, ftune=0.0, xftune=0.0, offs=50.e3, mthresh=-10.0, mbw=2.0e3, arate=int(48.0e3), srate=2.0e6):
 		grc_wxgui.top_block_gui.__init__(self, title="Multimode")
 		_icon_path = "/usr/share/icons/hicolor/32x32/apps/gnuradio-grc.png"
 		self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
@@ -44,6 +44,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.mthresh = mthresh
 		self.mbw = mbw
 		self.arate = arate
+		self.srate = srate
 
 		##################################################
 		# Variables
@@ -55,7 +56,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.wbfm = wbfm = 200e3
 		self.volume = volume = vol
 		self.variable_static_text_0 = variable_static_text_0 = float(int(math.log10(rf_power+1.0e-14)*100.0)/10.0)
-		self.samp_rate = samp_rate = int(2.0e6)
+		self.samp_rate = samp_rate = int(srate)
 		self.rfgain = rfgain = 25
 		self.record_file = record_file = "recording.wav"
 		self.record = record = False
@@ -331,7 +332,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.osmosdr_source_c_0.set_gain_mode(agc, 0)
 		self.osmosdr_source_c_0.set_gain(25 if agc == 1 else rfgain, 0)
 		self.low_pass_filter_4 = gr.fir_filter_fff(1, firdes.low_pass(
-			1.0, audio_int_rate, 5.0e3, 1.25e3, firdes.WIN_HAMMING, 6.76))
+			1.0, audio_int_rate, 6.0e3, 2.5e3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_3 = gr.fir_filter_fff(1, firdes.low_pass(
 			2.5, audio_int_rate, 9.5e3, 3.5e3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_2 = gr.fir_filter_ccf(1, firdes.low_pass(
@@ -493,6 +494,13 @@ class multimode(grc_wxgui.top_block_gui):
 		self.arate = arate
 		self.gr_fractional_interpolator_xx_0.set_interp_ratio(self.audio_int_rate/self.arate)
 
+	def get_srate(self):
+		return self.srate
+
+	def set_srate(self, srate):
+		self.srate = srate
+		self.set_samp_rate(int(self.srate))
+
 	def get_rf_power(self):
 		return self.rf_power
 
@@ -557,9 +565,9 @@ class multimode(grc_wxgui.top_block_gui):
 		self.wxgui_fftsink2_0.set_sample_rate(self.samp_rate)
 		self.wxgui_waterfallsink2_0.set_sample_rate(self.samp_rate)
 		self.rf_probe.set_alpha(1.0/(self.samp_rate/50.0))
-		self.low_pass_filter_1_1.set_taps(firdes.low_pass(1, self.samp_rate, 45.0e3, 35.0e3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_1.set_taps(firdes.low_pass(2, self.samp_rate, self.wbfm/2.10, self.wbfm/5, firdes.WIN_HAMMING, 6.76))
 		self.osmosdr_source_c_0.set_sample_rate(self.samp_rate)
+		self.low_pass_filter_1_1.set_taps(firdes.low_pass(1, self.samp_rate, 45.0e3, 35.0e3, firdes.WIN_HAMMING, 6.76))
 
 	def get_rfgain(self):
 		return self.rfgain
@@ -609,12 +617,12 @@ class multimode(grc_wxgui.top_block_gui):
 	def set_mode(self, mode):
 		self.mode = mode
 		self._mode_chooser.set_value(self.mode)
-		self.gr_multiply_const_vxx_0_0_0.set_k((1.0 if self.mode == 'AM' else 0.0, ))
-		self.gr_multiply_const_vxx_0_0.set_k((2.0 if (self.mode == 'LSB' or self.mode == 'USB') else 0.0, ))
 		self.gr_multiply_const_vxx_0.set_k((1.0 if self.mode == 'FM' else 0.0, ))
 		self.gr_multiply_const_vxx_0_0_0_0.set_k((1.0 if self.mode == 'TV-FM' else 0.0, ))
 		self.gr_multiply_const_vxx_2.set_k((1.0 if self.mode == 'WFM' else 0.0, ))
 		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1, self.audio_int_rate, -(self.bw/2) if self.mode == 'LSB' else 0, 0 if self.mode == 'LSB' else self.bw/2, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
+		self.gr_multiply_const_vxx_0_0.set_k((2.0 if (self.mode == 'LSB' or self.mode == 'USB') else 0.0, ))
+		self.gr_multiply_const_vxx_0_0_0.set_k((1.0 if self.mode == 'AM' else 0.0, ))
 
 	def get_ifreq(self):
 		return self.ifreq
@@ -651,12 +659,12 @@ class multimode(grc_wxgui.top_block_gui):
 	def set_audio_int_rate(self, audio_int_rate):
 		self.audio_int_rate = audio_int_rate
 		self.low_pass_filter_3.set_taps(firdes.low_pass(2.5, self.audio_int_rate, 9.5e3, 3.5e3, firdes.WIN_HAMMING, 6.76))
-		self.low_pass_filter_4.set_taps(firdes.low_pass(1.0, self.audio_int_rate, 5.0e3, 1.25e3, firdes.WIN_HAMMING, 6.76))
-		self.gr_fractional_interpolator_xx_0.set_interp_ratio(self.audio_int_rate/self.arate)
 		self.low_pass_filter_2.set_taps(firdes.low_pass(3, self.audio_int_rate*4, 25e3, 8e3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_0.set_taps(firdes.low_pass(3, self.audio_int_rate*4, 8.5e3, 5e3, firdes.WIN_HAMMING, 6.76))
 		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1, self.audio_int_rate, -(self.bw/2) if self.mode == 'LSB' else 0, 0 if self.mode == 'LSB' else self.bw/2, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_1_0.set_taps(firdes.low_pass(1, self.audio_int_rate*2, self.bw/2.0, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
+		self.gr_fractional_interpolator_xx_0.set_interp_ratio(self.audio_int_rate/self.arate)
+		self.low_pass_filter_4.set_taps(firdes.low_pass(1.0, self.audio_int_rate, 6.0e3, 2.5e3, firdes.WIN_HAMMING, 6.76))
 
 	def get_agc(self):
 		return self.agc
@@ -691,7 +699,9 @@ if __name__ == '__main__':
 		help="Set AM/SSB Demod Bandwidth [default=%default]")
 	parser.add_option("", "--arate", dest="arate", type="intx", default=int(48.0e3),
 		help="Set Audio Sample Rate [default=%default]")
+	parser.add_option("", "--srate", dest="srate", type="eng_float", default=eng_notation.num_to_str(2.0e6),
+		help="Set RF Sample Rate [default=%default]")
 	(options, args) = parser.parse_args()
-	tb = multimode(devinfo=options.devinfo, ahw=options.ahw, freq=options.freq, ppm=options.ppm, vol=options.vol, ftune=options.ftune, xftune=options.xftune, offs=options.offs, mthresh=options.mthresh, mbw=options.mbw, arate=options.arate)
+	tb = multimode(devinfo=options.devinfo, ahw=options.ahw, freq=options.freq, ppm=options.ppm, vol=options.vol, ftune=options.ftune, xftune=options.xftune, offs=options.offs, mthresh=options.mthresh, mbw=options.mbw, arate=options.arate, srate=options.srate)
 	tb.Run(True)
 
