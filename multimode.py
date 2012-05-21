@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Multimode
-# Generated: Mon May 21 11:50:29 2012
+# Generated: Mon May 21 12:03:22 2012
 ##################################################
 
 from gnuradio import audio
@@ -255,7 +255,7 @@ class multimode(grc_wxgui.top_block_gui):
 			value=self.bw,
 			callback=self.set_bw,
 			minimum=1.0e3,
-			maximum=15e3,
+			maximum=audio_int_rate/2,
 			num_steps=100,
 			style=wx.SL_HORIZONTAL,
 			cast=float,
@@ -712,9 +712,9 @@ class multimode(grc_wxgui.top_block_gui):
 		self.audio_int_rate = audio_int_rate
 		self.gr_fractional_interpolator_xx_0.set_interp_ratio(self.audio_int_rate/self.arate)
 		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1, self.audio_int_rate, -(self.bw/2) if self.mode == 'LSB' else 0, 0 if self.mode == 'LSB' else self.bw/2, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
-		self.low_pass_filter_1_0.set_taps(firdes.low_pass(1, self.audio_int_rate, self.bw/2.0, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_3.set_taps(firdes.low_pass(1, self.audio_int_rate*8, 11.5e3, 7.5e3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_4.set_taps(firdes.low_pass(2.5, self.audio_int_rate, 5.0e3, 2.0e3, firdes.WIN_HAMMING, 6.76))
+		self.low_pass_filter_1_0.set_taps(firdes.low_pass(1, self.audio_int_rate, self.bw/2.0, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 
 if __name__ == '__main__':
 	parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
