@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Multimode
-# Generated: Sun May 20 20:11:15 2012
+# Generated: Sun May 20 21:49:20 2012
 ##################################################
 
 from gnuradio import audio
@@ -25,7 +25,7 @@ import wx
 
 class multimode(grc_wxgui.top_block_gui):
 
-	def __init__(self, devinfo="rtl=0", ahw="default", freq=150.0e6, ppm=0.0, vol=1.0, ftune=0.0, xftune=0.0, offs=50.e3, mbw=2.0e3, srate=2.0e6, dmode='FM', mthresh=-10.0, agc=0, arate=48.0e3):
+	def __init__(self, devinfo="rtl=0", ahw="default", freq=150.0e6, ppm=0.0, vol=1.0, ftune=0.0, xftune=0.0, offs=50.e3, mbw=2.0e3, dmode='FM', mthresh=-10.0, agc=0, arate=48.0e3, srate=2.5e6):
 		grc_wxgui.top_block_gui.__init__(self, title="Multimode")
 		_icon_path = "/usr/share/icons/hicolor/32x32/apps/gnuradio-grc.png"
 		self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
@@ -42,23 +42,25 @@ class multimode(grc_wxgui.top_block_gui):
 		self.xftune = xftune
 		self.offs = offs
 		self.mbw = mbw
-		self.srate = srate
 		self.dmode = dmode
 		self.mthresh = mthresh
 		self.agc = agc
 		self.arate = arate
+		self.srate = srate
 
 		##################################################
 		# Variables
 		##################################################
+		self.wbfm = wbfm = 200e3
 		self.rf_power = rf_power = 0
 		self.thresh = thresh = mthresh
+		self.samp_rate = samp_rate = int(int(srate/wbfm)*wbfm)
 		self.logpower = logpower = math.log10(rf_power+1.0e-12)*10.0
+		self.adjusted = adjusted = "" if int(srate) % int(wbfm) == 0 else " (adjusted from "+str(srate/1.0e6)+"Msps)"
 		self.xfine = xfine = xftune
-		self.wbfm = wbfm = 200e3
 		self.volume = volume = vol
+		self.variable_static_text_1 = variable_static_text_1 = str(samp_rate/1.0e6)+"Msps"+adjusted
 		self.variable_static_text_0 = variable_static_text_0 = float(int(math.log10(rf_power+1.0e-14)*100.0)/10.0)
-		self.samp_rate = samp_rate = int(srate)
 		self.rfgain = rfgain = 25
 		self.record_file = record_file = "recording.wav"
 		self.record = record = False
@@ -287,6 +289,14 @@ class multimode(grc_wxgui.top_block_gui):
 			peak_hold=False,
 		)
 		self.Add(self.wxgui_fftsink2_0.win)
+		self._variable_static_text_1_static_text = forms.static_text(
+			parent=self.GetWin(),
+			value=self.variable_static_text_1,
+			callback=self.set_variable_static_text_1,
+			label="Sample Rate",
+			converter=forms.str_converter(),
+		)
+		self.GridAdd(self._variable_static_text_1_static_text, 2, 2, 1, 1)
 		self._variable_static_text_0_static_text = forms.static_text(
 			parent=self.GetWin(),
 			value=self.variable_static_text_0,
@@ -482,13 +492,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self.mbw = mbw
 		self.set_bw(self.mbw)
 
-	def get_srate(self):
-		return self.srate
-
-	def set_srate(self, srate):
-		self.srate = srate
-		self.set_samp_rate(int(self.srate))
-
 	def get_dmode(self):
 		return self.dmode
 
@@ -518,6 +521,23 @@ class multimode(grc_wxgui.top_block_gui):
 		self.arate = arate
 		self.gr_fractional_interpolator_xx_0.set_interp_ratio(self.audio_int_rate/self.arate)
 
+	def get_srate(self):
+		return self.srate
+
+	def set_srate(self, srate):
+		self.srate = srate
+		self.set_samp_rate(int(int(self.srate/self.wbfm)*self.wbfm))
+		self.set_adjusted("" if int(self.srate) % int(self.wbfm) == 0 else " (adjusted from "+str(self.srate/1.0e6)+"Msps)")
+
+	def get_wbfm(self):
+		return self.wbfm
+
+	def set_wbfm(self, wbfm):
+		self.wbfm = wbfm
+		self.low_pass_filter_1.set_taps(firdes.low_pass(2, self.samp_rate, self.wbfm/2.10, self.wbfm/5, firdes.WIN_HAMMING, 6.76))
+		self.set_samp_rate(int(int(self.srate/self.wbfm)*self.wbfm))
+		self.set_adjusted("" if int(self.srate) % int(self.wbfm) == 0 else " (adjusted from "+str(self.srate/1.0e6)+"Msps)")
+
 	def get_rf_power(self):
 		return self.rf_power
 
@@ -535,12 +555,32 @@ class multimode(grc_wxgui.top_block_gui):
 		self._thresh_text_box.set_value(self.thresh)
 		self.set_muted(0.0 if self.logpower >= self.thresh else 1)
 
+	def get_samp_rate(self):
+		return self.samp_rate
+
+	def set_samp_rate(self, samp_rate):
+		self.samp_rate = samp_rate
+		self.wxgui_fftsink2_0.set_sample_rate(self.samp_rate)
+		self.low_pass_filter_1_1.set_taps(firdes.low_pass(1, self.samp_rate, 45.0e3, 35.0e3, firdes.WIN_HAMMING, 6.76))
+		self.rf_probe.set_alpha(1.0/(self.samp_rate/50.0))
+		self.osmosdr_source_c_0.set_sample_rate(self.samp_rate)
+		self.wxgui_waterfallsink2_0.set_sample_rate(self.samp_rate)
+		self.low_pass_filter_1.set_taps(firdes.low_pass(2, self.samp_rate, self.wbfm/2.10, self.wbfm/5, firdes.WIN_HAMMING, 6.76))
+		self.set_variable_static_text_1(str(self.samp_rate/1.0e6)+"Msps"+self.adjusted)
+
 	def get_logpower(self):
 		return self.logpower
 
 	def set_logpower(self, logpower):
 		self.logpower = logpower
 		self.set_muted(0.0 if self.logpower >= self.thresh else 1)
+
+	def get_adjusted(self):
+		return self.adjusted
+
+	def set_adjusted(self, adjusted):
+		self.adjusted = adjusted
+		self.set_variable_static_text_1(str(self.samp_rate/1.0e6)+"Msps"+self.adjusted)
 
 	def get_xfine(self):
 		return self.xfine
@@ -551,13 +591,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self._xfine_slider.set_value(self.xfine)
 		self._xfine_text_box.set_value(self.xfine)
 
-	def get_wbfm(self):
-		return self.wbfm
-
-	def set_wbfm(self, wbfm):
-		self.wbfm = wbfm
-		self.low_pass_filter_1.set_taps(firdes.low_pass(2, self.samp_rate, self.wbfm/2.10, self.wbfm/5, firdes.WIN_HAMMING, 6.76))
-
 	def get_volume(self):
 		return self.volume
 
@@ -567,6 +600,13 @@ class multimode(grc_wxgui.top_block_gui):
 		self._volume_slider.set_value(self.volume)
 		self._volume_text_box.set_value(self.volume)
 
+	def get_variable_static_text_1(self):
+		return self.variable_static_text_1
+
+	def set_variable_static_text_1(self, variable_static_text_1):
+		self.variable_static_text_1 = variable_static_text_1
+		self._variable_static_text_1_static_text.set_value(self.variable_static_text_1)
+
 	def get_variable_static_text_0(self):
 		return self.variable_static_text_0
 
@@ -574,26 +614,14 @@ class multimode(grc_wxgui.top_block_gui):
 		self.variable_static_text_0 = variable_static_text_0
 		self._variable_static_text_0_static_text.set_value(self.variable_static_text_0)
 
-	def get_samp_rate(self):
-		return self.samp_rate
-
-	def set_samp_rate(self, samp_rate):
-		self.samp_rate = samp_rate
-		self.wxgui_fftsink2_0.set_sample_rate(self.samp_rate)
-		self.wxgui_waterfallsink2_0.set_sample_rate(self.samp_rate)
-		self.low_pass_filter_1.set_taps(firdes.low_pass(2, self.samp_rate, self.wbfm/2.10, self.wbfm/5, firdes.WIN_HAMMING, 6.76))
-		self.low_pass_filter_1_1.set_taps(firdes.low_pass(1, self.samp_rate, 45.0e3, 35.0e3, firdes.WIN_HAMMING, 6.76))
-		self.rf_probe.set_alpha(1.0/(self.samp_rate/50.0))
-		self.osmosdr_source_c_0.set_sample_rate(self.samp_rate)
-
 	def get_rfgain(self):
 		return self.rfgain
 
 	def set_rfgain(self, rfgain):
 		self.rfgain = rfgain
+		self.osmosdr_source_c_0.set_gain(25 if self.agc == 1 else self.rfgain, 0)
 		self._rfgain_slider.set_value(self.rfgain)
 		self._rfgain_text_box.set_value(self.rfgain)
-		self.osmosdr_source_c_0.set_gain(25 if self.agc == 1 else self.rfgain, 0)
 
 	def get_record_file(self):
 		return self.record_file
@@ -617,9 +645,9 @@ class multimode(grc_wxgui.top_block_gui):
 	def set_offset(self, offset):
 		self.offset = offset
 		self.gr_freq_xlating_fir_filter_xxx_0_1.set_center_freq(self.offset+self.fine+self.xfine)
+		self.osmosdr_source_c_0.set_center_freq(self.ifreq+self.offset, 0)
 		self._offset_slider.set_value(self.offset)
 		self._offset_text_box.set_value(self.offset)
-		self.osmosdr_source_c_0.set_center_freq(self.ifreq+self.offset, 0)
 
 	def get_muted(self):
 		return self.muted
@@ -647,9 +675,9 @@ class multimode(grc_wxgui.top_block_gui):
 	def set_ifreq(self, ifreq):
 		self.ifreq = ifreq
 		self.wxgui_fftsink2_0.set_baseband_freq(self.ifreq)
-		self.wxgui_waterfallsink2_0.set_baseband_freq(self.ifreq)
 		self._ifreq_text_box.set_value(self.ifreq)
 		self.osmosdr_source_c_0.set_center_freq(self.ifreq+self.offset, 0)
+		self.wxgui_waterfallsink2_0.set_baseband_freq(self.ifreq)
 
 	def get_iagc(self):
 		return self.iagc
@@ -711,8 +739,6 @@ if __name__ == '__main__':
 		help="Set LO Offset [default=%default]")
 	parser.add_option("", "--mbw", dest="mbw", type="eng_float", default=eng_notation.num_to_str(2.0e3),
 		help="Set AM/SSB Demod Bandwidth [default=%default]")
-	parser.add_option("", "--srate", dest="srate", type="eng_float", default=eng_notation.num_to_str(2.0e6),
-		help="Set RF Sample Rate [default=%default]")
 	parser.add_option("", "--dmode", dest="dmode", type="string", default='FM',
 		help="Set Demod Mode [default=%default]")
 	parser.add_option("", "--mthresh", dest="mthresh", type="eng_float", default=eng_notation.num_to_str(-10.0),
@@ -721,7 +747,9 @@ if __name__ == '__main__':
 		help="Set AGC On/Off [default=%default]")
 	parser.add_option("", "--arate", dest="arate", type="eng_float", default=eng_notation.num_to_str(48.0e3),
 		help="Set Audio Sample Rate [default=%default]")
+	parser.add_option("", "--srate", dest="srate", type="eng_float", default=eng_notation.num_to_str(2.5e6),
+		help="Set RF Sample Rate [default=%default]")
 	(options, args) = parser.parse_args()
-	tb = multimode(devinfo=options.devinfo, ahw=options.ahw, freq=options.freq, ppm=options.ppm, vol=options.vol, ftune=options.ftune, xftune=options.xftune, offs=options.offs, mbw=options.mbw, srate=options.srate, dmode=options.dmode, mthresh=options.mthresh, agc=options.agc, arate=options.arate)
+	tb = multimode(devinfo=options.devinfo, ahw=options.ahw, freq=options.freq, ppm=options.ppm, vol=options.vol, ftune=options.ftune, xftune=options.xftune, offs=options.offs, mbw=options.mbw, dmode=options.dmode, mthresh=options.mthresh, agc=options.agc, arate=options.arate, srate=options.srate)
 	tb.Run(True)
 
