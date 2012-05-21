@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Multimode
-# Generated: Mon May 21 14:33:19 2012
+# Generated: Mon May 21 14:45:33 2012
 ##################################################
 
 from gnuradio import audio
@@ -166,7 +166,7 @@ class multimode(grc_wxgui.top_block_gui):
 			true=True,
 			false=False,
 		)
-		self.GridAdd(self._record_check_box, 1, 4, 1, 1)
+		self.GridAdd(self._record_check_box, 2, 3, 1, 1)
 		_offset_sizer = wx.BoxSizer(wx.VERTICAL)
 		self._offset_text_box = forms.text_box(
 			parent=self.GetWin(),
@@ -190,13 +190,14 @@ class multimode(grc_wxgui.top_block_gui):
 			proportion=1,
 		)
 		self.GridAdd(_offset_sizer, 1, 3, 1, 1)
-		self._mode_chooser = forms.drop_down(
+		self._mode_chooser = forms.radio_buttons(
 			parent=self.GetWin(),
 			value=self.mode,
 			callback=self.set_mode,
 			label="Mode",
 			choices=['FM','AM','USB','LSB','WFM','TV-FM'],
 			labels=[],
+			style=wx.RA_HORIZONTAL,
 		)
 		self.GridAdd(self._mode_chooser, 0, 4, 1, 1)
 		self._ifreq_text_box = forms.text_box(
@@ -301,7 +302,7 @@ class multimode(grc_wxgui.top_block_gui):
 			label="Devinfo",
 			converter=forms.str_converter(),
 		)
-		self.GridAdd(self._variable_static_text_1_0_static_text, 2, 3, 1, 1)
+		self.GridAdd(self._variable_static_text_1_0_static_text, 3, 0, 1, 3)
 		self._variable_static_text_1_static_text = forms.static_text(
 			parent=self.GetWin(),
 			value=self.variable_static_text_1,
@@ -659,8 +660,8 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_record(self, record):
 		self.record = record
-		self._record_check_box.set_value(self.record)
 		self.gr_wavfile_sink_0.open("/dev/null" if self.record == False else self.record_file)
+		self._record_check_box.set_value(self.record)
 
 	def get_offset(self):
 		return self.offset
