@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Multimode
-# Generated: Mon May 21 14:45:33 2012
+# Generated: Mon May 21 14:52:04 2012
 ##################################################
 
 from gnuradio import audio
@@ -278,6 +278,10 @@ class multimode(grc_wxgui.top_block_gui):
 			win=window.hamming,
 		)
 		self.Add(self.wxgui_waterfallsink2_0.win)
+		def wxgui_waterfallsink2_0_callback(x, y):
+			self.set_ifreq(x)
+		
+		self.wxgui_waterfallsink2_0.set_callback(wxgui_waterfallsink2_0_callback)
 		self.wxgui_fftsink2_0 = fftsink2.fft_sink_c(
 			self.GetWin(),
 			baseband_freq=ifreq,
@@ -295,6 +299,10 @@ class multimode(grc_wxgui.top_block_gui):
 			win=window.hamming,
 		)
 		self.Add(self.wxgui_fftsink2_0.win)
+		def wxgui_fftsink2_0_callback(x, y):
+			self.set_ifreq(x)
+		
+		self.wxgui_fftsink2_0.set_callback(wxgui_fftsink2_0_callback)
 		self._variable_static_text_1_0_static_text = forms.static_text(
 			parent=self.GetWin(),
 			value=self.variable_static_text_1_0,
