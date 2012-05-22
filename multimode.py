@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Multimode
-# Generated: Mon May 21 16:08:19 2012
+# Generated: Mon May 21 22:23:13 2012
 ##################################################
 
 from gnuradio import audio
@@ -55,16 +55,17 @@ class multimode(grc_wxgui.top_block_gui):
 		self.rf_power = rf_power = 0
 		self.thresh = thresh = mthresh
 		self.samp_rate = samp_rate = int(int(srate/wbfm)*wbfm)
+		self.rf_d_power = rf_d_power = 0
 		self.quad_rate = quad_rate = wbfm
 		self.mode = mode = dmode
 		self.logpower = logpower = math.log10(rf_power+1.0e-12)*10.0
 		self.deviation_dict = deviation_dict = {'FM' : 7.5e3, 'WFM' : 95e3, 'TV-FM' : 25e3, 'AM' : 5.5e3, 'USB' : 5.5e3, 'LSB' : 5.5e3}
-		self.adjusted = adjusted = "" if int(srate) % int(wbfm) == 0 else " (adjusted from "+str(srate/1.0e6)+"Msps)"
+		self.adjusted = adjusted = "" if int(srate) % int(wbfm) == 0 else " (adjusted)"
 		self.xfine = xfine = xftune
 		self.volume = volume = vol
 		self.variable_static_text_1_0 = variable_static_text_1_0 = devinfo
 		self.variable_static_text_1 = variable_static_text_1 = str(samp_rate/1.0e6)+"Msps"+adjusted
-		self.variable_static_text_0 = variable_static_text_0 = float(int(math.log10(rf_power+1.0e-14)*100.0)/10.0)
+		self.variable_static_text_0 = variable_static_text_0 = float(int(math.log10(rf_d_power+1.0e-14)*100.0)/10.0)
 		self.rfgain = rfgain = 25
 		self.record_file = record_file = "recording.wav"
 		self.record = record = False
@@ -240,6 +241,7 @@ class multimode(grc_wxgui.top_block_gui):
 			proportion=1,
 		)
 		self.GridAdd(_fine_sizer, 0, 2, 1, 1)
+		self.display_probe = gr.probe_avg_mag_sqrd_c(0, 0.005)
 		_bw_sizer = wx.BoxSizer(wx.VERTICAL)
 		self._bw_text_box = forms.text_box(
 			parent=self.GetWin(),
@@ -342,7 +344,7 @@ class multimode(grc_wxgui.top_block_gui):
 			sizer=_thresh_sizer,
 			value=self.thresh,
 			callback=self.set_thresh,
-			minimum=-40,
+			minimum=-50,
 			maximum=10,
 			num_steps=100,
 			style=wx.SL_HORIZONTAL,
@@ -359,6 +361,15 @@ class multimode(grc_wxgui.top_block_gui):
 		_rf_power_thread = threading.Thread(target=_rf_power_probe)
 		_rf_power_thread.daemon = True
 		_rf_power_thread.start()
+		def _rf_d_power_probe():
+			while True:
+				val = self.display_probe.level()
+				try: self.set_rf_d_power(val)
+				except AttributeError, e: pass
+				time.sleep(1.0/(5))
+		_rf_d_power_thread = threading.Thread(target=_rf_d_power_probe)
+		_rf_d_power_thread.daemon = True
+		_rf_d_power_thread.start()
 		self.osmosdr_source_c_0 = osmosdr.source_c( args="nchan=" + str(1) + " " + devinfo  )
 		self.osmosdr_source_c_0.set_sample_rate(samp_rate)
 		self.osmosdr_source_c_0.set_center_freq(ifreq+offset, 0)
@@ -433,6 +444,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.connect((self.low_pass_filter_3, 0), (self.gr_multiply_const_vxx_0_1, 0))
 		self.connect((self.gr_complex_to_mag_squared_0, 0), (self.band_pass_filter_1, 0))
 		self.connect((self.band_pass_filter_1, 0), (self.gr_multiply_const_vxx_0_0_0, 0))
+		self.connect((self.gr_add_xx_1, 0), (self.display_probe, 0))
 
 	def get_devinfo(self):
 		return self.devinfo
@@ -523,7 +535,7 @@ class multimode(grc_wxgui.top_block_gui):
 	def set_srate(self, srate):
 		self.srate = srate
 		self.set_samp_rate(int(int(self.srate/self.wbfm)*self.wbfm))
-		self.set_adjusted("" if int(self.srate) % int(self.wbfm) == 0 else " (adjusted from "+str(self.srate/1.0e6)+"Msps)")
+		self.set_adjusted("" if int(self.srate) % int(self.wbfm) == 0 else " (adjusted)")
 
 	def get_agc(self):
 		return self.agc
@@ -538,9 +550,9 @@ class multimode(grc_wxgui.top_block_gui):
 	def set_wbfm(self, wbfm):
 		self.wbfm = wbfm
 		self.set_samp_rate(int(int(self.srate/self.wbfm)*self.wbfm))
-		self.set_adjusted("" if int(self.srate) % int(self.wbfm) == 0 else " (adjusted from "+str(self.srate/1.0e6)+"Msps)")
 		self.low_pass_filter_2.set_taps(firdes.low_pass(1, self.wbfm, 15e3, 4e3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode], self.deviation_dict[self.mode]/3.3, firdes.WIN_HAMMING, 6.76))
+		self.set_adjusted("" if int(self.srate) % int(self.wbfm) == 0 else " (adjusted)")
 		self.set_quad_rate(self.wbfm)
 
 	def get_rf_power(self):
@@ -548,7 +560,6 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_rf_power(self, rf_power):
 		self.rf_power = rf_power
-		self.set_variable_static_text_0(float(int(math.log10(self.rf_power+1.0e-14)*100.0)/10.0))
 		self.set_logpower(math.log10(self.rf_power+1.0e-12)*10.0)
 
 	def get_thresh(self):
@@ -556,9 +567,9 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_thresh(self, thresh):
 		self.thresh = thresh
+		self.set_muted(0.0 if self.logpower >= self.thresh else 1)
 		self._thresh_slider.set_value(self.thresh)
 		self._thresh_text_box.set_value(self.thresh)
-		self.set_muted(0.0 if self.logpower >= self.thresh else 1)
 
 	def get_samp_rate(self):
 		return self.samp_rate
@@ -570,6 +581,13 @@ class multimode(grc_wxgui.top_block_gui):
 		self.wxgui_fftsink2_0.set_sample_rate(self.samp_rate)
 		self.wxgui_waterfallsink2_0.set_sample_rate(self.samp_rate)
 		self.low_pass_filter_1.set_taps(firdes.low_pass(1, self.samp_rate, 98e3, 55e3, firdes.WIN_HAMMING, 6.76))
+
+	def get_rf_d_power(self):
+		return self.rf_d_power
+
+	def set_rf_d_power(self, rf_d_power):
+		self.rf_d_power = rf_d_power
+		self.set_variable_static_text_0(float(int(math.log10(self.rf_d_power+1.0e-14)*100.0)/10.0))
 
 	def get_quad_rate(self):
 		return self.quad_rate
@@ -583,7 +601,6 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_mode(self, mode):
 		self.mode = mode
-		self.set_k(self.quad_rate/(2*math.pi*self.deviation_dict[self.mode]))
 		self.gr_multiply_const_vxx_2.set_k((1.0 if self.mode == 'WFM' or self.mode == 'FM' or self.mode == 'TV-FM' else 0.0, ))
 		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1, self.audio_int_rate, -(self.bw/2) if self.mode == 'LSB' else 0, 0 if self.mode == 'LSB' else self.bw/2, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode], self.deviation_dict[self.mode]/3.3, firdes.WIN_HAMMING, 6.76))
@@ -592,6 +609,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.gr_multiply_const_vxx_0_1.set_k((10.0 if self.mode == 'AM' or self.mode == 'LSB' or self.mode == 'USB' else 0.0, ))
 		self.gr_multiply_const_vxx_0_0_0.set_k((1.0 if self.mode == 'AM' else 0.0, ))
 		self.gr_multiply_const_vxx_0_0.set_k((2.0 if (self.mode == 'LSB' or self.mode == 'USB') else 0.0, ))
+		self.set_k(self.quad_rate/(2*math.pi*self.deviation_dict[self.mode]))
 
 	def get_logpower(self):
 		return self.logpower
@@ -605,8 +623,8 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_deviation_dict(self, deviation_dict):
 		self.deviation_dict = deviation_dict
-		self.set_k(self.quad_rate/(2*math.pi*self.deviation_dict[self.mode]))
 		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode], self.deviation_dict[self.mode]/3.3, firdes.WIN_HAMMING, 6.76))
+		self.set_k(self.quad_rate/(2*math.pi*self.deviation_dict[self.mode]))
 
 	def get_adjusted(self):
 		return self.adjusted
@@ -749,8 +767,8 @@ class multimode(grc_wxgui.top_block_gui):
 		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1, self.audio_int_rate, -(self.bw/2) if self.mode == 'LSB' else 0, 0 if self.mode == 'LSB' else self.bw/2, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_1_0.set_taps(firdes.low_pass(1, self.audio_int_rate, self.bw/2.0, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 		self.gr_fractional_interpolator_xx_0.set_interp_ratio(self.audio_int_rate/self.arate)
-		self.low_pass_filter_3.set_taps(firdes.low_pass(1, self.audio_int_rate*8, 11.5e3, 7.5e3, firdes.WIN_HAMMING, 6.76))
 		self.band_pass_filter_1.set_taps(firdes.band_pass(1, self.audio_int_rate, 100, 5.5e3, 2.0e3, firdes.WIN_HAMMING, 6.76))
+		self.low_pass_filter_3.set_taps(firdes.low_pass(1, self.audio_int_rate*8, 11.5e3, 7.5e3, firdes.WIN_HAMMING, 6.76))
 
 if __name__ == '__main__':
 	parser = OptionParser(option_class=eng_option, usage="%prog: [options]")

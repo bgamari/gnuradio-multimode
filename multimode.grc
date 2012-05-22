@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Mon May 21 16:08:19 2012</timestamp>
+  <timestamp>Mon May 21 22:20:51 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -406,45 +406,6 @@
     </param>
   </block>
   <block>
-    <key>variable_function_probe</key>
-    <param>
-      <key>id</key>
-      <value>rf_power</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>block_id</key>
-      <value>rf_probe</value>
-    </param>
-    <param>
-      <key>function_name</key>
-      <value>level</value>
-    </param>
-    <param>
-      <key>function_args</key>
-      <value></value>
-    </param>
-    <param>
-      <key>poll_rate</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(710, 941)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>parameter</key>
     <param>
       <key>id</key>
@@ -561,61 +522,6 @@
     <key>variable_slider</key>
     <param>
       <key>id</key>
-      <value>thresh</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Mute Threshold</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>mthresh</value>
-    </param>
-    <param>
-      <key>min</key>
-      <value>-40</value>
-    </param>
-    <param>
-      <key>max</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>num_steps</key>
-      <value>100</value>
-    </param>
-    <param>
-      <key>style</key>
-      <value>wx.SL_HORIZONTAL</value>
-    </param>
-    <param>
-      <key>converver</key>
-      <value>float_converter</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value>1,1,1,1</value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(148, 897)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_slider</key>
-    <param>
-      <key>id</key>
       <value>xfine</value>
     </param>
     <param>
@@ -661,49 +567,6 @@
     <param>
       <key>_coordinate</key>
       <value>(301, 1047)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_static_text</key>
-    <param>
-      <key>id</key>
-      <value>variable_static_text_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>RF Level</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>float(int(math.log10(rf_power+1.0e-14)*100.0)/10.0)</value>
-    </param>
-    <param>
-      <key>converver</key>
-      <value>float_converter</value>
-    </param>
-    <param>
-      <key>formatter</key>
-      <value>None</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value>1,0,1,1</value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(11, 1191)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1145,52 +1008,6 @@
     <param>
       <key>_coordinate</key>
       <value>(12, 189)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>adjusted</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"" if int(srate) % int(wbfm) == 0 else " (adjusted from "+str(srate/1.0e6)+"Msps)"</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(8, 510)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>k</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>quad_rate/(2*math.pi*deviation_dict[mode])</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(548, 388)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1719,29 +1536,6 @@
     </param>
   </block>
   <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>deviation_dict</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>{'FM' : 7.5e3, 'WFM' : 95e3, 'TV-FM' : 25e3, 'AM' : 5.5e3, 'USB' : 5.5e3, 'LSB' : 5.5e3}</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(595, 456)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>low_pass_filter</key>
     <param>
       <key>id</key>
@@ -1845,29 +1639,6 @@
     <param>
       <key>_coordinate</key>
       <value>(538, 527)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>quad_rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>wbfm</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(505, 456)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2690,92 +2461,6 @@
     </param>
   </block>
   <block>
-    <key>gr_add_xx</key>
-    <param>
-      <key>id</key>
-      <value>gr_add_xx_1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(390, 308)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>low_pass_filter</key>
-    <param>
-      <key>id</key>
-      <value>low_pass_filter_3</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>fir_filter_ccf</value>
-    </param>
-    <param>
-      <key>decim</key>
-      <value>int((audio_int_rate*8)/(audio_int_rate))</value>
-    </param>
-    <param>
-      <key>interp</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>gain</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>audio_int_rate*8</value>
-    </param>
-    <param>
-      <key>cutoff_freq</key>
-      <value>11.5e3</value>
-    </param>
-    <param>
-      <key>width</key>
-      <value>7.5e3</value>
-    </param>
-    <param>
-      <key>win</key>
-      <value>firdes.WIN_HAMMING</value>
-    </param>
-    <param>
-      <key>beta</key>
-      <value>6.76</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(327, 28)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_multiply_const_vxx</key>
     <param>
       <key>id</key>
@@ -2951,6 +2636,236 @@
     </param>
   </block>
   <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>adjusted</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"" if int(srate) % int(wbfm) == 0 else " (adjusted)"</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(8, 510)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_add_xx</key>
+    <param>
+      <key>id</key>
+      <value>gr_add_xx_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(390, 308)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_static_text</key>
+    <param>
+      <key>id</key>
+      <value>variable_static_text_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>RF Level</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>float(int(math.log10(rf_d_power+1.0e-14)*100.0)/10.0)</value>
+    </param>
+    <param>
+      <key>converver</key>
+      <value>float_converter</value>
+    </param>
+    <param>
+      <key>formatter</key>
+      <value>None</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value>1,0,1,1</value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(3, 1191)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_function_probe</key>
+    <param>
+      <key>id</key>
+      <value>rf_power</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>block_id</key>
+      <value>rf_probe</value>
+    </param>
+    <param>
+      <key>function_name</key>
+      <value>level</value>
+    </param>
+    <param>
+      <key>function_args</key>
+      <value></value>
+    </param>
+    <param>
+      <key>poll_rate</key>
+      <value>10</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(710, 941)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_function_probe</key>
+    <param>
+      <key>id</key>
+      <value>rf_d_power</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>block_id</key>
+      <value>display_probe</value>
+    </param>
+    <param>
+      <key>function_name</key>
+      <value>level</value>
+    </param>
+    <param>
+      <key>function_args</key>
+      <value></value>
+    </param>
+    <param>
+      <key>poll_rate</key>
+      <value>5</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(512, 1082)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>low_pass_filter</key>
+    <param>
+      <key>id</key>
+      <value>low_pass_filter_3</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>fir_filter_ccf</value>
+    </param>
+    <param>
+      <key>decim</key>
+      <value>int((audio_int_rate*8)/(audio_int_rate))</value>
+    </param>
+    <param>
+      <key>interp</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>gain</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>audio_int_rate*8</value>
+    </param>
+    <param>
+      <key>cutoff_freq</key>
+      <value>11.5e3</value>
+    </param>
+    <param>
+      <key>width</key>
+      <value>7.5e3</value>
+    </param>
+    <param>
+      <key>win</key>
+      <value>firdes.WIN_HAMMING</value>
+    </param>
+    <param>
+      <key>beta</key>
+      <value>6.76</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(328, 8)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>gr_probe_avg_mag_sqrd_x</key>
     <param>
       <key>id</key>
@@ -2974,7 +2889,162 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(350, 216)</value>
+      <value>(340, 152)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_probe_avg_mag_sqrd_x</key>
+    <param>
+      <key>id</key>
+      <value>display_probe</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>c</value>
+    </param>
+    <param>
+      <key>threshold</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>alpha</key>
+      <value>0.005</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(342, 216)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>deviation_dict</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>{'FM' : 7.5e3, 'WFM' : 95e3, 'TV-FM' : 25e3, 'AM' : 5.5e3, 'USB' : 5.5e3, 'LSB' : 5.5e3}</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(595, 456)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>k</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>quad_rate/(2*math.pi*deviation_dict[mode])</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(548, 388)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>quad_rate</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>wbfm</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(505, 456)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_slider</key>
+    <param>
+      <key>id</key>
+      <value>thresh</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Mute Threshold</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>mthresh</value>
+    </param>
+    <param>
+      <key>min</key>
+      <value>-50</value>
+    </param>
+    <param>
+      <key>max</key>
+      <value>10</value>
+    </param>
+    <param>
+      <key>num_steps</key>
+      <value>100</value>
+    </param>
+    <param>
+      <key>style</key>
+      <value>wx.SL_HORIZONTAL</value>
+    </param>
+    <param>
+      <key>converver</key>
+      <value>float_converter</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value>1,1,1,1</value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(148, 897)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3170,6 +3240,12 @@
   <connection>
     <source_block_id>band_pass_filter_1</source_block_id>
     <sink_block_id>gr_multiply_const_vxx_0_0_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>gr_add_xx_1</source_block_id>
+    <sink_block_id>display_probe</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
