@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Multimode
-# Generated: Mon May 21 22:30:18 2012
+# Generated: Mon May 21 22:33:50 2012
 ##################################################
 
 from gnuradio import audio
@@ -390,7 +390,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.gr_quadrature_demod_cf_0 = gr.quadrature_demod_cf(k)
 		self.gr_multiply_const_vxx_2 = gr.multiply_const_vff((1.0 if mode == 'WFM' or mode == 'FM' or mode == 'TV-FM' else 0.0, ))
 		self.gr_multiply_const_vxx_1 = gr.multiply_const_vff((0.0 if muted else volume/4.5, ))
-		self.gr_multiply_const_vxx_0_1 = gr.multiply_const_vcc((10.0 if mode == 'AM' or mode == 'LSB' or mode == 'USB' else 0.0, ))
+		self.gr_multiply_const_vxx_0_1 = gr.multiply_const_vcc((10.0, ))
 		self.gr_multiply_const_vxx_0_0_0 = gr.multiply_const_vff((1.0 if mode == 'AM' else 0.0, ))
 		self.gr_multiply_const_vxx_0_0 = gr.multiply_const_vff((2.0 if (mode == 'LSB' or mode == 'USB') else 0.0, ))
 		self.gr_freq_xlating_fir_filter_xxx_0_1 = gr.freq_xlating_fir_filter_ccc(1, (1.0, ), offset+fine+xfine, samp_rate)
@@ -603,7 +603,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self.gr_multiply_const_vxx_0_0_0.set_k((1.0 if self.mode == 'AM' else 0.0, ))
 		self.gr_multiply_const_vxx_0_0.set_k((2.0 if (self.mode == 'LSB' or self.mode == 'USB') else 0.0, ))
 		self.set_k(self.quad_rate/(2*math.pi*self.deviation_dict[self.mode]))
-		self.gr_multiply_const_vxx_0_1.set_k((10.0 if self.mode == 'AM' or self.mode == 'LSB' or self.mode == 'USB' else 0.0, ))
 
 	def get_logpower(self):
 		return self.logpower
