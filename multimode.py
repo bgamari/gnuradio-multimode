@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Multimode
-# Generated: Mon May 21 22:36:41 2012
+# Generated: Mon May 21 23:01:22 2012
 ##################################################
 
 from gnuradio import audio
@@ -59,7 +59,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.quad_rate = quad_rate = wbfm
 		self.mode = mode = dmode
 		self.logpower = logpower = math.log10(rf_power+1.0e-12)*10.0
-		self.deviation_dict = deviation_dict = {'FM' : 7.5e3, 'WFM' : 95e3, 'TV-FM' : 25e3, 'AM' : 5.5e3, 'USB' : 5.5e3, 'LSB' : 5.5e3}
+		self.deviation_dict = deviation_dict = {'FM' : 5.5e3, 'WFM' : 90e3, 'TV-FM' : 25e3, 'AM' : 5.5e3, 'USB' : 5.5e3, 'LSB' : 5.5e3}
 		self.adjusted = adjusted = "" if int(srate) % int(wbfm) == 0 else " (adjusted)"
 		self.xfine = xfine = xftune
 		self.volume = volume = vol
@@ -385,7 +385,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.low_pass_filter_1 = gr.fir_filter_ccf(int(samp_rate/wbfm), firdes.low_pass(
 			1, samp_rate, 98e3, 55e3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_0 = gr.fir_filter_ccf(1, firdes.low_pass(
-			1, wbfm, deviation_dict[mode], deviation_dict[mode]/3.3, firdes.WIN_HAMMING, 6.76))
+			1, wbfm, deviation_dict[mode]*1.15, deviation_dict[mode]/2.75, firdes.WIN_HAMMING, 6.76))
 		self.gr_wavfile_sink_0 = gr.wavfile_sink("/dev/null" if record == False else record_file, 1, int(audio_int_rate), 8)
 		self.gr_quadrature_demod_cf_0 = gr.quadrature_demod_cf(k)
 		self.gr_multiply_const_vxx_2 = gr.multiply_const_vff((1.0 if mode == 'WFM' or mode == 'FM' or mode == 'TV-FM' else 0.0, ))
@@ -398,7 +398,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.gr_feedforward_agc_cc_0 = gr.feedforward_agc_cc(1024, 0.45)
 		self.gr_complex_to_real_0 = gr.complex_to_real(1)
 		self.gr_complex_to_mag_squared_0 = gr.complex_to_mag_squared(1)
-		self.gr_agc2_xx_1 = gr.agc2_cc(1e-1, 1e-2, 0.75, 1.0, 0.0)
+		self.gr_agc2_xx_0 = gr.agc2_cc(1e-2, 1e-3, 0.75, 1.0, 0.0)
 		self.gr_add_xx_0 = gr.add_vff(1)
 		self.blks2_fm_deemph_0 = blks2.fm_deemph(fs=audio_int_rate, tau=75e-6)
 		self.band_pass_filter_1 = gr.fir_filter_fff(1, firdes.band_pass(
@@ -423,7 +423,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self.connect((self.gr_feedforward_agc_cc_0, 0), (self.band_pass_filter_0, 0))
 		self.connect((self.gr_feedforward_agc_cc_0, 0), (self.gr_complex_to_mag_squared_0, 0))
 		self.connect((self.osmosdr_source_c_0, 0), (self.gr_freq_xlating_fir_filter_xxx_0_1, 0))
-		self.connect((self.gr_agc2_xx_1, 0), (self.low_pass_filter_0, 0))
 		self.connect((self.low_pass_filter_0, 0), (self.gr_quadrature_demod_cf_0, 0))
 		self.connect((self.gr_quadrature_demod_cf_0, 0), (self.low_pass_filter_2, 0))
 		self.connect((self.low_pass_filter_2, 0), (self.blks2_fm_deemph_0, 0))
@@ -431,7 +430,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self.connect((self.gr_multiply_const_vxx_0_0_0, 0), (self.gr_add_xx_0, 2))
 		self.connect((self.gr_multiply_const_vxx_2, 0), (self.gr_add_xx_0, 0))
 		self.connect((self.gr_freq_xlating_fir_filter_xxx_0_1, 0), (self.low_pass_filter_1, 0))
-		self.connect((self.low_pass_filter_1, 0), (self.gr_agc2_xx_1, 0))
 		self.connect((self.gr_freq_xlating_fir_filter_xxx_0_1, 0), (self.wxgui_fftsink2_0, 0))
 		self.connect((self.low_pass_filter_3, 0), (self.low_pass_filter_1_0, 0))
 		self.connect((self.gr_complex_to_mag_squared_0, 0), (self.band_pass_filter_1, 0))
@@ -440,6 +438,8 @@ class multimode(grc_wxgui.top_block_gui):
 		self.connect((self.low_pass_filter_1, 0), (self.low_pass_filter_3, 0))
 		self.connect((self.gr_multiply_const_vxx_0_1, 0), (self.rf_probe, 0))
 		self.connect((self.gr_multiply_const_vxx_0_1, 0), (self.display_probe, 0))
+		self.connect((self.gr_agc2_xx_0, 0), (self.low_pass_filter_0, 0))
+		self.connect((self.low_pass_filter_1, 0), (self.gr_agc2_xx_0, 0))
 
 	def get_devinfo(self):
 		return self.devinfo
@@ -547,8 +547,8 @@ class multimode(grc_wxgui.top_block_gui):
 		self.set_samp_rate(int(int(self.srate/self.wbfm)*self.wbfm))
 		self.set_adjusted("" if int(self.srate) % int(self.wbfm) == 0 else " (adjusted)")
 		self.set_quad_rate(self.wbfm)
-		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode], self.deviation_dict[self.mode]/3.3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_2.set_taps(firdes.low_pass(1, self.wbfm, 11.5e3, 4e3, firdes.WIN_HAMMING, 6.76))
+		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/2.75, firdes.WIN_HAMMING, 6.76))
 
 	def get_rf_power(self):
 		return self.rf_power
@@ -597,12 +597,12 @@ class multimode(grc_wxgui.top_block_gui):
 	def set_mode(self, mode):
 		self.mode = mode
 		self.gr_multiply_const_vxx_2.set_k((1.0 if self.mode == 'WFM' or self.mode == 'FM' or self.mode == 'TV-FM' else 0.0, ))
-		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1, self.audio_int_rate, -(self.bw/2) if self.mode == 'LSB' else 0, 0 if self.mode == 'LSB' else self.bw/2, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 		self._mode_chooser.set_value(self.mode)
 		self.gr_multiply_const_vxx_0_0_0.set_k((1.0 if self.mode == 'AM' else 0.0, ))
 		self.gr_multiply_const_vxx_0_0.set_k((2.0 if (self.mode == 'LSB' or self.mode == 'USB') else 0.0, ))
+		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1, self.audio_int_rate, -(self.bw/2) if self.mode == 'LSB' else 0, 0 if self.mode == 'LSB' else self.bw/2, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 		self.set_k(self.quad_rate/(2*math.pi*self.deviation_dict[self.mode]))
-		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode], self.deviation_dict[self.mode]/3.3, firdes.WIN_HAMMING, 6.76))
+		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/2.75, firdes.WIN_HAMMING, 6.76))
 
 	def get_logpower(self):
 		return self.logpower
@@ -617,7 +617,7 @@ class multimode(grc_wxgui.top_block_gui):
 	def set_deviation_dict(self, deviation_dict):
 		self.deviation_dict = deviation_dict
 		self.set_k(self.quad_rate/(2*math.pi*self.deviation_dict[self.mode]))
-		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode], self.deviation_dict[self.mode]/3.3, firdes.WIN_HAMMING, 6.76))
+		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/2.75, firdes.WIN_HAMMING, 6.76))
 
 	def get_adjusted(self):
 		return self.adjusted
@@ -747,21 +747,21 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_bw(self, bw):
 		self.bw = bw
-		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1, self.audio_int_rate, -(self.bw/2) if self.mode == 'LSB' else 0, 0 if self.mode == 'LSB' else self.bw/2, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_1_0.set_taps(firdes.low_pass(1, self.audio_int_rate, self.bw/2.0, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 		self._bw_slider.set_value(self.bw)
 		self._bw_text_box.set_value(self.bw)
+		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1, self.audio_int_rate, -(self.bw/2) if self.mode == 'LSB' else 0, 0 if self.mode == 'LSB' else self.bw/2, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 
 	def get_audio_int_rate(self):
 		return self.audio_int_rate
 
 	def set_audio_int_rate(self, audio_int_rate):
 		self.audio_int_rate = audio_int_rate
-		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1, self.audio_int_rate, -(self.bw/2) if self.mode == 'LSB' else 0, 0 if self.mode == 'LSB' else self.bw/2, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_1_0.set_taps(firdes.low_pass(1, self.audio_int_rate, self.bw/2.0, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 		self.gr_fractional_interpolator_xx_0.set_interp_ratio(self.audio_int_rate/self.arate)
 		self.band_pass_filter_1.set_taps(firdes.band_pass(1, self.audio_int_rate, 100, 5.5e3, 2.0e3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_3.set_taps(firdes.low_pass(1, self.audio_int_rate*8, 11.5e3, 7.5e3, firdes.WIN_HAMMING, 6.76))
+		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1, self.audio_int_rate, -(self.bw/2) if self.mode == 'LSB' else 0, 0 if self.mode == 'LSB' else self.bw/2, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 
 if __name__ == '__main__':
 	parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
