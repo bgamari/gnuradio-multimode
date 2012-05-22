@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Tue May 22 16:36:53 2012</timestamp>
+  <timestamp>Tue May 22 18:19:23 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -2577,6 +2577,29 @@
     </param>
   </block>
   <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>deviation_dict</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>{'FM' : 5.5e3, 'WFM' : 90e3, 'TV-FM' : 25e3, 'AM' : 5.5e3, 'USB' : 5.5e3, 'LSB' : 5.5e3}</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(595, 456)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>gr_complex_to_mag_squared</key>
     <param>
       <key>id</key>
@@ -2748,29 +2771,6 @@
     </param>
   </block>
   <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>k</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>quad_rate/(2*math.pi*deviation_dict[mode])</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(548, 388)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>low_pass_filter</key>
     <param>
       <key>id</key>
@@ -2819,6 +2819,84 @@
     <param>
       <key>_coordinate</key>
       <value>(768, 644)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>low_pass_filter</key>
+    <param>
+      <key>id</key>
+      <value>low_pass_filter_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>fir_filter_ccf</value>
+    </param>
+    <param>
+      <key>decim</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>interp</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>gain</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>wbfm</value>
+    </param>
+    <param>
+      <key>cutoff_freq</key>
+      <value>deviation_dict[mode]*1.15</value>
+    </param>
+    <param>
+      <key>width</key>
+      <value>deviation_dict[mode]/2.75</value>
+    </param>
+    <param>
+      <key>win</key>
+      <value>firdes.WIN_HAMMING</value>
+    </param>
+    <param>
+      <key>beta</key>
+      <value>6.76</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(538, 527)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>k</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>quad_rate/(2*math.pi*deviation_dict[mode])</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(548, 388)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2905,84 +2983,6 @@
     <param>
       <key>_coordinate</key>
       <value>(943, 1288)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>deviation_dict</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>{'FM' : 5.5e3, 'WFM' : 80e3, 'TV-FM' : 25e3, 'AM' : 5.5e3, 'USB' : 5.5e3, 'LSB' : 5.5e3}</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(595, 456)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>low_pass_filter</key>
-    <param>
-      <key>id</key>
-      <value>low_pass_filter_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>fir_filter_ccf</value>
-    </param>
-    <param>
-      <key>decim</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>interp</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>gain</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>wbfm</value>
-    </param>
-    <param>
-      <key>cutoff_freq</key>
-      <value>deviation_dict[mode]*1.15</value>
-    </param>
-    <param>
-      <key>width</key>
-      <value>deviation_dict[mode]/2.75</value>
-    </param>
-    <param>
-      <key>win</key>
-      <value>firdes.WIN_HAMMING</value>
-    </param>
-    <param>
-      <key>beta</key>
-      <value>6.76</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(538, 527)</value>
     </param>
     <param>
       <key>_rotation</key>

@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Multimode
-# Generated: Tue May 22 16:36:54 2012
+# Generated: Tue May 22 18:19:24 2012
 ##################################################
 
 from gnuradio import audio
@@ -59,7 +59,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.quad_rate = quad_rate = wbfm
 		self.mode = mode = dmode
 		self.logpower = logpower = math.log10(rf_power+1.0e-12)*10.0
-		self.deviation_dict = deviation_dict = {'FM' : 5.5e3, 'WFM' : 80e3, 'TV-FM' : 25e3, 'AM' : 5.5e3, 'USB' : 5.5e3, 'LSB' : 5.5e3}
+		self.deviation_dict = deviation_dict = {'FM' : 5.5e3, 'WFM' : 90e3, 'TV-FM' : 25e3, 'AM' : 5.5e3, 'USB' : 5.5e3, 'LSB' : 5.5e3}
 		self.adjusted = adjusted = "" if int(srate) % int(wbfm) == 0 else " (adjusted)"
 		self.xfine = xfine = xftune
 		self.volume = volume = vol
@@ -600,9 +600,9 @@ class multimode(grc_wxgui.top_block_gui):
 		self.gr_multiply_const_vxx_0_0_0.set_k((1.0 if self.mode == 'AM' else 0.0, ))
 		self.gr_multiply_const_vxx_0_0.set_k((2.0 if (self.mode == 'LSB' or self.mode == 'USB') else 0.0, ))
 		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1, self.audio_int_rate, -(self.bw/2) if self.mode == 'LSB' else 0, 0 if self.mode == 'LSB' else self.bw/2, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
+		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/2.75, firdes.WIN_HAMMING, 6.76))
 		self.set_k(self.quad_rate/(2*math.pi*self.deviation_dict[self.mode]))
 		self._mode_chooser.set_value(self.mode)
-		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/2.75, firdes.WIN_HAMMING, 6.76))
 
 	def get_logpower(self):
 		return self.logpower
@@ -616,8 +616,8 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_deviation_dict(self, deviation_dict):
 		self.deviation_dict = deviation_dict
-		self.set_k(self.quad_rate/(2*math.pi*self.deviation_dict[self.mode]))
 		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/2.75, firdes.WIN_HAMMING, 6.76))
+		self.set_k(self.quad_rate/(2*math.pi*self.deviation_dict[self.mode]))
 
 	def get_adjusted(self):
 		return self.adjusted
