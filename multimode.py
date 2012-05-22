@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Multimode
-# Generated: Mon May 21 22:28:03 2012
+# Generated: Mon May 21 22:30:18 2012
 ##################################################
 
 from gnuradio import audio
@@ -393,14 +393,12 @@ class multimode(grc_wxgui.top_block_gui):
 		self.gr_multiply_const_vxx_0_1 = gr.multiply_const_vcc((10.0 if mode == 'AM' or mode == 'LSB' or mode == 'USB' else 0.0, ))
 		self.gr_multiply_const_vxx_0_0_0 = gr.multiply_const_vff((1.0 if mode == 'AM' else 0.0, ))
 		self.gr_multiply_const_vxx_0_0 = gr.multiply_const_vff((2.0 if (mode == 'LSB' or mode == 'USB') else 0.0, ))
-		self.gr_multiply_const_vxx_0 = gr.multiply_const_vcc((0 if mode == 'AM' or mode == 'LSB' or mode == 'USB' else 1.0, ))
 		self.gr_freq_xlating_fir_filter_xxx_0_1 = gr.freq_xlating_fir_filter_ccc(1, (1.0, ), offset+fine+xfine, samp_rate)
 		self.gr_fractional_interpolator_xx_0 = gr.fractional_interpolator_ff(0, audio_int_rate/arate)
 		self.gr_feedforward_agc_cc_0 = gr.feedforward_agc_cc(1024, 0.45)
 		self.gr_complex_to_real_0 = gr.complex_to_real(1)
 		self.gr_complex_to_mag_squared_0 = gr.complex_to_mag_squared(1)
 		self.gr_agc2_xx_1 = gr.agc2_cc(1e-1, 1e-2, 0.75, 1.0, 0.0)
-		self.gr_add_xx_1 = gr.add_vcc(1)
 		self.gr_add_xx_0 = gr.add_vff(1)
 		self.blks2_fm_deemph_0 = blks2.fm_deemph(fs=audio_int_rate, tau=75e-6)
 		self.band_pass_filter_1 = gr.fir_filter_fff(1, firdes.band_pass(
@@ -436,15 +434,12 @@ class multimode(grc_wxgui.top_block_gui):
 		self.connect((self.low_pass_filter_1, 0), (self.gr_agc2_xx_1, 0))
 		self.connect((self.gr_freq_xlating_fir_filter_xxx_0_1, 0), (self.wxgui_fftsink2_0, 0))
 		self.connect((self.low_pass_filter_3, 0), (self.low_pass_filter_1_0, 0))
-		self.connect((self.gr_add_xx_1, 0), (self.rf_probe, 0))
-		self.connect((self.gr_multiply_const_vxx_0, 0), (self.gr_add_xx_1, 0))
-		self.connect((self.gr_multiply_const_vxx_0_1, 0), (self.gr_add_xx_1, 1))
 		self.connect((self.gr_complex_to_mag_squared_0, 0), (self.band_pass_filter_1, 0))
 		self.connect((self.band_pass_filter_1, 0), (self.gr_multiply_const_vxx_0_0_0, 0))
-		self.connect((self.gr_add_xx_1, 0), (self.display_probe, 0))
 		self.connect((self.low_pass_filter_3, 0), (self.gr_multiply_const_vxx_0_1, 0))
 		self.connect((self.low_pass_filter_1, 0), (self.low_pass_filter_3, 0))
-		self.connect((self.low_pass_filter_1, 0), (self.gr_multiply_const_vxx_0, 0))
+		self.connect((self.gr_multiply_const_vxx_0_1, 0), (self.rf_probe, 0))
+		self.connect((self.gr_multiply_const_vxx_0_1, 0), (self.display_probe, 0))
 
 	def get_devinfo(self):
 		return self.devinfo
@@ -605,11 +600,10 @@ class multimode(grc_wxgui.top_block_gui):
 		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1, self.audio_int_rate, -(self.bw/2) if self.mode == 'LSB' else 0, 0 if self.mode == 'LSB' else self.bw/2, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode], self.deviation_dict[self.mode]/3.3, firdes.WIN_HAMMING, 6.76))
 		self._mode_chooser.set_value(self.mode)
-		self.gr_multiply_const_vxx_0_1.set_k((10.0 if self.mode == 'AM' or self.mode == 'LSB' or self.mode == 'USB' else 0.0, ))
 		self.gr_multiply_const_vxx_0_0_0.set_k((1.0 if self.mode == 'AM' else 0.0, ))
 		self.gr_multiply_const_vxx_0_0.set_k((2.0 if (self.mode == 'LSB' or self.mode == 'USB') else 0.0, ))
 		self.set_k(self.quad_rate/(2*math.pi*self.deviation_dict[self.mode]))
-		self.gr_multiply_const_vxx_0.set_k((0 if self.mode == 'AM' or self.mode == 'LSB' or self.mode == 'USB' else 1.0, ))
+		self.gr_multiply_const_vxx_0_1.set_k((10.0 if self.mode == 'AM' or self.mode == 'LSB' or self.mode == 'USB' else 0.0, ))
 
 	def get_logpower(self):
 		return self.logpower

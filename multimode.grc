@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Mon May 21 22:28:03 2012</timestamp>
+  <timestamp>Mon May 21 22:30:18 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -1008,29 +1008,6 @@
     <param>
       <key>_coordinate</key>
       <value>(12, 189)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>audio_int_rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>25e3</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(92, 273)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2375,37 +2352,6 @@
     </param>
   </block>
   <block>
-    <key>gr_multiply_const_vxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_multiply_const_vxx_0_1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>const</key>
-      <value>10.0 if mode == 'AM' or mode == 'LSB' or mode == 'USB' else 0.0</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(225, 385)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_complex_to_mag_squared</key>
     <param>
       <key>id</key>
@@ -2566,37 +2512,6 @@
     <param>
       <key>_coordinate</key>
       <value>(8, 510)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_add_xx</key>
-    <param>
-      <key>id</key>
-      <value>gr_add_xx_1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(390, 308)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2780,68 +2695,6 @@
     </param>
   </block>
   <block>
-    <key>gr_probe_avg_mag_sqrd_x</key>
-    <param>
-      <key>id</key>
-      <value>rf_probe</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>c</value>
-    </param>
-    <param>
-      <key>threshold</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>alpha</key>
-      <value>0.02</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(340, 152)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_probe_avg_mag_sqrd_x</key>
-    <param>
-      <key>id</key>
-      <value>display_probe</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>c</value>
-    </param>
-    <param>
-      <key>threshold</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>alpha</key>
-      <value>0.005</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(342, 216)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>variable</key>
     <param>
       <key>id</key>
@@ -2966,37 +2819,6 @@
     </param>
   </block>
   <block>
-    <key>gr_multiply_const_vxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_multiply_const_vxx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>const</key>
-      <value>0 if mode == 'AM' or mode == 'LSB' or mode == 'USB' else 1.0</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(228, 282)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>low_pass_filter</key>
     <param>
       <key>id</key>
@@ -3045,6 +2867,122 @@
     <param>
       <key>_coordinate</key>
       <value>(316, 611)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>audio_int_rate</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>25e3</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(102, 81)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_probe_avg_mag_sqrd_x</key>
+    <param>
+      <key>id</key>
+      <value>rf_probe</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>c</value>
+    </param>
+    <param>
+      <key>threshold</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>alpha</key>
+      <value>0.02</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(340, 152)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_multiply_const_vxx</key>
+    <param>
+      <key>id</key>
+      <value>gr_multiply_const_vxx_0_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>const</key>
+      <value>10.0 if mode == 'AM' or mode == 'LSB' or mode == 'USB' else 0.0</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(172, 310)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_probe_avg_mag_sqrd_x</key>
+    <param>
+      <key>id</key>
+      <value>display_probe</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>c</value>
+    </param>
+    <param>
+      <key>threshold</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>alpha</key>
+      <value>0.005</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(342, 216)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3196,24 +3134,6 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_add_xx_1</source_block_id>
-    <sink_block_id>rf_probe</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>gr_multiply_const_vxx_0</source_block_id>
-    <sink_block_id>gr_add_xx_1</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>gr_multiply_const_vxx_0_1</source_block_id>
-    <sink_block_id>gr_add_xx_1</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>1</sink_key>
-  </connection>
-  <connection>
     <source_block_id>gr_complex_to_mag_squared_0</source_block_id>
     <sink_block_id>band_pass_filter_1</sink_block_id>
     <source_key>0</source_key>
@@ -3222,12 +3142,6 @@
   <connection>
     <source_block_id>band_pass_filter_1</source_block_id>
     <sink_block_id>gr_multiply_const_vxx_0_0_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>gr_add_xx_1</source_block_id>
-    <sink_block_id>display_probe</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -3244,8 +3158,14 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>low_pass_filter_1</source_block_id>
-    <sink_block_id>gr_multiply_const_vxx_0</sink_block_id>
+    <source_block_id>gr_multiply_const_vxx_0_1</source_block_id>
+    <sink_block_id>rf_probe</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>gr_multiply_const_vxx_0_1</source_block_id>
+    <sink_block_id>display_probe</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
