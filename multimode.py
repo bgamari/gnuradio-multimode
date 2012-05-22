@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Multimode
-# Generated: Mon May 21 23:01:22 2012
+# Generated: Tue May 22 16:36:54 2012
 ##################################################
 
 from gnuradio import audio
@@ -25,7 +25,7 @@ import wx
 
 class multimode(grc_wxgui.top_block_gui):
 
-	def __init__(self, devinfo="rtl=0", ahw="default", freq=150.0e6, ppm=0.0, vol=1.0, ftune=0.0, xftune=0.0, offs=50.e3, mbw=2.0e3, dmode='FM', mthresh=-10.0, arate=48.0e3, srate=1.0e6, agc=0):
+	def __init__(self, devinfo="rtl=0", ahw="default", freq=150.0e6, ppm=0.0, vol=1.0, ftune=0.0, xftune=0.0, offs=50.e3, mbw=2.0e3, mthresh=-10.0, arate=48.0e3, srate=1.0e6, agc=0, dmode="FM"):
 		grc_wxgui.top_block_gui.__init__(self, title="Multimode")
 		_icon_path = "/usr/share/icons/hicolor/32x32/apps/gnuradio-grc.png"
 		self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
@@ -42,11 +42,11 @@ class multimode(grc_wxgui.top_block_gui):
 		self.xftune = xftune
 		self.offs = offs
 		self.mbw = mbw
-		self.dmode = dmode
 		self.mthresh = mthresh
 		self.arate = arate
 		self.srate = srate
 		self.agc = agc
+		self.dmode = dmode
 
 		##################################################
 		# Variables
@@ -59,7 +59,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.quad_rate = quad_rate = wbfm
 		self.mode = mode = dmode
 		self.logpower = logpower = math.log10(rf_power+1.0e-12)*10.0
-		self.deviation_dict = deviation_dict = {'FM' : 5.5e3, 'WFM' : 90e3, 'TV-FM' : 25e3, 'AM' : 5.5e3, 'USB' : 5.5e3, 'LSB' : 5.5e3}
+		self.deviation_dict = deviation_dict = {'FM' : 5.5e3, 'WFM' : 80e3, 'TV-FM' : 25e3, 'AM' : 5.5e3, 'USB' : 5.5e3, 'LSB' : 5.5e3}
 		self.adjusted = adjusted = "" if int(srate) % int(wbfm) == 0 else " (adjusted)"
 		self.xfine = xfine = xftune
 		self.volume = volume = vol
@@ -503,13 +503,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self.mbw = mbw
 		self.set_bw(self.mbw)
 
-	def get_dmode(self):
-		return self.dmode
-
-	def set_dmode(self, dmode):
-		self.dmode = dmode
-		self.set_mode(self.dmode)
-
 	def get_mthresh(self):
 		return self.mthresh
 
@@ -538,6 +531,13 @@ class multimode(grc_wxgui.top_block_gui):
 	def set_agc(self, agc):
 		self.agc = agc
 		self.set_iagc(self.agc)
+
+	def get_dmode(self):
+		return self.dmode
+
+	def set_dmode(self, dmode):
+		self.dmode = dmode
+		self.set_mode(self.dmode)
 
 	def get_wbfm(self):
 		return self.wbfm
@@ -597,11 +597,11 @@ class multimode(grc_wxgui.top_block_gui):
 	def set_mode(self, mode):
 		self.mode = mode
 		self.gr_multiply_const_vxx_2.set_k((1.0 if self.mode == 'WFM' or self.mode == 'FM' or self.mode == 'TV-FM' else 0.0, ))
-		self._mode_chooser.set_value(self.mode)
 		self.gr_multiply_const_vxx_0_0_0.set_k((1.0 if self.mode == 'AM' else 0.0, ))
 		self.gr_multiply_const_vxx_0_0.set_k((2.0 if (self.mode == 'LSB' or self.mode == 'USB') else 0.0, ))
 		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1, self.audio_int_rate, -(self.bw/2) if self.mode == 'LSB' else 0, 0 if self.mode == 'LSB' else self.bw/2, self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 		self.set_k(self.quad_rate/(2*math.pi*self.deviation_dict[self.mode]))
+		self._mode_chooser.set_value(self.mode)
 		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/2.75, firdes.WIN_HAMMING, 6.76))
 
 	def get_logpower(self):
@@ -783,8 +783,6 @@ if __name__ == '__main__':
 		help="Set LO Offset [default=%default]")
 	parser.add_option("", "--mbw", dest="mbw", type="eng_float", default=eng_notation.num_to_str(2.0e3),
 		help="Set AM/SSB Demod Bandwidth [default=%default]")
-	parser.add_option("", "--dmode", dest="dmode", type="string", default='FM',
-		help="Set Demod Mode [default=%default]")
 	parser.add_option("", "--mthresh", dest="mthresh", type="eng_float", default=eng_notation.num_to_str(-10.0),
 		help="Set Mute Threshold (dB) [default=%default]")
 	parser.add_option("", "--arate", dest="arate", type="eng_float", default=eng_notation.num_to_str(48.0e3),
@@ -793,7 +791,9 @@ if __name__ == '__main__':
 		help="Set RF Sample Rate [default=%default]")
 	parser.add_option("", "--agc", dest="agc", type="intx", default=0,
 		help="Set AGC On/Off [default=%default]")
+	parser.add_option("", "--dmode", dest="dmode", type="string", default="FM",
+		help="Set Demod Mode [default=%default]")
 	(options, args) = parser.parse_args()
-	tb = multimode(devinfo=options.devinfo, ahw=options.ahw, freq=options.freq, ppm=options.ppm, vol=options.vol, ftune=options.ftune, xftune=options.xftune, offs=options.offs, mbw=options.mbw, dmode=options.dmode, mthresh=options.mthresh, arate=options.arate, srate=options.srate, agc=options.agc)
+	tb = multimode(devinfo=options.devinfo, ahw=options.ahw, freq=options.freq, ppm=options.ppm, vol=options.vol, ftune=options.ftune, xftune=options.xftune, offs=options.offs, mbw=options.mbw, mthresh=options.mthresh, arate=options.arate, srate=options.srate, agc=options.agc, dmode=options.dmode)
 	tb.Run(True)
 
