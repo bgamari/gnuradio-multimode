@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Multimode
-# Generated: Tue May 22 19:53:08 2012
+# Generated: Wed May 23 15:49:07 2012
 ##################################################
 
 from gnuradio import audio
@@ -59,7 +59,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.quad_rate = quad_rate = wbfm
 		self.mode = mode = dmode
 		self.logpower = logpower = math.log10(rf_power+1.0e-12)*10.0
-		self.deviation_dict = deviation_dict = {'FM' : 5.5e3, 'WFM' : 90e3, 'TV-FM' : 25e3, 'AM' : 5.5e3, 'USB' : 5.5e3, 'LSB' : 5.5e3}
+		self.deviation_dict = deviation_dict = {'FM' : 5.5e3, 'WFM' : 80e3, 'TV-FM' : 25e3, 'AM' : 5.5e3, 'USB' : 5.5e3, 'LSB' : 5.5e3}
 		self.adjusted = adjusted = "" if int(srate) % int(wbfm) == 0 else " (adjusted)"
 		self.xfine = xfine = xftune
 		self.volume = volume = vol
@@ -150,7 +150,7 @@ class multimode(grc_wxgui.top_block_gui):
 			proportion=1,
 		)
 		self.GridAdd(_rfgain_sizer, 2, 1, 1, 1)
-		self.rf_probe = gr.probe_avg_mag_sqrd_c(0, 0.02)
+		self.rf_probe = gr.probe_avg_mag_sqrd_c(0, 0.01)
 		self._record_file_text_box = forms.text_box(
 			parent=self.GetWin(),
 			value=self.record_file,
