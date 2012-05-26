@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sat May 26 14:43:26 2012</timestamp>
+  <timestamp>Sat May 26 14:56:06 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -2974,7 +2974,7 @@
     </param>
     <param>
       <key>ok_to_block</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>num_inputs</key>
