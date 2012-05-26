@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Multimode
-# Generated: Thu May 24 18:01:42 2012
+# Generated: Sat May 26 14:42:30 2012
 ##################################################
 
 from gnuradio import audio
@@ -405,7 +405,7 @@ class multimode(grc_wxgui.top_block_gui):
 			1.25, audio_int_rate, 100, 5.5e3, 2.0e3, firdes.WIN_HAMMING, 6.76))
 		self.band_pass_filter_0 = gr.fir_filter_ccc(1, firdes.complex_band_pass(
 			1.0, audio_int_rate, -(bw) if mode == 'LSB' else bw/12, bw/12 if mode == 'LSB' else bw, bw/3.5, firdes.WIN_HAMMING, 6.76))
-		self.audio_sink_0 = audio.sink(int(arate), ahw, True)
+		self.audio_sink_0 = audio.sink(int(arate), ahw, False)
 
 		##################################################
 		# Connections

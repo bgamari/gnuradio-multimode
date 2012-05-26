@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Thu May 24 18:01:42 2012</timestamp>
+  <timestamp>Sat May 26 14:42:29 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -1253,41 +1253,6 @@
     <param>
       <key>_coordinate</key>
       <value>(150, 1049)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>audio_sink</key>
-    <param>
-      <key>id</key>
-      <value>audio_sink_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>int(arate)</value>
-    </param>
-    <param>
-      <key>device_name</key>
-      <value>ahw</value>
-    </param>
-    <param>
-      <key>ok_to_block</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1384, 512)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2983,6 +2948,41 @@
     <param>
       <key>_coordinate</key>
       <value>(1092, 152)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>audio_sink</key>
+    <param>
+      <key>id</key>
+      <value>audio_sink_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>int(arate)</value>
+    </param>
+    <param>
+      <key>device_name</key>
+      <value>ahw</value>
+    </param>
+    <param>
+      <key>ok_to_block</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1384, 512)</value>
     </param>
     <param>
       <key>_rotation</key>
