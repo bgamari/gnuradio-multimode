@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 ##################################################
 # Gnuradio Python Flow Graph
-# Title: Multimode
-# Generated: Sat May 26 14:56:07 2012
+# Title: Multimode Radio Receiver
+# Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
+# Generated: Sun May 27 13:48:31 2012
 ##################################################
 
 from gnuradio import audio
@@ -26,7 +27,7 @@ import wx
 class multimode(grc_wxgui.top_block_gui):
 
 	def __init__(self, devinfo="rtl=0", ahw="default", freq=150.0e6, ppm=0.0, vol=1.0, ftune=0.0, xftune=0.0, offs=50.e3, mbw=2.0e3, mthresh=-10.0, arate=48.0e3, srate=1.0e6, agc=0, dmode="FM"):
-		grc_wxgui.top_block_gui.__init__(self, title="Multimode")
+		grc_wxgui.top_block_gui.__init__(self, title="Multimode Radio Receiver")
 		_icon_path = "/usr/share/icons/hicolor/32x32/apps/gnuradio-grc.png"
 		self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
 
