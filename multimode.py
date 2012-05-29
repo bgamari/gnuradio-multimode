@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Sun May 27 13:48:31 2012
+# Generated: Tue May 29 17:02:32 2012
 ##################################################
 
 from gnuradio import audio
@@ -26,7 +26,7 @@ import wx
 
 class multimode(grc_wxgui.top_block_gui):
 
-	def __init__(self, devinfo="rtl=0", ahw="default", freq=150.0e6, ppm=0.0, vol=1.0, ftune=0.0, xftune=0.0, offs=50.e3, mbw=2.0e3, mthresh=-10.0, arate=48.0e3, srate=1.0e6, agc=0, dmode="FM"):
+	def __init__(self, devinfo="rtl=0", ahw="default", freq=150.0e6, ppm=0.0, vol=1.0, ftune=0.0, xftune=0.0, offs=50.e3, mbw=2.0e3, mthresh=-10.0, arate=48.0e3, srate=1.0e6, dmode="FM", agc=0, upce=0, upclo=0.0):
 		grc_wxgui.top_block_gui.__init__(self, title="Multimode Radio Receiver")
 		_icon_path = "/usr/share/icons/hicolor/32x32/apps/gnuradio-grc.png"
 		self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
@@ -46,8 +46,10 @@ class multimode(grc_wxgui.top_block_gui):
 		self.mthresh = mthresh
 		self.arate = arate
 		self.srate = srate
-		self.agc = agc
 		self.dmode = dmode
+		self.agc = agc
+		self.upce = upce
+		self.upclo = upclo
 
 		##################################################
 		# Variables
@@ -67,6 +69,8 @@ class multimode(grc_wxgui.top_block_gui):
 		self.variable_static_text_1_0 = variable_static_text_1_0 = devinfo
 		self.variable_static_text_1 = variable_static_text_1 = str(samp_rate/1.0e6)+"Msps"+adjusted
 		self.variable_static_text_0 = variable_static_text_0 = float(int(math.log10(rf_d_power+1.0e-14)*100.0)/10.0)
+		self.upc_offset = upc_offset = upclo
+		self.upc = upc = upce
 		self.rfgain = rfgain = 25
 		self.record_file = record_file = "recording.wav"
 		self.record = record = False
@@ -128,6 +132,23 @@ class multimode(grc_wxgui.top_block_gui):
 			proportion=1,
 		)
 		self.GridAdd(_volume_sizer, 0, 0, 1, 1)
+		self._upc_offset_text_box = forms.text_box(
+			parent=self.GetWin(),
+			value=self.upc_offset,
+			callback=self.set_upc_offset,
+			label="Upconv. LO Freq",
+			converter=forms.float_converter(),
+		)
+		self.GridAdd(self._upc_offset_text_box, 3, 3, 1, 1)
+		self._upc_check_box = forms.check_box(
+			parent=self.GetWin(),
+			value=self.upc,
+			callback=self.set_upc,
+			label="Ext. Upconv.",
+			true=1,
+			false=0,
+		)
+		self.GridAdd(self._upc_check_box, 3, 2, 1, 1)
 		_rfgain_sizer = wx.BoxSizer(wx.VERTICAL)
 		self._rfgain_text_box = forms.text_box(
 			parent=self.GetWin(),
@@ -313,7 +334,7 @@ class multimode(grc_wxgui.top_block_gui):
 			label="Devinfo",
 			converter=forms.str_converter(),
 		)
-		self.GridAdd(self._variable_static_text_1_0_static_text, 3, 0, 1, 3)
+		self.GridAdd(self._variable_static_text_1_0_static_text, 3, 0, 1, 2)
 		self._variable_static_text_1_static_text = forms.static_text(
 			parent=self.GetWin(),
 			value=self.variable_static_text_1,
@@ -373,7 +394,7 @@ class multimode(grc_wxgui.top_block_gui):
 		_rf_d_power_thread.start()
 		self.osmosdr_source_c_0 = osmosdr.source_c( args="nchan=" + str(1) + " " + devinfo  )
 		self.osmosdr_source_c_0.set_sample_rate(samp_rate)
-		self.osmosdr_source_c_0.set_center_freq(ifreq+offset, 0)
+		self.osmosdr_source_c_0.set_center_freq(ifreq+offset+(upc_offset*float(upc)), 0)
 		self.osmosdr_source_c_0.set_freq_corr(ppm, 0)
 		self.osmosdr_source_c_0.set_gain_mode(iagc, 0)
 		self.osmosdr_source_c_0.set_gain(25 if iagc == 1 else rfgain, 0)
@@ -526,6 +547,13 @@ class multimode(grc_wxgui.top_block_gui):
 		self.set_samp_rate(int(int(self.srate/self.wbfm)*self.wbfm))
 		self.set_adjusted("" if int(self.srate) % int(self.wbfm) == 0 else " (adjusted)")
 
+	def get_dmode(self):
+		return self.dmode
+
+	def set_dmode(self, dmode):
+		self.dmode = dmode
+		self.set_mode(self.dmode)
+
 	def get_agc(self):
 		return self.agc
 
@@ -533,12 +561,19 @@ class multimode(grc_wxgui.top_block_gui):
 		self.agc = agc
 		self.set_iagc(self.agc)
 
-	def get_dmode(self):
-		return self.dmode
+	def get_upce(self):
+		return self.upce
 
-	def set_dmode(self, dmode):
-		self.dmode = dmode
-		self.set_mode(self.dmode)
+	def set_upce(self, upce):
+		self.upce = upce
+		self.set_upc(self.upce)
+
+	def get_upclo(self):
+		return self.upclo
+
+	def set_upclo(self, upclo):
+		self.upclo = upclo
+		self.set_upc_offset(self.upclo)
 
 	def get_wbfm(self):
 		return self.wbfm
@@ -573,10 +608,10 @@ class multimode(grc_wxgui.top_block_gui):
 	def set_samp_rate(self, samp_rate):
 		self.samp_rate = samp_rate
 		self.set_variable_static_text_1(str(self.samp_rate/1.0e6)+"Msps"+self.adjusted)
-		self.osmosdr_source_c_0.set_sample_rate(self.samp_rate)
 		self.wxgui_fftsink2_0.set_sample_rate(self.samp_rate)
 		self.wxgui_waterfallsink2_0.set_sample_rate(self.samp_rate)
 		self.low_pass_filter_1.set_taps(firdes.low_pass(1, self.samp_rate, 98e3, 55e3, firdes.WIN_HAMMING, 6.76))
+		self.osmosdr_source_c_0.set_sample_rate(self.samp_rate)
 
 	def get_rf_d_power(self):
 		return self.rf_d_power
@@ -666,6 +701,22 @@ class multimode(grc_wxgui.top_block_gui):
 		self.variable_static_text_0 = variable_static_text_0
 		self._variable_static_text_0_static_text.set_value(self.variable_static_text_0)
 
+	def get_upc_offset(self):
+		return self.upc_offset
+
+	def set_upc_offset(self, upc_offset):
+		self.upc_offset = upc_offset
+		self.osmosdr_source_c_0.set_center_freq(self.ifreq+self.offset+(self.upc_offset*float(self.upc)), 0)
+		self._upc_offset_text_box.set_value(self.upc_offset)
+
+	def get_upc(self):
+		return self.upc
+
+	def set_upc(self, upc):
+		self.upc = upc
+		self._upc_check_box.set_value(self.upc)
+		self.osmosdr_source_c_0.set_center_freq(self.ifreq+self.offset+(self.upc_offset*float(self.upc)), 0)
+
 	def get_rfgain(self):
 		return self.rfgain
 
@@ -699,7 +750,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self._offset_slider.set_value(self.offset)
 		self._offset_text_box.set_value(self.offset)
 		self.gr_freq_xlating_fir_filter_xxx_0_1.set_center_freq(self.offset+self.fine+self.xfine)
-		self.osmosdr_source_c_0.set_center_freq(self.ifreq+self.offset, 0)
+		self.osmosdr_source_c_0.set_center_freq(self.ifreq+self.offset+(self.upc_offset*float(self.upc)), 0)
 
 	def get_muted(self):
 		return self.muted
@@ -721,9 +772,9 @@ class multimode(grc_wxgui.top_block_gui):
 	def set_ifreq(self, ifreq):
 		self.ifreq = ifreq
 		self._ifreq_text_box.set_value(self.ifreq)
-		self.osmosdr_source_c_0.set_center_freq(self.ifreq+self.offset, 0)
 		self.wxgui_fftsink2_0.set_baseband_freq(self.ifreq)
 		self.wxgui_waterfallsink2_0.set_baseband_freq(self.ifreq)
+		self.osmosdr_source_c_0.set_center_freq(self.ifreq+self.offset+(self.upc_offset*float(self.upc)), 0)
 
 	def get_iagc(self):
 		return self.iagc
@@ -790,11 +841,15 @@ if __name__ == '__main__':
 		help="Set Audio Sample Rate [default=%default]")
 	parser.add_option("", "--srate", dest="srate", type="eng_float", default=eng_notation.num_to_str(1.0e6),
 		help="Set RF Sample Rate [default=%default]")
-	parser.add_option("", "--agc", dest="agc", type="intx", default=0,
-		help="Set AGC On/Off [default=%default]")
 	parser.add_option("", "--dmode", dest="dmode", type="string", default="FM",
 		help="Set Demod Mode [default=%default]")
+	parser.add_option("", "--agc", dest="agc", type="intx", default=0,
+		help="Set AGC On/Off [default=%default]")
+	parser.add_option("", "--upce", dest="upce", type="intx", default=0,
+		help="Set Upconverter Enabled [default=%default]")
+	parser.add_option("", "--upclo", dest="upclo", type="eng_float", default=eng_notation.num_to_str(0.0),
+		help="Set Upconverter LO Frequency [default=%default]")
 	(options, args) = parser.parse_args()
-	tb = multimode(devinfo=options.devinfo, ahw=options.ahw, freq=options.freq, ppm=options.ppm, vol=options.vol, ftune=options.ftune, xftune=options.xftune, offs=options.offs, mbw=options.mbw, mthresh=options.mthresh, arate=options.arate, srate=options.srate, agc=options.agc, dmode=options.dmode)
+	tb = multimode(devinfo=options.devinfo, ahw=options.ahw, freq=options.freq, ppm=options.ppm, vol=options.vol, ftune=options.ftune, xftune=options.xftune, offs=options.offs, mbw=options.mbw, mthresh=options.mthresh, arate=options.arate, srate=options.srate, dmode=options.dmode, agc=options.agc, upce=options.upce, upclo=options.upclo)
 	tb.Run(True)
 
