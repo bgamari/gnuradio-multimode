@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Wed May 30 20:36:52 2012
+# Generated: Wed May 30 20:56:19 2012
 ##################################################
 
 from gnuradio import audio
@@ -69,6 +69,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.sc_ena = sc_ena = False
 		self.rf_power = rf_power = 0
 		self.ifreq = ifreq = freq
+		self.samp_rate = samp_rate = int(int(srate/wbfm)*wbfm)
 		self.rf_d_power = rf_d_power = 0
 		self.quad_rate = quad_rate = wbfm
 		self.mode = mode = dmode
@@ -78,12 +79,12 @@ class multimode(grc_wxgui.top_block_gui):
 		self.bw = bw = mbw
 		self.xfine = xfine = xftune
 		self.volume = volume = vol
+		self.variable_static_text_1_0 = variable_static_text_1_0 = samp_rate
 		self.variable_static_text_1 = variable_static_text_1 = cur_freq
 		self.variable_static_text_0 = variable_static_text_0 = float(int(math.log10(rf_d_power+1.0e-14)*100.0)/10.0)
 		self.upc_offset = upc_offset = upclo
 		self.upc = upc = upce
 		self.sc_list_len = sc_list_len = len(sc_list)
-		self.samp_rate = samp_rate = int(int(srate/wbfm)*wbfm)
 		self.rfgain = rfgain = 25
 		self.record_file = record_file = "recording.wav"
 		self.record = record = False
@@ -347,6 +348,14 @@ class multimode(grc_wxgui.top_block_gui):
 			self.set_freq(x)
 		
 		self.wxgui_fftsink2_0.set_callback(wxgui_fftsink2_0_callback)
+		self._variable_static_text_1_0_static_text = forms.static_text(
+			parent=self.Main.GetPage(0).GetWin(),
+			value=self.variable_static_text_1_0,
+			callback=self.set_variable_static_text_1_0,
+			label="Adjusted Sample Rate",
+			converter=forms.float_converter(),
+		)
+		self.Main.GetPage(0).GridAdd(self._variable_static_text_1_0_static_text, 1, 4, 1, 1)
 		self._variable_static_text_1_static_text = forms.static_text(
 			parent=self.Main.GetPage(1).GetWin(),
 			value=self.variable_static_text_1,
@@ -763,6 +772,17 @@ class multimode(grc_wxgui.top_block_gui):
 		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
 		self._ifreq_text_box.set_value(self.ifreq)
 
+	def get_samp_rate(self):
+		return self.samp_rate
+
+	def set_samp_rate(self, samp_rate):
+		self.samp_rate = samp_rate
+		self.low_pass_filter_1.set_taps(firdes.low_pass(1, self.samp_rate, 98e3, 55e3, firdes.WIN_HAMMING, 6.76))
+		self.osmosdr_source_c_0.set_sample_rate(self.samp_rate)
+		self.wxgui_fftsink2_0.set_sample_rate(self.samp_rate)
+		self.wxgui_waterfallsink2_0.set_sample_rate(self.samp_rate)
+		self.set_variable_static_text_1_0(self.samp_rate)
+
 	def get_rf_d_power(self):
 		return self.rf_d_power
 
@@ -842,6 +862,13 @@ class multimode(grc_wxgui.top_block_gui):
 		self._volume_slider.set_value(self.volume)
 		self._volume_text_box.set_value(self.volume)
 
+	def get_variable_static_text_1_0(self):
+		return self.variable_static_text_1_0
+
+	def set_variable_static_text_1_0(self, variable_static_text_1_0):
+		self.variable_static_text_1_0 = variable_static_text_1_0
+		self._variable_static_text_1_0_static_text.set_value(self.variable_static_text_1_0)
+
 	def get_variable_static_text_1(self):
 		return self.variable_static_text_1
 
@@ -877,16 +904,6 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_sc_list_len(self, sc_list_len):
 		self.sc_list_len = sc_list_len
-
-	def get_samp_rate(self):
-		return self.samp_rate
-
-	def set_samp_rate(self, samp_rate):
-		self.samp_rate = samp_rate
-		self.low_pass_filter_1.set_taps(firdes.low_pass(1, self.samp_rate, 98e3, 55e3, firdes.WIN_HAMMING, 6.76))
-		self.osmosdr_source_c_0.set_sample_rate(self.samp_rate)
-		self.wxgui_fftsink2_0.set_sample_rate(self.samp_rate)
-		self.wxgui_waterfallsink2_0.set_sample_rate(self.samp_rate)
 
 	def get_rfgain(self):
 		return self.rfgain
