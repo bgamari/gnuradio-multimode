@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Wed May 30 20:56:19 2012
+# Generated: Wed May 30 22:01:32 2012
 ##################################################
 
 from gnuradio import audio
@@ -105,7 +105,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.rf_probe = gr.probe_avg_mag_sqrd_c(0, 0.02)
 		self.Main = self.Main = wx.Notebook(self.GetWin(), style=wx.NB_TOP)
 		self.Main.AddPage(grc_wxgui.Panel(self.Main), "Main Controls")
-		self.Main.AddPage(grc_wxgui.Panel(self.Main), "Scan/Upconv Controls")
+		self.Main.AddPage(grc_wxgui.Panel(self.Main), "Scan/Upconv Controls/Detail")
 		self.Add(self.Main)
 		_xfine_sizer = wx.BoxSizer(wx.VERTICAL)
 		self._xfine_text_box = forms.text_box(
@@ -308,27 +308,59 @@ class multimode(grc_wxgui.top_block_gui):
 			proportion=1,
 		)
 		self.Main.GetPage(0).GridAdd(_bw_sizer, 1, 2, 1, 1)
+		self.wxgui_waterfallsink2_0_0 = waterfallsink2.waterfall_sink_c(
+			self.Main.GetPage(1).GetWin(),
+			baseband_freq=0,
+			dynamic_range=40,
+			ref_level=0,
+			ref_scale=2.0,
+			sample_rate=audio_int_rate,
+			fft_size=1024,
+			fft_rate=5,
+			average=True,
+			avg_alpha=None,
+			title="Detailed Spectrogram",
+			win=window.hamming,
+		)
+		self.Main.GetPage(1).Add(self.wxgui_waterfallsink2_0_0.win)
 		self.wxgui_waterfallsink2_0 = waterfallsink2.waterfall_sink_c(
-			self.GetWin(),
+			self.Main.GetPage(0).GetWin(),
 			baseband_freq=mh.get_last_returned(freq_update),
 			dynamic_range=40,
 			ref_level=0,
 			ref_scale=2.0,
 			sample_rate=samp_rate,
 			fft_size=1024,
-			fft_rate=8,
+			fft_rate=6,
 			average=True,
 			avg_alpha=None,
 			title="Spectrogram",
 			win=window.hamming,
 		)
-		self.Add(self.wxgui_waterfallsink2_0.win)
+		self.Main.GetPage(0).Add(self.wxgui_waterfallsink2_0.win)
 		def wxgui_waterfallsink2_0_callback(x, y):
 			self.set_freq(x)
 		
 		self.wxgui_waterfallsink2_0.set_callback(wxgui_waterfallsink2_0_callback)
+		self.wxgui_fftsink2_0_0 = fftsink2.fft_sink_c(
+			self.Main.GetPage(1).GetWin(),
+			baseband_freq=0,
+			y_per_div=10,
+			y_divs=10,
+			ref_level=0,
+			ref_scale=2.0,
+			sample_rate=audio_int_rate,
+			fft_size=1024,
+			fft_rate=5,
+			average=True,
+			avg_alpha=0.250,
+			title="Detailed Spectrum",
+			peak_hold=False,
+			win=window.hamming,
+		)
+		self.Main.GetPage(1).Add(self.wxgui_fftsink2_0_0.win)
 		self.wxgui_fftsink2_0 = fftsink2.fft_sink_c(
-			self.GetWin(),
+			self.Main.GetPage(0).GetWin(),
 			baseband_freq=mh.get_last_returned(freq_update),
 			y_per_div=10,
 			y_divs=10,
@@ -336,14 +368,14 @@ class multimode(grc_wxgui.top_block_gui):
 			ref_scale=2.0,
 			sample_rate=samp_rate,
 			fft_size=1024,
-			fft_rate=10,
+			fft_rate=6,
 			average=True,
 			avg_alpha=0.1,
 			title="Panorama",
 			peak_hold=False,
 			win=window.hamming,
 		)
-		self.Add(self.wxgui_fftsink2_0.win)
+		self.Main.GetPage(0).Add(self.wxgui_fftsink2_0.win)
 		def wxgui_fftsink2_0_callback(x, y):
 			self.set_freq(x)
 		
@@ -479,6 +511,8 @@ class multimode(grc_wxgui.top_block_gui):
 		self.osmosdr_source_c_0.set_freq_corr(ppm, 0)
 		self.osmosdr_source_c_0.set_gain_mode(iagc, 0)
 		self.osmosdr_source_c_0.set_gain(25 if iagc == 1 else rfgain, 0)
+		self.low_pass_filter_3 = gr.fir_filter_ccf(int(wbfm/audio_int_rate), firdes.low_pass(
+			1, wbfm, 11.5e3, 5.5e3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_2 = gr.fir_filter_fff(int(quad_rate/audio_int_rate), firdes.low_pass(
 			1, wbfm, 11.5e3, 4e3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_1 = gr.fir_filter_ccf(int(samp_rate/wbfm), firdes.low_pass(
@@ -545,6 +579,9 @@ class multimode(grc_wxgui.top_block_gui):
 		self.connect((self.band_pass_filter_0, 0), (self.gr_feedforward_agc_cc_0, 0))
 		self.connect((self.gr_multiply_const_vxx_2, 0), (self.gr_add_xx_0, 0))
 		self.connect((self.gr_complex_to_real_0, 0), (self.gr_multiply_const_vxx_0_0, 0))
+		self.connect((self.low_pass_filter_3, 0), (self.wxgui_waterfallsink2_0_0, 0))
+		self.connect((self.low_pass_filter_1, 0), (self.low_pass_filter_3, 0))
+		self.connect((self.low_pass_filter_3, 0), (self.wxgui_fftsink2_0_0, 0))
 
 	def get_ahw(self):
 		return self.ahw
@@ -680,10 +717,11 @@ class multimode(grc_wxgui.top_block_gui):
 		self.wbfm = wbfm
 		self.set_samp_rate(int(int(self.srate/self.wbfm)*self.wbfm))
 		self.set_adjusted("" if int(self.srate) % int(self.wbfm) == 0 else " (adjusted)")
-		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.audio_int_rate))
 		self.set_quad_rate(self.wbfm)
 		self.low_pass_filter_2.set_taps(firdes.low_pass(1, self.wbfm, 11.5e3, 4e3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/2.0, firdes.WIN_HAMMING, 6.76))
+		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.audio_int_rate))
+		self.low_pass_filter_3.set_taps(firdes.low_pass(1, self.wbfm, 11.5e3, 5.5e3, firdes.WIN_HAMMING, 6.76))
 
 	def get_thresh(self):
 		return self.thresh
@@ -777,11 +815,11 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_samp_rate(self, samp_rate):
 		self.samp_rate = samp_rate
-		self.low_pass_filter_1.set_taps(firdes.low_pass(1, self.samp_rate, 98e3, 55e3, firdes.WIN_HAMMING, 6.76))
 		self.osmosdr_source_c_0.set_sample_rate(self.samp_rate)
-		self.wxgui_fftsink2_0.set_sample_rate(self.samp_rate)
-		self.wxgui_waterfallsink2_0.set_sample_rate(self.samp_rate)
 		self.set_variable_static_text_1_0(self.samp_rate)
+		self.low_pass_filter_1.set_taps(firdes.low_pass(1, self.samp_rate, 98e3, 55e3, firdes.WIN_HAMMING, 6.76))
+		self.wxgui_waterfallsink2_0.set_sample_rate(self.samp_rate)
+		self.wxgui_fftsink2_0.set_sample_rate(self.samp_rate)
 
 	def get_rf_d_power(self):
 		return self.rf_d_power
@@ -968,8 +1006,8 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_freq_update(self, freq_update):
 		self.freq_update = freq_update
-		self.wxgui_fftsink2_0.set_baseband_freq(mh.get_last_returned(self.freq_update))
 		self.wxgui_waterfallsink2_0.set_baseband_freq(mh.get_last_returned(self.freq_update))
+		self.wxgui_fftsink2_0.set_baseband_freq(mh.get_last_returned(self.freq_update))
 
 	def get_fine(self):
 		return self.fine
@@ -987,8 +1025,10 @@ class multimode(grc_wxgui.top_block_gui):
 		self.audio_int_rate = audio_int_rate
 		self.gr_fractional_interpolator_xx_0.set_interp_ratio(self.audio_int_rate/self.arate)
 		self.band_pass_filter_1.set_taps(firdes.band_pass(1.25, self.audio_int_rate, 100, 5.5e3, 2.0e3, firdes.WIN_HAMMING, 6.76))
-		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.audio_int_rate))
 		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1.0, self.audio_int_rate, self.am_filt_dict_low[self.mode], self.am_filt_dict_high[self.mode], self.bw/3.5, firdes.WIN_HAMMING, 6.76))
+		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.audio_int_rate))
+		self.wxgui_waterfallsink2_0_0.set_sample_rate(self.audio_int_rate)
+		self.wxgui_fftsink2_0_0.set_sample_rate(self.audio_int_rate)
 
 	def get_am_filt_dict_low(self):
 		return self.am_filt_dict_low
