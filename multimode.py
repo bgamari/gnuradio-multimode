@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Wed May 30 19:06:07 2012
+# Generated: Wed May 30 20:36:52 2012
 ##################################################
 
 from gnuradio import audio
@@ -27,7 +27,7 @@ import wx
 
 class multimode(grc_wxgui.top_block_gui):
 
-	def __init__(self, ahw="default", freq=150.0e6, ppm=0.0, vol=1.0, ftune=0.0, xftune=0.0, offs=50.e3, mbw=2.0e3, mthresh=-10.0, arate=48.0e3, srate=1.0e6, dmode="FM", upclo=0.0, upce=0, devinfo="rtl=0", agc=0, flist=""):
+	def __init__(self, ahw="default", freq=150.0e6, ppm=0.0, vol=1.0, ftune=0.0, xftune=0.0, offs=50.e3, srate=1.0e6, dmode="FM", upclo=0.0, devinfo="rtl=0", agc=0, arate=48.0e3, upce=0, mbw=2.0e3, mthresh=-10.0, flist=""):
 		grc_wxgui.top_block_gui.__init__(self, title="Multimode Radio Receiver")
 		_icon_path = "/usr/share/icons/hicolor/32x32/apps/gnuradio-grc.png"
 		self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
@@ -42,15 +42,15 @@ class multimode(grc_wxgui.top_block_gui):
 		self.ftune = ftune
 		self.xftune = xftune
 		self.offs = offs
-		self.mbw = mbw
-		self.mthresh = mthresh
-		self.arate = arate
 		self.srate = srate
 		self.dmode = dmode
 		self.upclo = upclo
-		self.upce = upce
 		self.devinfo = devinfo
 		self.agc = agc
+		self.arate = arate
+		self.upce = upce
+		self.mbw = mbw
+		self.mthresh = mthresh
 		self.flist = flist
 
 		##################################################
@@ -102,9 +102,13 @@ class multimode(grc_wxgui.top_block_gui):
 		# Blocks
 		##################################################
 		self.rf_probe = gr.probe_avg_mag_sqrd_c(0, 0.02)
+		self.Main = self.Main = wx.Notebook(self.GetWin(), style=wx.NB_TOP)
+		self.Main.AddPage(grc_wxgui.Panel(self.Main), "Main Controls")
+		self.Main.AddPage(grc_wxgui.Panel(self.Main), "Scan/Upconv Controls")
+		self.Add(self.Main)
 		_xfine_sizer = wx.BoxSizer(wx.VERTICAL)
 		self._xfine_text_box = forms.text_box(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			sizer=_xfine_sizer,
 			value=self.xfine,
 			callback=self.set_xfine,
@@ -113,7 +117,7 @@ class multimode(grc_wxgui.top_block_gui):
 			proportion=0,
 		)
 		self._xfine_slider = forms.slider(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			sizer=_xfine_sizer,
 			value=self.xfine,
 			callback=self.set_xfine,
@@ -124,10 +128,10 @@ class multimode(grc_wxgui.top_block_gui):
 			cast=float,
 			proportion=1,
 		)
-		self.GridAdd(_xfine_sizer, 0, 3, 1, 1)
+		self.Main.GetPage(0).GridAdd(_xfine_sizer, 0, 3, 1, 1)
 		_volume_sizer = wx.BoxSizer(wx.VERTICAL)
 		self._volume_text_box = forms.text_box(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			sizer=_volume_sizer,
 			value=self.volume,
 			callback=self.set_volume,
@@ -136,7 +140,7 @@ class multimode(grc_wxgui.top_block_gui):
 			proportion=0,
 		)
 		self._volume_slider = forms.slider(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			sizer=_volume_sizer,
 			value=self.volume,
 			callback=self.set_volume,
@@ -147,27 +151,27 @@ class multimode(grc_wxgui.top_block_gui):
 			cast=float,
 			proportion=1,
 		)
-		self.GridAdd(_volume_sizer, 0, 0, 1, 1)
+		self.Main.GetPage(0).GridAdd(_volume_sizer, 0, 0, 1, 1)
 		self._upc_offset_text_box = forms.text_box(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(1).GetWin(),
 			value=self.upc_offset,
 			callback=self.set_upc_offset,
 			label="Upconv. LO Freq",
 			converter=forms.float_converter(),
 		)
-		self.GridAdd(self._upc_offset_text_box, 2, 4, 1, 1)
+		self.Main.GetPage(1).GridAdd(self._upc_offset_text_box, 3, 2, 1, 2)
 		self._upc_check_box = forms.check_box(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(1).GetWin(),
 			value=self.upc,
 			callback=self.set_upc,
 			label="Ext. Upconv.",
 			true=1,
 			false=0,
 		)
-		self.GridAdd(self._upc_check_box, 1, 4, 1, 1)
+		self.Main.GetPage(1).GridAdd(self._upc_check_box, 3, 0, 1, 1)
 		_rfgain_sizer = wx.BoxSizer(wx.VERTICAL)
 		self._rfgain_text_box = forms.text_box(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			sizer=_rfgain_sizer,
 			value=self.rfgain,
 			callback=self.set_rfgain,
@@ -176,7 +180,7 @@ class multimode(grc_wxgui.top_block_gui):
 			proportion=0,
 		)
 		self._rfgain_slider = forms.slider(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			sizer=_rfgain_sizer,
 			value=self.rfgain,
 			callback=self.set_rfgain,
@@ -187,27 +191,27 @@ class multimode(grc_wxgui.top_block_gui):
 			cast=float,
 			proportion=1,
 		)
-		self.GridAdd(_rfgain_sizer, 2, 1, 1, 1)
+		self.Main.GetPage(0).GridAdd(_rfgain_sizer, 2, 1, 1, 1)
 		self._record_file_text_box = forms.text_box(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			value=self.record_file,
 			callback=self.set_record_file,
 			label="Recording Filename",
 			converter=forms.str_converter(),
 		)
-		self.GridAdd(self._record_file_text_box, 2, 3, 1, 1)
+		self.Main.GetPage(0).GridAdd(self._record_file_text_box, 2, 3, 1, 3)
 		self._record_check_box = forms.check_box(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			value=self.record,
 			callback=self.set_record,
 			label="Record",
 			true=True,
 			false=False,
 		)
-		self.GridAdd(self._record_check_box, 2, 2, 1, 1)
+		self.Main.GetPage(0).GridAdd(self._record_check_box, 2, 2, 1, 1)
 		_offset_sizer = wx.BoxSizer(wx.VERTICAL)
 		self._offset_text_box = forms.text_box(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			sizer=_offset_sizer,
 			value=self.offset,
 			callback=self.set_offset,
@@ -216,7 +220,7 @@ class multimode(grc_wxgui.top_block_gui):
 			proportion=0,
 		)
 		self._offset_slider = forms.slider(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			sizer=_offset_sizer,
 			value=self.offset,
 			callback=self.set_offset,
@@ -227,9 +231,9 @@ class multimode(grc_wxgui.top_block_gui):
 			cast=float,
 			proportion=1,
 		)
-		self.GridAdd(_offset_sizer, 1, 3, 1, 1)
+		self.Main.GetPage(0).GridAdd(_offset_sizer, 1, 3, 1, 1)
 		self._mode_chooser = forms.radio_buttons(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			value=self.mode,
 			callback=self.set_mode,
 			label="Mode",
@@ -237,16 +241,16 @@ class multimode(grc_wxgui.top_block_gui):
 			labels=[],
 			style=wx.RA_HORIZONTAL,
 		)
-		self.GridAdd(self._mode_chooser, 0, 4, 1, 1)
+		self.Main.GetPage(0).GridAdd(self._mode_chooser, 0, 4, 1, 1)
 		self._iagc_check_box = forms.check_box(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			value=self.iagc,
 			callback=self.set_iagc,
 			label="AGC",
 			true=1,
 			false=0,
 		)
-		self.GridAdd(self._iagc_check_box, 2, 0, 1, 1)
+		self.Main.GetPage(0).GridAdd(self._iagc_check_box, 2, 0, 1, 1)
 		def _freq_update_probe():
 			while True:
 				val = self.rf_probe.level()
@@ -258,7 +262,7 @@ class multimode(grc_wxgui.top_block_gui):
 		_freq_update_thread.start()
 		_fine_sizer = wx.BoxSizer(wx.VERTICAL)
 		self._fine_text_box = forms.text_box(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			sizer=_fine_sizer,
 			value=self.fine,
 			callback=self.set_fine,
@@ -267,7 +271,7 @@ class multimode(grc_wxgui.top_block_gui):
 			proportion=0,
 		)
 		self._fine_slider = forms.slider(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			sizer=_fine_sizer,
 			value=self.fine,
 			callback=self.set_fine,
@@ -278,11 +282,11 @@ class multimode(grc_wxgui.top_block_gui):
 			cast=float,
 			proportion=1,
 		)
-		self.GridAdd(_fine_sizer, 0, 2, 1, 1)
+		self.Main.GetPage(0).GridAdd(_fine_sizer, 0, 2, 1, 1)
 		self.display_probe = gr.probe_avg_mag_sqrd_c(0, 0.005)
 		_bw_sizer = wx.BoxSizer(wx.VERTICAL)
 		self._bw_text_box = forms.text_box(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			sizer=_bw_sizer,
 			value=self.bw,
 			callback=self.set_bw,
@@ -291,7 +295,7 @@ class multimode(grc_wxgui.top_block_gui):
 			proportion=0,
 		)
 		self._bw_slider = forms.slider(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			sizer=_bw_sizer,
 			value=self.bw,
 			callback=self.set_bw,
@@ -302,7 +306,7 @@ class multimode(grc_wxgui.top_block_gui):
 			cast=float,
 			proportion=1,
 		)
-		self.GridAdd(_bw_sizer, 1, 2, 1, 1)
+		self.Main.GetPage(0).GridAdd(_bw_sizer, 1, 2, 1, 1)
 		self.wxgui_waterfallsink2_0 = waterfallsink2.waterfall_sink_c(
 			self.GetWin(),
 			baseband_freq=mh.get_last_returned(freq_update),
@@ -344,24 +348,24 @@ class multimode(grc_wxgui.top_block_gui):
 		
 		self.wxgui_fftsink2_0.set_callback(wxgui_fftsink2_0_callback)
 		self._variable_static_text_1_static_text = forms.static_text(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(1).GetWin(),
 			value=self.variable_static_text_1,
 			callback=self.set_variable_static_text_1,
 			label="Current Scan Freq",
 			converter=forms.float_converter(),
 		)
-		self.GridAdd(self._variable_static_text_1_static_text, 3, 4, 1, 1)
+		self.Main.GetPage(1).GridAdd(self._variable_static_text_1_static_text, 0, 5, 1, 1)
 		self._variable_static_text_0_static_text = forms.static_text(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			value=self.variable_static_text_0,
 			callback=self.set_variable_static_text_0,
 			label="RF Level",
 			converter=forms.float_converter(),
 		)
-		self.GridAdd(self._variable_static_text_0_static_text, 1, 0, 1, 1)
+		self.Main.GetPage(0).GridAdd(self._variable_static_text_0_static_text, 1, 0, 1, 1)
 		_thresh_sizer = wx.BoxSizer(wx.VERTICAL)
 		self._thresh_text_box = forms.text_box(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			sizer=_thresh_sizer,
 			value=self.thresh,
 			callback=self.set_thresh,
@@ -370,7 +374,7 @@ class multimode(grc_wxgui.top_block_gui):
 			proportion=0,
 		)
 		self._thresh_slider = forms.slider(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			sizer=_thresh_sizer,
 			value=self.thresh,
 			callback=self.set_thresh,
@@ -381,7 +385,7 @@ class multimode(grc_wxgui.top_block_gui):
 			cast=float,
 			proportion=1,
 		)
-		self.GridAdd(_thresh_sizer, 1, 1, 1, 1)
+		self.Main.GetPage(0).GridAdd(_thresh_sizer, 1, 1, 1, 1)
 		def _scan_power_probe():
 			while True:
 				val = self.rf_probe.level()
@@ -392,56 +396,56 @@ class multimode(grc_wxgui.top_block_gui):
 		_scan_power_thread.daemon = True
 		_scan_power_thread.start()
 		self._sc_low_text_box = forms.text_box(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(1).GetWin(),
 			value=self.sc_low,
 			callback=self.set_sc_low,
 			label="Scan Low",
 			converter=forms.float_converter(),
 		)
-		self.GridAdd(self._sc_low_text_box, 3, 1, 1, 1)
+		self.Main.GetPage(1).GridAdd(self._sc_low_text_box, 0, 1, 1, 1)
 		self._sc_listm_check_box = forms.check_box(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(1).GetWin(),
 			value=self.sc_listm,
 			callback=self.set_sc_listm,
 			label="Scan List Mode",
 			true=True,
 			false=False,
 		)
-		self.GridAdd(self._sc_listm_check_box, 5, 0, 1, 1)
+		self.Main.GetPage(1).GridAdd(self._sc_listm_check_box, 2, 0, 1, 1)
 		self._sc_list_str_text_box = forms.text_box(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(1).GetWin(),
 			value=self.sc_list_str,
 			callback=self.set_sc_list_str,
 			label="Scan List",
 			converter=forms.str_converter(),
 		)
-		self.GridAdd(self._sc_list_str_text_box, 5, 1, 1, 1)
+		self.Main.GetPage(1).GridAdd(self._sc_list_str_text_box, 2, 1, 1, 5)
 		self._sc_incr_chooser = forms.drop_down(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(1).GetWin(),
 			value=self.sc_incr,
 			callback=self.set_sc_incr,
 			label="Scan Increment (Hz)",
 			choices=[5.0e3,6.25e3,10.0e3,12.5e3,15e3,25e3],
 			labels=[],
 		)
-		self.GridAdd(self._sc_incr_chooser, 3, 0, 1, 1)
+		self.Main.GetPage(1).GridAdd(self._sc_incr_chooser, 0, 0, 1, 1)
 		self._sc_high_text_box = forms.text_box(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(1).GetWin(),
 			value=self.sc_high,
 			callback=self.set_sc_high,
 			label="Scan High",
 			converter=forms.float_converter(),
 		)
-		self.GridAdd(self._sc_high_text_box, 3, 2, 1, 1)
+		self.Main.GetPage(1).GridAdd(self._sc_high_text_box, 0, 2, 1, 1)
 		self._sc_ena_check_box = forms.check_box(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(1).GetWin(),
 			value=self.sc_ena,
 			callback=self.set_sc_ena,
 			label="Scan Enable",
 			true=True,
 			false=False,
 		)
-		self.GridAdd(self._sc_ena_check_box, 3, 3, 1, 1)
+		self.Main.GetPage(1).GridAdd(self._sc_ena_check_box, 0, 3, 1, 1)
 		def _rf_power_probe():
 			while True:
 				val = self.rf_probe.level()
@@ -471,15 +475,15 @@ class multimode(grc_wxgui.top_block_gui):
 		self.low_pass_filter_1 = gr.fir_filter_ccf(int(samp_rate/wbfm), firdes.low_pass(
 			1, samp_rate, 98e3, 55e3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_0 = gr.fir_filter_ccf(1, firdes.low_pass(
-			1, wbfm, deviation_dict[mode]*1.15, deviation_dict[mode]/2.75, firdes.WIN_HAMMING, 6.76))
+			1, wbfm, deviation_dict[mode]*1.15, deviation_dict[mode]/2.0, firdes.WIN_HAMMING, 6.76))
 		self._ifreq_text_box = forms.text_box(
-			parent=self.GetWin(),
+			parent=self.Main.GetPage(0).GetWin(),
 			value=self.ifreq,
 			callback=self.set_ifreq,
 			label="Frequency",
 			converter=forms.float_converter(),
 		)
-		self.GridAdd(self._ifreq_text_box, 0, 1, 1, 1)
+		self.Main.GetPage(0).GridAdd(self._ifreq_text_box, 0, 1, 1, 1)
 		self.gr_wavfile_sink_0 = gr.wavfile_sink("/dev/null" if record == False else record_file, 1, int(audio_int_rate), 8)
 		self.gr_quadrature_demod_cf_0 = gr.quadrature_demod_cf(k)
 		self.gr_multiply_const_vxx_2 = gr.multiply_const_vff((1.0 if mode == 'WFM' or mode == 'FM' or mode == 'TV-FM' else 0.0, ))
@@ -544,8 +548,8 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_freq(self, freq):
 		self.freq = freq
-		self.set_ifreq(self.freq)
 		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
+		self.set_ifreq(self.freq)
 
 	def get_ppm(self):
 		return self.ppm
@@ -582,27 +586,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self.offs = offs
 		self.set_offset(self.offs)
 
-	def get_mbw(self):
-		return self.mbw
-
-	def set_mbw(self, mbw):
-		self.mbw = mbw
-		self.set_bw(self.mbw)
-
-	def get_mthresh(self):
-		return self.mthresh
-
-	def set_mthresh(self, mthresh):
-		self.mthresh = mthresh
-		self.set_thresh(self.mthresh)
-
-	def get_arate(self):
-		return self.arate
-
-	def set_arate(self, arate):
-		self.arate = arate
-		self.gr_fractional_interpolator_xx_0.set_interp_ratio(self.audio_int_rate/self.arate)
-
 	def get_srate(self):
 		return self.srate
 
@@ -625,13 +608,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self.upclo = upclo
 		self.set_upc_offset(self.upclo)
 
-	def get_upce(self):
-		return self.upce
-
-	def set_upce(self, upce):
-		self.upce = upce
-		self.set_upc(self.upce)
-
 	def get_devinfo(self):
 		return self.devinfo
 
@@ -644,6 +620,34 @@ class multimode(grc_wxgui.top_block_gui):
 	def set_agc(self, agc):
 		self.agc = agc
 		self.set_iagc(self.agc)
+
+	def get_arate(self):
+		return self.arate
+
+	def set_arate(self, arate):
+		self.arate = arate
+		self.gr_fractional_interpolator_xx_0.set_interp_ratio(self.audio_int_rate/self.arate)
+
+	def get_upce(self):
+		return self.upce
+
+	def set_upce(self, upce):
+		self.upce = upce
+		self.set_upc(self.upce)
+
+	def get_mbw(self):
+		return self.mbw
+
+	def set_mbw(self, mbw):
+		self.mbw = mbw
+		self.set_bw(self.mbw)
+
+	def get_mthresh(self):
+		return self.mthresh
+
+	def set_mthresh(self, mthresh):
+		self.mthresh = mthresh
+		self.set_thresh(self.mthresh)
 
 	def get_flist(self):
 		return self.flist
@@ -667,20 +671,20 @@ class multimode(grc_wxgui.top_block_gui):
 		self.wbfm = wbfm
 		self.set_samp_rate(int(int(self.srate/self.wbfm)*self.wbfm))
 		self.set_adjusted("" if int(self.srate) % int(self.wbfm) == 0 else " (adjusted)")
-		self.low_pass_filter_2.set_taps(firdes.low_pass(1, self.wbfm, 11.5e3, 4e3, firdes.WIN_HAMMING, 6.76))
-		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/2.75, firdes.WIN_HAMMING, 6.76))
 		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.audio_int_rate))
 		self.set_quad_rate(self.wbfm)
+		self.low_pass_filter_2.set_taps(firdes.low_pass(1, self.wbfm, 11.5e3, 4e3, firdes.WIN_HAMMING, 6.76))
+		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/2.0, firdes.WIN_HAMMING, 6.76))
 
 	def get_thresh(self):
 		return self.thresh
 
 	def set_thresh(self, thresh):
 		self.thresh = thresh
-		self._thresh_slider.set_value(self.thresh)
-		self._thresh_text_box.set_value(self.thresh)
 		self.set_muted(0.0 if self.logpower >= self.thresh else 1)
 		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
+		self._thresh_slider.set_value(self.thresh)
+		self._thresh_text_box.set_value(self.thresh)
 
 	def get_scan_rate(self):
 		return self.scan_rate
@@ -725,24 +729,24 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_sc_incr(self, sc_incr):
 		self.sc_incr = sc_incr
-		self._sc_incr_chooser.set_value(self.sc_incr)
 		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
+		self._sc_incr_chooser.set_value(self.sc_incr)
 
 	def get_sc_high(self):
 		return self.sc_high
 
 	def set_sc_high(self, sc_high):
 		self.sc_high = sc_high
-		self._sc_high_text_box.set_value(self.sc_high)
 		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
+		self._sc_high_text_box.set_value(self.sc_high)
 
 	def get_sc_ena(self):
 		return self.sc_ena
 
 	def set_sc_ena(self, sc_ena):
 		self.sc_ena = sc_ena
-		self._sc_ena_check_box.set_value(self.sc_ena)
 		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
+		self._sc_ena_check_box.set_value(self.sc_ena)
 
 	def get_rf_power(self):
 		return self.rf_power
@@ -756,8 +760,8 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_ifreq(self, ifreq):
 		self.ifreq = ifreq
-		self._ifreq_text_box.set_value(self.ifreq)
 		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
+		self._ifreq_text_box.set_value(self.ifreq)
 
 	def get_rf_d_power(self):
 		return self.rf_d_power
@@ -779,12 +783,12 @@ class multimode(grc_wxgui.top_block_gui):
 	def set_mode(self, mode):
 		self.mode = mode
 		self.gr_multiply_const_vxx_0_0_0.set_k((1.0 if self.mode == 'AM' else 0.0, ))
-		self._mode_chooser.set_value(self.mode)
-		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/2.75, firdes.WIN_HAMMING, 6.76))
 		self.gr_multiply_const_vxx_0_0.set_k((1.25 if (self.mode == 'LSB' or self.mode == 'USB') else 0.0, ))
 		self.set_k(self.quad_rate/(2*math.pi*self.deviation_dict[self.mode]))
 		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1.0, self.audio_int_rate, self.am_filt_dict_low[self.mode], self.am_filt_dict_high[self.mode], self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 		self.gr_multiply_const_vxx_2.set_k((1.0 if self.mode == 'WFM' or self.mode == 'FM' or self.mode == 'TV-FM' else 0.0, ))
+		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/2.0, firdes.WIN_HAMMING, 6.76))
+		self._mode_chooser.set_value(self.mode)
 
 	def get_logpower(self):
 		return self.logpower
@@ -798,8 +802,8 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_deviation_dict(self, deviation_dict):
 		self.deviation_dict = deviation_dict
-		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/2.75, firdes.WIN_HAMMING, 6.76))
 		self.set_k(self.quad_rate/(2*math.pi*self.deviation_dict[self.mode]))
+		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/2.0, firdes.WIN_HAMMING, 6.76))
 
 	def get_cur_freq(self):
 		return self.cur_freq
@@ -814,20 +818,20 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_bw(self, bw):
 		self.bw = bw
-		self._bw_slider.set_value(self.bw)
-		self._bw_text_box.set_value(self.bw)
 		self.set_am_filt_dict_high({'AM' : self.bw/2, 'USB' : self.bw/2, 'LSB': -self.bw/12, 'FM' : self.bw/2, 'WFM' : self.bw/2, 'TV-FM' : self.bw/2})
 		self.set_am_filt_dict_low({'AM' : -self.bw/2, 'USB' : self.bw/12, 'LSB': -self.bw/2, 'FM' : -self.bw/2, 'WFM' : -self.bw/2, 'TV-FM' : -self.bw/2})
 		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1.0, self.audio_int_rate, self.am_filt_dict_low[self.mode], self.am_filt_dict_high[self.mode], self.bw/3.5, firdes.WIN_HAMMING, 6.76))
+		self._bw_slider.set_value(self.bw)
+		self._bw_text_box.set_value(self.bw)
 
 	def get_xfine(self):
 		return self.xfine
 
 	def set_xfine(self, xfine):
 		self.xfine = xfine
+		self.gr_freq_xlating_fir_filter_xxx_0_1.set_center_freq(self.offset+self.fine+self.xfine)
 		self._xfine_slider.set_value(self.xfine)
 		self._xfine_text_box.set_value(self.xfine)
-		self.gr_freq_xlating_fir_filter_xxx_0_1.set_center_freq(self.offset+self.fine+self.xfine)
 
 	def get_volume(self):
 		return self.volume
@@ -857,16 +861,16 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_upc_offset(self, upc_offset):
 		self.upc_offset = upc_offset
-		self._upc_offset_text_box.set_value(self.upc_offset)
 		self.osmosdr_source_c_0.set_center_freq(self.cur_freq+self.offset+(self.upc_offset*float(self.upc)), 0)
+		self._upc_offset_text_box.set_value(self.upc_offset)
 
 	def get_upc(self):
 		return self.upc
 
 	def set_upc(self, upc):
 		self.upc = upc
-		self._upc_check_box.set_value(self.upc)
 		self.osmosdr_source_c_0.set_center_freq(self.cur_freq+self.offset+(self.upc_offset*float(self.upc)), 0)
+		self._upc_check_box.set_value(self.upc)
 
 	def get_sc_list_len(self):
 		return self.sc_list_len
@@ -889,9 +893,9 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_rfgain(self, rfgain):
 		self.rfgain = rfgain
+		self.osmosdr_source_c_0.set_gain(25 if self.iagc == 1 else self.rfgain, 0)
 		self._rfgain_slider.set_value(self.rfgain)
 		self._rfgain_text_box.set_value(self.rfgain)
-		self.osmosdr_source_c_0.set_gain(25 if self.iagc == 1 else self.rfgain, 0)
 
 	def get_record_file(self):
 		return self.record_file
@@ -914,10 +918,10 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_offset(self, offset):
 		self.offset = offset
-		self._offset_slider.set_value(self.offset)
-		self._offset_text_box.set_value(self.offset)
 		self.gr_freq_xlating_fir_filter_xxx_0_1.set_center_freq(self.offset+self.fine+self.xfine)
 		self.osmosdr_source_c_0.set_center_freq(self.cur_freq+self.offset+(self.upc_offset*float(self.upc)), 0)
+		self._offset_slider.set_value(self.offset)
+		self._offset_text_box.set_value(self.offset)
 
 	def get_muted(self):
 		return self.muted
@@ -938,9 +942,9 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_iagc(self, iagc):
 		self.iagc = iagc
-		self._iagc_check_box.set_value(self.iagc)
 		self.osmosdr_source_c_0.set_gain_mode(self.iagc, 0)
 		self.osmosdr_source_c_0.set_gain(25 if self.iagc == 1 else self.rfgain, 0)
+		self._iagc_check_box.set_value(self.iagc)
 
 	def get_freq_update(self):
 		return self.freq_update
@@ -1005,27 +1009,27 @@ if __name__ == '__main__':
 		help="Set Extra Fine Tuning [default=%default]")
 	parser.add_option("", "--offs", dest="offs", type="eng_float", default=eng_notation.num_to_str(50.e3),
 		help="Set LO Offset [default=%default]")
-	parser.add_option("", "--mbw", dest="mbw", type="eng_float", default=eng_notation.num_to_str(2.0e3),
-		help="Set AM/SSB Demod Bandwidth [default=%default]")
-	parser.add_option("", "--mthresh", dest="mthresh", type="eng_float", default=eng_notation.num_to_str(-10.0),
-		help="Set Mute Threshold (dB) [default=%default]")
-	parser.add_option("", "--arate", dest="arate", type="eng_float", default=eng_notation.num_to_str(48.0e3),
-		help="Set Audio Sample Rate [default=%default]")
 	parser.add_option("", "--srate", dest="srate", type="eng_float", default=eng_notation.num_to_str(1.0e6),
 		help="Set RF Sample Rate [default=%default]")
 	parser.add_option("", "--dmode", dest="dmode", type="string", default="FM",
 		help="Set Demod Mode [default=%default]")
 	parser.add_option("", "--upclo", dest="upclo", type="eng_float", default=eng_notation.num_to_str(0.0),
 		help="Set Upconverter LO Frequency [default=%default]")
-	parser.add_option("", "--upce", dest="upce", type="intx", default=0,
-		help="Set Upconverter Enabled [default=%default]")
 	parser.add_option("", "--devinfo", dest="devinfo", type="string", default="rtl=0",
 		help="Set Device Information [default=%default]")
 	parser.add_option("", "--agc", dest="agc", type="intx", default=0,
 		help="Set AGC On/Off [default=%default]")
+	parser.add_option("", "--arate", dest="arate", type="eng_float", default=eng_notation.num_to_str(48.0e3),
+		help="Set Audio Sample Rate [default=%default]")
+	parser.add_option("", "--upce", dest="upce", type="intx", default=0,
+		help="Set Upconverter Enabled [default=%default]")
+	parser.add_option("", "--mbw", dest="mbw", type="eng_float", default=eng_notation.num_to_str(2.0e3),
+		help="Set AM/SSB Demod Bandwidth [default=%default]")
+	parser.add_option("", "--mthresh", dest="mthresh", type="eng_float", default=eng_notation.num_to_str(-10.0),
+		help="Set Mute Threshold (dB) [default=%default]")
 	parser.add_option("", "--flist", dest="flist", type="string", default="",
 		help="Set Frequency Scan List [default=%default]")
 	(options, args) = parser.parse_args()
-	tb = multimode(ahw=options.ahw, freq=options.freq, ppm=options.ppm, vol=options.vol, ftune=options.ftune, xftune=options.xftune, offs=options.offs, mbw=options.mbw, mthresh=options.mthresh, arate=options.arate, srate=options.srate, dmode=options.dmode, upclo=options.upclo, upce=options.upce, devinfo=options.devinfo, agc=options.agc, flist=options.flist)
+	tb = multimode(ahw=options.ahw, freq=options.freq, ppm=options.ppm, vol=options.vol, ftune=options.ftune, xftune=options.xftune, offs=options.offs, srate=options.srate, dmode=options.dmode, upclo=options.upclo, devinfo=options.devinfo, agc=options.agc, arate=options.arate, upce=options.upce, mbw=options.mbw, mthresh=options.mthresh, flist=options.flist)
 	tb.Run(True, 350)
 
