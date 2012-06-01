@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Wed May 30 22:01:32 2012
+# Generated: Thu May 31 17:49:56 2012
 ##################################################
 
 from gnuradio import audio
@@ -395,7 +395,7 @@ class multimode(grc_wxgui.top_block_gui):
 			label="Current Scan Freq",
 			converter=forms.float_converter(),
 		)
-		self.Main.GetPage(1).GridAdd(self._variable_static_text_1_static_text, 0, 5, 1, 1)
+		self.Main.GetPage(1).GridAdd(self._variable_static_text_1_static_text, 0, 5, 1, 2)
 		self._variable_static_text_0_static_text = forms.static_text(
 			parent=self.Main.GetPage(0).GetWin(),
 			value=self.variable_static_text_0,

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Wed May 30 22:01:31 2012</timestamp>
+  <timestamp>Thu May 31 17:49:55 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -2843,49 +2843,6 @@
     </param>
   </block>
   <block>
-    <key>variable_text_box</key>
-    <param>
-      <key>id</key>
-      <value>sc_list_str</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Scan List</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>flist</value>
-    </param>
-    <param>
-      <key>converver</key>
-      <value>str_converter</value>
-    </param>
-    <param>
-      <key>formatter</key>
-      <value>None</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value>2,1,1,5</value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value>Main,1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1264, 1539)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>variable_function_probe</key>
     <param>
       <key>id</key>
@@ -3200,49 +3157,6 @@
     <param>
       <key>_coordinate</key>
       <value>(9, 1038)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_static_text</key>
-    <param>
-      <key>id</key>
-      <value>variable_static_text_1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Current Scan Freq</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>cur_freq</value>
-    </param>
-    <param>
-      <key>converver</key>
-      <value>float_converter</value>
-    </param>
-    <param>
-      <key>formatter</key>
-      <value>None</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value>0,5,1,1</value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value>Main,1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1421, 1457)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3833,6 +3747,92 @@
     <param>
       <key>_coordinate</key>
       <value>(1596, 908)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_static_text</key>
+    <param>
+      <key>id</key>
+      <value>variable_static_text_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Current Scan Freq</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>cur_freq</value>
+    </param>
+    <param>
+      <key>converver</key>
+      <value>float_converter</value>
+    </param>
+    <param>
+      <key>formatter</key>
+      <value>None</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value>0,5,1,2</value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value>Main,1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1421, 1457)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_text_box</key>
+    <param>
+      <key>id</key>
+      <value>sc_list_str</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Scan List</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>flist</value>
+    </param>
+    <param>
+      <key>converver</key>
+      <value>str_converter</value>
+    </param>
+    <param>
+      <key>formatter</key>
+      <value>None</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value>2,1,1,5</value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value>Main,1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1264, 1539)</value>
     </param>
     <param>
       <key>_rotation</key>
