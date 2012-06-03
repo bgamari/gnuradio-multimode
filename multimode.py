@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Thu May 31 17:49:56 2012
+# Generated: Sun Jun  3 12:14:01 2012
 ##################################################
 
 from gnuradio import audio
@@ -59,7 +59,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.sc_list_str = sc_list_str = flist
 		self.wbfm = wbfm = 200e3
 		self.thresh = thresh = mthresh
-		self.scan_rate = scan_rate = 10
+		self.scan_rate = scan_rate = 15
 		self.scan_power = scan_power = 0
 		self.sc_low = sc_low = 150e6
 		self.sc_listm = sc_listm = False
@@ -102,7 +102,7 @@ class multimode(grc_wxgui.top_block_gui):
 		##################################################
 		# Blocks
 		##################################################
-		self.rf_probe = gr.probe_avg_mag_sqrd_c(0, 0.02)
+		self.rf_probe = gr.probe_avg_mag_sqrd_c(0, 0.05)
 		self.Main = self.Main = wx.Notebook(self.GetWin(), style=wx.NB_TOP)
 		self.Main.AddPage(grc_wxgui.Panel(self.Main), "Main Controls")
 		self.Main.AddPage(grc_wxgui.Panel(self.Main), "Scan/Upconv Controls/Detail")
