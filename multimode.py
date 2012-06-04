@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Mon Jun  4 18:58:13 2012
+# Generated: Mon Jun  4 19:09:56 2012
 ##################################################
 
 from gnuradio import audio
@@ -72,7 +72,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self.rf_d_power = rf_d_power = 0
 		self.mode = mode = dmode
 		self.logpower = logpower = math.log10(rf_power+1.0e-12)*10.0
-		self.israte = israte = srate
 		self.deviation_dict = deviation_dict = {'NFM1' : 5.0e3, 'NFM2' : 2.0e3, 'WFM' : 80e3, 'TV-FM' : 25e3, 'AM' : 9e3, 'USB' : 9e3, 'LSB' : 9e3}
 		self.cur_freq = cur_freq = mh.scan_freq_out(sc_ena,sc_low,sc_high,freq,ifreq,scan_power+1.0e-14,thresh,sc_incr,scan_rate,sc_listm,sc_list)
 		self.bw = bw = mbw
@@ -84,7 +83,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.upc = upc = upce
 		self.ssb_modes = ssb_modes = ["USB", "LSB"]
 		self.sc_list_len = sc_list_len = len(sc_list)
-		self.samp_rate = samp_rate = int(int(israte/wbfm)*wbfm)
+		self.samp_rate = samp_rate = int(int(srate/wbfm)*wbfm)
 		self.rfgain = rfgain = 25
 		self.record_file = record_file = "recording.wav"
 		self.record = record = False
@@ -493,19 +492,10 @@ class multimode(grc_wxgui.top_block_gui):
 			1.25, audio_int_rate, 6.5e3, 2.5e3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_2 = gr.fir_filter_fff(int(wbfm/audio_int_rate), firdes.low_pass(
 			1, wbfm, 11.5e3, 4.5e3, firdes.WIN_HAMMING, 6.76))
-		self.low_pass_filter_1 = gr.fir_filter_ccf(5, firdes.low_pass(
+		self.low_pass_filter_1 = gr.fir_filter_ccf(int(samp_rate/wbfm), firdes.low_pass(
 			1, samp_rate, 98e3, 55e3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_0 = gr.fir_filter_ccf(1, firdes.low_pass(
 			1, wbfm, deviation_dict[mode]*1.15, deviation_dict[mode]/1.85, firdes.WIN_HAMMING, 6.76))
-		self._israte_chooser = forms.drop_down(
-			parent=self.Main.GetPage(0).GetWin(),
-			value=self.israte,
-			callback=self.set_israte,
-			label="Samp Rate",
-			choices=[1.0e6,1.2e6,1.4e6,1.6e6,1.8e6,2.0e6,2.2e6,2.4e6,2.6e6,2.8e6],
-			labels=["1M", "1.2M","1.4M", "1.6M","1.8M", "2.0M", "2.2M","2.4M", "2.6M","2.8M"],
-		)
-		self.Main.GetPage(0).GridAdd(self._israte_chooser, 1, 4, 1, 1)
 		self._ifreq_text_box = forms.text_box(
 			parent=self.Main.GetPage(0).GetWin(),
 			value=self.ifreq,
@@ -521,8 +511,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.gr_multiply_const_vxx_0_0_0 = gr.multiply_const_vff((1.0 if mode in am_modes else 0.0, ))
 		self.gr_multiply_const_vxx_0_0 = gr.multiply_const_vff((1.25 if mode in ssb_modes else 0.0, ))
 		self.gr_keep_one_in_n_0 = gr.keep_one_in_n(gr.sizeof_gr_complex*1, int(wbfm/audio_int_rate))
-		self.gr_freq_xlating_fir_filter_xxx_0_1 = gr.freq_xlating_fir_filter_ccc(1, (1.0, ), (offset+fine+xfine)/(samp_rate/1.0e6), 1.0e6)
-		self.gr_fractional_interpolator_xx_1 = gr.fractional_interpolator_cc(0, int(samp_rate/5)/wbfm)
+		self.gr_freq_xlating_fir_filter_xxx_0_1 = gr.freq_xlating_fir_filter_ccc(1, (1.0, ), (offset+fine+xfine)/(samp_rate/1.0e6), samp_rate)
 		self.gr_fractional_interpolator_xx_0 = gr.fractional_interpolator_ff(0, audio_int_rate/arate)
 		self.gr_feedforward_agc_cc_0 = gr.feedforward_agc_cc(512, 0.75)
 		self.gr_complex_to_real_0 = gr.complex_to_real(1)
@@ -563,11 +552,10 @@ class multimode(grc_wxgui.top_block_gui):
 		self.connect((self.gr_complex_to_real_0, 0), (self.gr_multiply_const_vxx_0_0, 0))
 		self.connect((self.low_pass_filter_3, 0), (self.wxgui_waterfallsink2_0_0, 0))
 		self.connect((self.low_pass_filter_0, 0), (self.gr_keep_one_in_n_0, 0))
-		self.connect((self.low_pass_filter_1, 0), (self.gr_fractional_interpolator_xx_1, 0))
-		self.connect((self.gr_fractional_interpolator_xx_1, 0), (self.gr_agc2_xx_0, 0))
-		self.connect((self.gr_fractional_interpolator_xx_1, 0), (self.low_pass_filter_3, 0))
 		self.connect((self.gr_complex_to_mag_squared_0, 0), (self.low_pass_filter_2_0, 0))
 		self.connect((self.low_pass_filter_2_0, 0), (self.gr_multiply_const_vxx_0_0_0, 0))
+		self.connect((self.low_pass_filter_1, 0), (self.gr_agc2_xx_0, 0))
+		self.connect((self.low_pass_filter_1, 0), (self.low_pass_filter_3, 0))
 
 	def get_ahw(self):
 		return self.ahw
@@ -616,7 +604,7 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_srate(self, srate):
 		self.srate = srate
-		self.set_israte(self.srate)
+		self.set_samp_rate(int(int(self.srate/self.wbfm)*self.wbfm))
 
 	def get_upclo(self):
 		return self.upclo
@@ -790,10 +778,9 @@ class multimode(grc_wxgui.top_block_gui):
 		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.audio_int_rate))
 		self.set_k(self.wbfm/(2*math.pi*self.deviation_dict[self.mode]))
 		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/1.85, firdes.WIN_HAMMING, 6.76))
-		self.low_pass_filter_3.set_taps(firdes.low_pass(1, self.wbfm, 11.5e3, 7.5e3, firdes.WIN_HAMMING, 6.76))
-		self.gr_fractional_interpolator_xx_1.set_interp_ratio(int(self.samp_rate/5)/self.wbfm)
-		self.set_samp_rate(int(int(self.israte/self.wbfm)*self.wbfm))
 		self.low_pass_filter_2.set_taps(firdes.low_pass(1, self.wbfm, 11.5e3, 4.5e3, firdes.WIN_HAMMING, 6.76))
+		self.low_pass_filter_3.set_taps(firdes.low_pass(1, self.wbfm, 11.5e3, 7.5e3, firdes.WIN_HAMMING, 6.76))
+		self.set_samp_rate(int(int(self.srate/self.wbfm)*self.wbfm))
 
 	def get_rf_d_power(self):
 		return self.rf_d_power
@@ -821,14 +808,6 @@ class multimode(grc_wxgui.top_block_gui):
 	def set_logpower(self, logpower):
 		self.logpower = logpower
 		self.set_muted(0.0 if self.logpower >= self.thresh else 1)
-
-	def get_israte(self):
-		return self.israte
-
-	def set_israte(self, israte):
-		self.israte = israte
-		self._israte_chooser.set_value(self.israte)
-		self.set_samp_rate(int(int(self.israte/self.wbfm)*self.wbfm))
 
 	def get_deviation_dict(self):
 		return self.deviation_dict
@@ -927,7 +906,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self.osmosdr_source_c_0.set_sample_rate(self.samp_rate)
 		self.wxgui_fftsink2_0.set_sample_rate(self.samp_rate)
 		self.gr_freq_xlating_fir_filter_xxx_0_1.set_center_freq((self.offset+self.fine+self.xfine)/(self.samp_rate/1.0e6))
-		self.gr_fractional_interpolator_xx_1.set_interp_ratio(int(self.samp_rate/5)/self.wbfm)
 		self.low_pass_filter_1.set_taps(firdes.low_pass(1, self.samp_rate, 98e3, 55e3, firdes.WIN_HAMMING, 6.76))
 
 	def get_rfgain(self):
