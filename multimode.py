@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Mon Jun  4 18:20:12 2012
+# Generated: Mon Jun  4 18:23:15 2012
 ##################################################
 
 from gnuradio import audio
@@ -501,8 +501,8 @@ class multimode(grc_wxgui.top_block_gui):
 			value=self.israte,
 			callback=self.set_israte,
 			label="Samp Rate",
-			choices=[1.0e6,1.4e6,1.8e6,2.0e6,2.4e6,2.8e6],
-			labels=["1M", "1.4M", "1.8M", "2.0M", "2.4M", "2.8M"],
+			choices=[1.0e6,1.2e6,1.4e6,1.6e6,1.8e6,2.0e6,2.2e6,2.4e6,2.6e6,2.8e6],
+			labels=["1M", "1.2M","1.4M", "1.6M","1.8M", "2.0M", "2.2M","2.4M", "2.6M","2.8M"],
 		)
 		self.Main.GetPage(0).GridAdd(self._israte_chooser, 1, 4, 1, 1)
 		self._ifreq_text_box = forms.text_box(
