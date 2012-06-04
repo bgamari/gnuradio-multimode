@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Mon Jun  4 00:13:18 2012
+# Generated: Mon Jun  4 01:02:56 2012
 ##################################################
 
 from gnuradio import audio
@@ -260,7 +260,7 @@ class multimode(grc_wxgui.top_block_gui):
 				val = self.rf_probe.level()
 				try: self.set_freq_update(val)
 				except AttributeError, e: pass
-				time.sleep(1.0/(2.0))
+				time.sleep(1.0/(1.0/(2.5)))
 		_freq_update_thread = threading.Thread(target=_freq_update_probe)
 		_freq_update_thread.daemon = True
 		_freq_update_thread.start()
@@ -318,8 +318,8 @@ class multimode(grc_wxgui.top_block_gui):
 			ref_level=0,
 			ref_scale=2.0,
 			sample_rate=audio_int_rate,
-			fft_size=1024,
-			fft_rate=5,
+			fft_size=2048,
+			fft_rate=4,
 			average=True,
 			avg_alpha=None,
 			title="Detailed Spectrogram",
@@ -353,8 +353,8 @@ class multimode(grc_wxgui.top_block_gui):
 			ref_level=0,
 			ref_scale=2.0,
 			sample_rate=audio_int_rate,
-			fft_size=1024,
-			fft_rate=5,
+			fft_size=2048,
+			fft_rate=4,
 			average=True,
 			avg_alpha=0.250,
 			title="Detailed Spectrum",
@@ -1049,9 +1049,9 @@ class multimode(grc_wxgui.top_block_gui):
 		self.gr_fractional_interpolator_xx_0.set_interp_ratio(self.audio_int_rate/self.arate)
 		self.band_pass_filter_1.set_taps(firdes.band_pass(1.25, self.audio_int_rate, 100, 5.5e3, 2.0e3, firdes.WIN_HAMMING, 6.76))
 		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.audio_int_rate))
-		self.wxgui_waterfallsink2_0_0.set_sample_rate(self.audio_int_rate)
-		self.wxgui_fftsink2_0_0.set_sample_rate(self.audio_int_rate)
 		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1.0, self.audio_int_rate, self.am_filt_dict_low[self.mode], self.am_filt_dict_high[self.mode], self.bw/3.5, firdes.WIN_HAMMING, 6.76))
+		self.wxgui_fftsink2_0_0.set_sample_rate(self.audio_int_rate)
+		self.wxgui_waterfallsink2_0_0.set_sample_rate(self.audio_int_rate)
 
 	def get_am_modes(self):
 		return self.am_modes
