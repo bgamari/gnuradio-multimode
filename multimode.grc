@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Mon Jun  4 18:18:05 2012</timestamp>
+  <timestamp>Mon Jun  4 18:20:12 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -3799,7 +3799,7 @@
     </param>
     <param>
       <key>samp_rate</key>
-      <value>samp_rate</value>
+      <value>1.0e6</value>
     </param>
     <param>
       <key>_coordinate</key>
