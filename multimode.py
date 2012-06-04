@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Mon Jun  4 18:11:15 2012
+# Generated: Mon Jun  4 18:18:06 2012
 ##################################################
 
 from gnuradio import audio
@@ -520,7 +520,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.gr_multiply_const_vxx_0_0_0 = gr.multiply_const_vff((1.0 if mode in am_modes else 0.0, ))
 		self.gr_multiply_const_vxx_0_0 = gr.multiply_const_vff((1.25 if mode in ssb_modes else 0.0, ))
 		self.gr_keep_one_in_n_0 = gr.keep_one_in_n(gr.sizeof_gr_complex*1, int(wbfm/audio_int_rate))
-		self.gr_freq_xlating_fir_filter_xxx_0_1 = gr.freq_xlating_fir_filter_ccc(1, (1.0, ), offset+fine+xfine, samp_rate)
+		self.gr_freq_xlating_fir_filter_xxx_0_1 = gr.freq_xlating_fir_filter_ccc(1, (1.0, ), (offset+fine+xfine)/(samp_rate/1.0e6), samp_rate)
 		self.gr_fractional_interpolator_xx_1 = gr.fractional_interpolator_cc(0, (samp_rate/4)/wbfm)
 		self.gr_fractional_interpolator_xx_0 = gr.fractional_interpolator_ff(0, audio_int_rate/arate)
 		self.gr_feedforward_agc_cc_0 = gr.feedforward_agc_cc(512, 0.75)
@@ -813,10 +813,10 @@ class multimode(grc_wxgui.top_block_gui):
 		self.gr_multiply_const_vxx_0_0_0.set_k((1.0 if self.mode in self.am_modes else 0.0, ))
 		self.gr_multiply_const_vxx_2.set_k((1.0 if self.mode in self.fm_modes else 0.0, ))
 		self.gr_multiply_const_vxx_0_0.set_k((1.25 if self.mode in self.ssb_modes else 0.0, ))
-		self._mode_chooser.set_value(self.mode)
 		self.set_k(self.wbfm/(2*math.pi*self.deviation_dict[self.mode]))
 		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/1.85, firdes.WIN_HAMMING, 6.76))
 		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1.0, self.audio_int_rate, self.am_filt_dict_low[self.mode], self.am_filt_dict_high[self.mode], self.bw/2.5, firdes.WIN_HAMMING, 6.76))
+		self._mode_chooser.set_value(self.mode)
 
 	def get_logpower(self):
 		return self.logpower
@@ -846,8 +846,8 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_cur_freq(self, cur_freq):
 		self.cur_freq = cur_freq
-		self.osmosdr_source_c_0.set_center_freq(self.cur_freq+self.offset+(self.upc_offset*float(self.upc)), 0)
 		self.set_variable_static_text_1(self.cur_freq)
+		self.osmosdr_source_c_0.set_center_freq(self.cur_freq+self.offset+(self.upc_offset*float(self.upc)), 0)
 
 	def get_bw(self):
 		return self.bw
@@ -867,7 +867,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.xfine = xfine
 		self._xfine_slider.set_value(self.xfine)
 		self._xfine_text_box.set_value(self.xfine)
-		self.gr_freq_xlating_fir_filter_xxx_0_1.set_center_freq(self.offset+self.fine+self.xfine)
+		self.gr_freq_xlating_fir_filter_xxx_0_1.set_center_freq((self.offset+self.fine+self.xfine)/(self.samp_rate/1.0e6))
 
 	def get_volume(self):
 		return self.volume
@@ -897,16 +897,16 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_upc_offset(self, upc_offset):
 		self.upc_offset = upc_offset
-		self.osmosdr_source_c_0.set_center_freq(self.cur_freq+self.offset+(self.upc_offset*float(self.upc)), 0)
 		self._upc_offset_text_box.set_value(self.upc_offset)
+		self.osmosdr_source_c_0.set_center_freq(self.cur_freq+self.offset+(self.upc_offset*float(self.upc)), 0)
 
 	def get_upc(self):
 		return self.upc
 
 	def set_upc(self, upc):
 		self.upc = upc
-		self.osmosdr_source_c_0.set_center_freq(self.cur_freq+self.offset+(self.upc_offset*float(self.upc)), 0)
 		self._upc_check_box.set_value(self.upc)
+		self.osmosdr_source_c_0.set_center_freq(self.cur_freq+self.offset+(self.upc_offset*float(self.upc)), 0)
 
 	def get_ssb_modes(self):
 		return self.ssb_modes
@@ -926,20 +926,21 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_samp_rate(self, samp_rate):
 		self.samp_rate = samp_rate
-		self.osmosdr_source_c_0.set_sample_rate(self.samp_rate)
 		self.wxgui_fftsink2_0.set_sample_rate(self.samp_rate)
 		self.wxgui_waterfallsink2_0.set_sample_rate(self.samp_rate)
 		self.gr_fractional_interpolator_xx_1.set_interp_ratio((self.samp_rate/4)/self.wbfm)
 		self.low_pass_filter_1.set_taps(firdes.low_pass(1, self.samp_rate, 98e3, 55e3, firdes.WIN_HAMMING, 6.76))
+		self.osmosdr_source_c_0.set_sample_rate(self.samp_rate)
+		self.gr_freq_xlating_fir_filter_xxx_0_1.set_center_freq((self.offset+self.fine+self.xfine)/(self.samp_rate/1.0e6))
 
 	def get_rfgain(self):
 		return self.rfgain
 
 	def set_rfgain(self, rfgain):
 		self.rfgain = rfgain
-		self.osmosdr_source_c_0.set_gain(25 if self.iagc == 1 else self.rfgain, 0)
 		self._rfgain_slider.set_value(self.rfgain)
 		self._rfgain_text_box.set_value(self.rfgain)
+		self.osmosdr_source_c_0.set_gain(25 if self.iagc == 1 else self.rfgain, 0)
 
 	def get_record_file(self):
 		return self.record_file
@@ -962,10 +963,10 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_offset(self, offset):
 		self.offset = offset
-		self.osmosdr_source_c_0.set_center_freq(self.cur_freq+self.offset+(self.upc_offset*float(self.upc)), 0)
 		self._offset_slider.set_value(self.offset)
 		self._offset_text_box.set_value(self.offset)
-		self.gr_freq_xlating_fir_filter_xxx_0_1.set_center_freq(self.offset+self.fine+self.xfine)
+		self.osmosdr_source_c_0.set_center_freq(self.cur_freq+self.offset+(self.upc_offset*float(self.upc)), 0)
+		self.gr_freq_xlating_fir_filter_xxx_0_1.set_center_freq((self.offset+self.fine+self.xfine)/(self.samp_rate/1.0e6))
 
 	def get_muted(self):
 		return self.muted
@@ -986,9 +987,9 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_iagc(self, iagc):
 		self.iagc = iagc
+		self._iagc_check_box.set_value(self.iagc)
 		self.osmosdr_source_c_0.set_gain_mode(self.iagc, 0)
 		self.osmosdr_source_c_0.set_gain(25 if self.iagc == 1 else self.rfgain, 0)
-		self._iagc_check_box.set_value(self.iagc)
 
 	def get_freq_update(self):
 		return self.freq_update
@@ -1018,7 +1019,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.fine = fine
 		self._fine_slider.set_value(self.fine)
 		self._fine_text_box.set_value(self.fine)
-		self.gr_freq_xlating_fir_filter_xxx_0_1.set_center_freq(self.offset+self.fine+self.xfine)
+		self.gr_freq_xlating_fir_filter_xxx_0_1.set_center_freq((self.offset+self.fine+self.xfine)/(self.samp_rate/1.0e6))
 
 	def get_audio_int_rate(self):
 		return self.audio_int_rate
