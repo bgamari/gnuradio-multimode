@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Sun Jun  3 12:14:01 2012
+# Generated: Mon Jun  4 00:13:18 2012
 ##################################################
 
 from gnuradio import audio
@@ -27,7 +27,7 @@ import wx
 
 class multimode(grc_wxgui.top_block_gui):
 
-	def __init__(self, ahw="default", freq=150.0e6, ppm=0.0, vol=1.0, ftune=0.0, xftune=0.0, offs=50.e3, srate=1.0e6, dmode="FM", upclo=0.0, devinfo="rtl=0", agc=0, arate=48.0e3, upce=0, mbw=2.0e3, mthresh=-10.0, flist=""):
+	def __init__(self, ahw="default", freq=150.0e6, ppm=0.0, vol=1.0, ftune=0.0, xftune=0.0, offs=50.e3, srate=1.0e6, upclo=0.0, devinfo="rtl=0", agc=0, arate=48.0e3, upce=0, mbw=2.0e3, mthresh=-10.0, flist="", dmode="NFM1"):
 		grc_wxgui.top_block_gui.__init__(self, title="Multimode Radio Receiver")
 		_icon_path = "/usr/share/icons/hicolor/32x32/apps/gnuradio-grc.png"
 		self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
@@ -43,7 +43,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self.xftune = xftune
 		self.offs = offs
 		self.srate = srate
-		self.dmode = dmode
 		self.upclo = upclo
 		self.devinfo = devinfo
 		self.agc = agc
@@ -52,6 +51,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.mbw = mbw
 		self.mthresh = mthresh
 		self.flist = flist
+		self.dmode = dmode
 
 		##################################################
 		# Variables
@@ -74,7 +74,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.quad_rate = quad_rate = wbfm
 		self.mode = mode = dmode
 		self.logpower = logpower = math.log10(rf_power+1.0e-12)*10.0
-		self.deviation_dict = deviation_dict = {'FM' : 5.5e3, 'WFM' : 80e3, 'TV-FM' : 25e3, 'AM' : 9e3, 'USB' : 9e3, 'LSB' : 9e3}
+		self.deviation_dict = deviation_dict = {'NFM1' : 5.0e3, 'NFM2' : 2.0e3, 'WFM' : 80e3, 'TV-FM' : 25e3, 'AM' : 9e3, 'USB' : 9e3, 'LSB' : 9e3}
 		self.cur_freq = cur_freq = mh.scan_freq_out(sc_ena,sc_low,sc_high,freq,ifreq,scan_power+1.0e-14,thresh,sc_incr,scan_rate,sc_listm,sc_list)
 		self.bw = bw = mbw
 		self.xfine = xfine = xftune
@@ -84,6 +84,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.variable_static_text_0 = variable_static_text_0 = float(int(math.log10(rf_d_power+1.0e-14)*100.0)/10.0)
 		self.upc_offset = upc_offset = upclo
 		self.upc = upc = upce
+		self.ssb_modes = ssb_modes = ["USB", "LSB"]
 		self.sc_list_len = sc_list_len = len(sc_list)
 		self.rfgain = rfgain = 25
 		self.record_file = record_file = "recording.wav"
@@ -93,10 +94,13 @@ class multimode(grc_wxgui.top_block_gui):
 		self.k = k = quad_rate/(2*math.pi*deviation_dict[mode])
 		self.iagc = iagc = agc
 		self.freq_update = freq_update = 0
+		self.fm_modes = fm_modes = ["NFM1", "NFM2", "WFM", "TV-FM"]
+		self.fm_mode_labels = fm_mode_labels = ["NFM1(5kHz)", "NFM2(2.5Khz)", "WFM(80Khz)", "TV-FM(25Khz)"]
 		self.fine = fine = ftune
 		self.audio_int_rate = audio_int_rate = 25e3
-		self.am_filt_dict_low = am_filt_dict_low = {'AM' : -bw/2, 'USB' : bw/12, 'LSB': -bw/2, 'FM' : -bw/2, 'WFM' : -bw/2, 'TV-FM' : -bw/2}
-		self.am_filt_dict_high = am_filt_dict_high = {'AM' : bw/2, 'USB' : bw/2, 'LSB': -bw/12, 'FM' : bw/2, 'WFM' : bw/2, 'TV-FM' : bw/2}
+		self.am_modes = am_modes = ["AM"]
+		self.am_filt_dict_low = am_filt_dict_low = {'AM' : -bw/2, 'USB' : bw/12, 'LSB': -bw/2, 'NFM1' : -bw/2, 'NFM2' : bw/2, 'WFM' : -bw/2, 'TV-FM' : -bw/2}
+		self.am_filt_dict_high = am_filt_dict_high = {'AM' : bw/2, 'USB' : bw/2, 'LSB': -bw/12, 'NFM1' : bw/2, 'NFM2' : bw/2, 'WFM' : bw/2, 'TV-FM' : bw/2}
 		self.adjusted = adjusted = "" if int(srate) % int(wbfm) == 0 else " (adjusted)"
 
 		##################################################
@@ -233,14 +237,13 @@ class multimode(grc_wxgui.top_block_gui):
 			proportion=1,
 		)
 		self.Main.GetPage(0).GridAdd(_offset_sizer, 1, 3, 1, 1)
-		self._mode_chooser = forms.radio_buttons(
+		self._mode_chooser = forms.drop_down(
 			parent=self.Main.GetPage(0).GetWin(),
 			value=self.mode,
 			callback=self.set_mode,
 			label="Mode",
-			choices=['FM','AM','USB','LSB','WFM','TV-FM'],
-			labels=[],
-			style=wx.RA_HORIZONTAL,
+			choices=fm_modes+am_modes+ssb_modes,
+			labels=fm_mode_labels+am_modes+ssb_modes,
 		)
 		self.Main.GetPage(0).GridAdd(self._mode_chooser, 0, 4, 1, 1)
 		self._iagc_check_box = forms.check_box(
@@ -529,10 +532,10 @@ class multimode(grc_wxgui.top_block_gui):
 		self.Main.GetPage(0).GridAdd(self._ifreq_text_box, 0, 1, 1, 1)
 		self.gr_wavfile_sink_0 = gr.wavfile_sink("/dev/null" if record == False else record_file, 1, int(audio_int_rate), 8)
 		self.gr_quadrature_demod_cf_0 = gr.quadrature_demod_cf(k)
-		self.gr_multiply_const_vxx_2 = gr.multiply_const_vff((1.0 if mode == 'WFM' or mode == 'FM' or mode == 'TV-FM' else 0.0, ))
+		self.gr_multiply_const_vxx_2 = gr.multiply_const_vff((1.0 if mode in fm_modes else 0.0, ))
 		self.gr_multiply_const_vxx_1 = gr.multiply_const_vff((0.0 if muted else volume/4.5, ))
-		self.gr_multiply_const_vxx_0_0_0 = gr.multiply_const_vff((1.0 if mode == 'AM' else 0.0, ))
-		self.gr_multiply_const_vxx_0_0 = gr.multiply_const_vff((1.25 if (mode == 'LSB' or mode == 'USB') else 0.0, ))
+		self.gr_multiply_const_vxx_0_0_0 = gr.multiply_const_vff((1.0 if mode in am_modes else 0.0, ))
+		self.gr_multiply_const_vxx_0_0 = gr.multiply_const_vff((1.25 if mode in ssb_modes else 0.0, ))
 		self.gr_keep_one_in_n_0 = gr.keep_one_in_n(gr.sizeof_gr_complex*1, int(wbfm/audio_int_rate))
 		self.gr_freq_xlating_fir_filter_xxx_0_1 = gr.freq_xlating_fir_filter_ccc(1, (1.0, ), offset+fine+xfine, samp_rate)
 		self.gr_fractional_interpolator_xx_0 = gr.fractional_interpolator_ff(0, audio_int_rate/arate)
@@ -640,13 +643,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self.set_samp_rate(int(int(self.srate/self.wbfm)*self.wbfm))
 		self.set_adjusted("" if int(self.srate) % int(self.wbfm) == 0 else " (adjusted)")
 
-	def get_dmode(self):
-		return self.dmode
-
-	def set_dmode(self, dmode):
-		self.dmode = dmode
-		self.set_mode(self.dmode)
-
 	def get_upclo(self):
 		return self.upclo
 
@@ -702,6 +698,13 @@ class multimode(grc_wxgui.top_block_gui):
 		self.flist = flist
 		self.set_sc_list_str(self.flist)
 
+	def get_dmode(self):
+		return self.dmode
+
+	def set_dmode(self, dmode):
+		self.dmode = dmode
+		self.set_mode(self.dmode)
+
 	def get_sc_list_str(self):
 		return self.sc_list_str
 
@@ -717,21 +720,21 @@ class multimode(grc_wxgui.top_block_gui):
 		self.wbfm = wbfm
 		self.set_samp_rate(int(int(self.srate/self.wbfm)*self.wbfm))
 		self.set_adjusted("" if int(self.srate) % int(self.wbfm) == 0 else " (adjusted)")
+		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.audio_int_rate))
+		self.low_pass_filter_3.set_taps(firdes.low_pass(1, self.wbfm, 11.5e3, 5.5e3, firdes.WIN_HAMMING, 6.76))
 		self.set_quad_rate(self.wbfm)
 		self.low_pass_filter_2.set_taps(firdes.low_pass(1, self.wbfm, 11.5e3, 4e3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/2.0, firdes.WIN_HAMMING, 6.76))
-		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.audio_int_rate))
-		self.low_pass_filter_3.set_taps(firdes.low_pass(1, self.wbfm, 11.5e3, 5.5e3, firdes.WIN_HAMMING, 6.76))
 
 	def get_thresh(self):
 		return self.thresh
 
 	def set_thresh(self, thresh):
 		self.thresh = thresh
-		self.set_muted(0.0 if self.logpower >= self.thresh else 1)
 		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
 		self._thresh_slider.set_value(self.thresh)
 		self._thresh_text_box.set_value(self.thresh)
+		self.set_muted(0.0 if self.logpower >= self.thresh else 1)
 
 	def get_scan_rate(self):
 		return self.scan_rate
@@ -840,13 +843,13 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_mode(self, mode):
 		self.mode = mode
-		self.gr_multiply_const_vxx_0_0_0.set_k((1.0 if self.mode == 'AM' else 0.0, ))
-		self.gr_multiply_const_vxx_0_0.set_k((1.25 if (self.mode == 'LSB' or self.mode == 'USB') else 0.0, ))
+		self.gr_multiply_const_vxx_0_0_0.set_k((1.0 if self.mode in self.am_modes else 0.0, ))
 		self.set_k(self.quad_rate/(2*math.pi*self.deviation_dict[self.mode]))
+		self.gr_multiply_const_vxx_2.set_k((1.0 if self.mode in self.fm_modes else 0.0, ))
 		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1.0, self.audio_int_rate, self.am_filt_dict_low[self.mode], self.am_filt_dict_high[self.mode], self.bw/3.5, firdes.WIN_HAMMING, 6.76))
-		self.gr_multiply_const_vxx_2.set_k((1.0 if self.mode == 'WFM' or self.mode == 'FM' or self.mode == 'TV-FM' else 0.0, ))
-		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/2.0, firdes.WIN_HAMMING, 6.76))
+		self.gr_multiply_const_vxx_0_0.set_k((1.25 if self.mode in self.ssb_modes else 0.0, ))
 		self._mode_chooser.set_value(self.mode)
+		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/2.0, firdes.WIN_HAMMING, 6.76))
 
 	def get_logpower(self):
 		return self.logpower
@@ -876,11 +879,11 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_bw(self, bw):
 		self.bw = bw
-		self.set_am_filt_dict_high({'AM' : self.bw/2, 'USB' : self.bw/2, 'LSB': -self.bw/12, 'FM' : self.bw/2, 'WFM' : self.bw/2, 'TV-FM' : self.bw/2})
-		self.set_am_filt_dict_low({'AM' : -self.bw/2, 'USB' : self.bw/12, 'LSB': -self.bw/2, 'FM' : -self.bw/2, 'WFM' : -self.bw/2, 'TV-FM' : -self.bw/2})
-		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1.0, self.audio_int_rate, self.am_filt_dict_low[self.mode], self.am_filt_dict_high[self.mode], self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 		self._bw_slider.set_value(self.bw)
 		self._bw_text_box.set_value(self.bw)
+		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1.0, self.audio_int_rate, self.am_filt_dict_low[self.mode], self.am_filt_dict_high[self.mode], self.bw/3.5, firdes.WIN_HAMMING, 6.76))
+		self.set_am_filt_dict_high({'AM' : self.bw/2, 'USB' : self.bw/2, 'LSB': -self.bw/12, 'NFM1' : self.bw/2, 'NFM2' : self.bw/2, 'WFM' : self.bw/2, 'TV-FM' : self.bw/2})
+		self.set_am_filt_dict_low({'AM' : -self.bw/2, 'USB' : self.bw/12, 'LSB': -self.bw/2, 'NFM1' : -self.bw/2, 'NFM2' : self.bw/2, 'WFM' : -self.bw/2, 'TV-FM' : -self.bw/2})
 
 	def get_xfine(self):
 		return self.xfine
@@ -936,6 +939,13 @@ class multimode(grc_wxgui.top_block_gui):
 		self.upc = upc
 		self.osmosdr_source_c_0.set_center_freq(self.cur_freq+self.offset+(self.upc_offset*float(self.upc)), 0)
 		self._upc_check_box.set_value(self.upc)
+
+	def get_ssb_modes(self):
+		return self.ssb_modes
+
+	def set_ssb_modes(self, ssb_modes):
+		self.ssb_modes = ssb_modes
+		self.gr_multiply_const_vxx_0_0.set_k((1.25 if self.mode in self.ssb_modes else 0.0, ))
 
 	def get_sc_list_len(self):
 		return self.sc_list_len
@@ -1009,6 +1019,19 @@ class multimode(grc_wxgui.top_block_gui):
 		self.wxgui_waterfallsink2_0.set_baseband_freq(mh.get_last_returned(self.freq_update))
 		self.wxgui_fftsink2_0.set_baseband_freq(mh.get_last_returned(self.freq_update))
 
+	def get_fm_modes(self):
+		return self.fm_modes
+
+	def set_fm_modes(self, fm_modes):
+		self.fm_modes = fm_modes
+		self.gr_multiply_const_vxx_2.set_k((1.0 if self.mode in self.fm_modes else 0.0, ))
+
+	def get_fm_mode_labels(self):
+		return self.fm_mode_labels
+
+	def set_fm_mode_labels(self, fm_mode_labels):
+		self.fm_mode_labels = fm_mode_labels
+
 	def get_fine(self):
 		return self.fine
 
@@ -1025,10 +1048,17 @@ class multimode(grc_wxgui.top_block_gui):
 		self.audio_int_rate = audio_int_rate
 		self.gr_fractional_interpolator_xx_0.set_interp_ratio(self.audio_int_rate/self.arate)
 		self.band_pass_filter_1.set_taps(firdes.band_pass(1.25, self.audio_int_rate, 100, 5.5e3, 2.0e3, firdes.WIN_HAMMING, 6.76))
-		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1.0, self.audio_int_rate, self.am_filt_dict_low[self.mode], self.am_filt_dict_high[self.mode], self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.audio_int_rate))
 		self.wxgui_waterfallsink2_0_0.set_sample_rate(self.audio_int_rate)
 		self.wxgui_fftsink2_0_0.set_sample_rate(self.audio_int_rate)
+		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1.0, self.audio_int_rate, self.am_filt_dict_low[self.mode], self.am_filt_dict_high[self.mode], self.bw/3.5, firdes.WIN_HAMMING, 6.76))
+
+	def get_am_modes(self):
+		return self.am_modes
+
+	def set_am_modes(self, am_modes):
+		self.am_modes = am_modes
+		self.gr_multiply_const_vxx_0_0_0.set_k((1.0 if self.mode in self.am_modes else 0.0, ))
 
 	def get_am_filt_dict_low(self):
 		return self.am_filt_dict_low
@@ -1068,8 +1098,6 @@ if __name__ == '__main__':
 		help="Set LO Offset [default=%default]")
 	parser.add_option("", "--srate", dest="srate", type="eng_float", default=eng_notation.num_to_str(1.0e6),
 		help="Set RF Sample Rate [default=%default]")
-	parser.add_option("", "--dmode", dest="dmode", type="string", default="FM",
-		help="Set Demod Mode [default=%default]")
 	parser.add_option("", "--upclo", dest="upclo", type="eng_float", default=eng_notation.num_to_str(0.0),
 		help="Set Upconverter LO Frequency [default=%default]")
 	parser.add_option("", "--devinfo", dest="devinfo", type="string", default="rtl=0",
@@ -1086,7 +1114,9 @@ if __name__ == '__main__':
 		help="Set Mute Threshold (dB) [default=%default]")
 	parser.add_option("", "--flist", dest="flist", type="string", default="",
 		help="Set Frequency Scan List [default=%default]")
+	parser.add_option("", "--dmode", dest="dmode", type="string", default="NFM1",
+		help="Set Demod Mode [default=%default]")
 	(options, args) = parser.parse_args()
-	tb = multimode(ahw=options.ahw, freq=options.freq, ppm=options.ppm, vol=options.vol, ftune=options.ftune, xftune=options.xftune, offs=options.offs, srate=options.srate, dmode=options.dmode, upclo=options.upclo, devinfo=options.devinfo, agc=options.agc, arate=options.arate, upce=options.upce, mbw=options.mbw, mthresh=options.mthresh, flist=options.flist)
+	tb = multimode(ahw=options.ahw, freq=options.freq, ppm=options.ppm, vol=options.vol, ftune=options.ftune, xftune=options.xftune, offs=options.offs, srate=options.srate, upclo=options.upclo, devinfo=options.devinfo, agc=options.agc, arate=options.arate, upce=options.upce, mbw=options.mbw, mthresh=options.mthresh, flist=options.flist, dmode=options.dmode)
 	tb.Run(True, 350)
 
