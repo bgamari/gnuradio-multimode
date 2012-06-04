@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Mon Jun  4 18:37:10 2012</timestamp>
+  <timestamp>Mon Jun  4 18:39:20 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -2814,49 +2814,6 @@
     </param>
   </block>
   <block>
-    <key>gr_agc2_xx</key>
-    <param>
-      <key>id</key>
-      <value>gr_agc2_xx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>attack_rate</key>
-      <value>1e-2</value>
-    </param>
-    <param>
-      <key>decay_rate</key>
-      <value>1e-3</value>
-    </param>
-    <param>
-      <key>reference</key>
-      <value>0.75</value>
-    </param>
-    <param>
-      <key>gain</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>max_gain</key>
-      <value>0.0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(348, 501)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>import</key>
     <param>
       <key>id</key>
@@ -2896,61 +2853,6 @@
     <param>
       <key>_coordinate</key>
       <value>(645, 359)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>low_pass_filter</key>
-    <param>
-      <key>id</key>
-      <value>low_pass_filter_3</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>fir_filter_ccf</value>
-    </param>
-    <param>
-      <key>decim</key>
-      <value>int(wbfm/audio_int_rate)</value>
-    </param>
-    <param>
-      <key>interp</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>gain</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>wbfm</value>
-    </param>
-    <param>
-      <key>cutoff_freq</key>
-      <value>11.5e3</value>
-    </param>
-    <param>
-      <key>width</key>
-      <value>7.5e3</value>
-    </param>
-    <param>
-      <key>win</key>
-      <value>firdes.WIN_HAMMING</value>
-    </param>
-    <param>
-      <key>beta</key>
-      <value>6.76</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1139, 853)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3702,6 +3604,49 @@
     </param>
   </block>
   <block>
+    <key>gr_agc2_xx</key>
+    <param>
+      <key>id</key>
+      <value>gr_agc2_xx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>attack_rate</key>
+      <value>1e-2</value>
+    </param>
+    <param>
+      <key>decay_rate</key>
+      <value>1e-3</value>
+    </param>
+    <param>
+      <key>reference</key>
+      <value>0.75</value>
+    </param>
+    <param>
+      <key>gain</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>max_gain</key>
+      <value>0.0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(348, 501)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>low_pass_filter</key>
     <param>
       <key>id</key>
@@ -3717,7 +3662,7 @@
     </param>
     <param>
       <key>decim</key>
-      <value>5</value>
+      <value>int(samp_rate/wbfm)</value>
     </param>
     <param>
       <key>interp</key>
@@ -3757,10 +3702,10 @@
     </param>
   </block>
   <block>
-    <key>gr_fractional_interpolator_xx</key>
+    <key>low_pass_filter</key>
     <param>
       <key>id</key>
-      <value>gr_fractional_interpolator_xx_1</value>
+      <value>low_pass_filter_3</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -3768,19 +3713,43 @@
     </param>
     <param>
       <key>type</key>
-      <value>complex</value>
+      <value>fir_filter_ccf</value>
     </param>
     <param>
-      <key>phase_shift</key>
-      <value>0</value>
+      <key>decim</key>
+      <value>int(wbfm/audio_int_rate)</value>
     </param>
     <param>
-      <key>interp_ratio</key>
-      <value>(samp_rate/5)/wbfm</value>
+      <key>interp</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>gain</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>wbfm</value>
+    </param>
+    <param>
+      <key>cutoff_freq</key>
+      <value>11.5e3</value>
+    </param>
+    <param>
+      <key>width</key>
+      <value>7.5e3</value>
+    </param>
+    <param>
+      <key>win</key>
+      <value>firdes.WIN_HAMMING</value>
+    </param>
+    <param>
+      <key>beta</key>
+      <value>6.76</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(284, 645)</value>
+      <value>(1139, 853)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3957,18 +3926,12 @@
   </connection>
   <connection>
     <source_block_id>low_pass_filter_1</source_block_id>
-    <sink_block_id>gr_fractional_interpolator_xx_1</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>gr_fractional_interpolator_xx_1</source_block_id>
     <sink_block_id>gr_agc2_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_fractional_interpolator_xx_1</source_block_id>
+    <source_block_id>low_pass_filter_1</source_block_id>
     <sink_block_id>low_pass_filter_3</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
