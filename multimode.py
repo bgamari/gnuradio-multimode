@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Mon Jun  4 01:02:56 2012
+# Generated: Mon Jun  4 01:10:46 2012
 ##################################################
 
 from gnuradio import audio
@@ -99,7 +99,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.fine = fine = ftune
 		self.audio_int_rate = audio_int_rate = 25e3
 		self.am_modes = am_modes = ["AM"]
-		self.am_filt_dict_low = am_filt_dict_low = {'AM' : -bw/2, 'USB' : bw/12, 'LSB': -bw/2, 'NFM1' : -bw/2, 'NFM2' : bw/2, 'WFM' : -bw/2, 'TV-FM' : -bw/2}
+		self.am_filt_dict_low = am_filt_dict_low = {'AM' : -bw/2, 'USB' : bw/12, 'LSB': -bw/2, 'NFM1' : -bw/2, 'NFM2' : -bw/2, 'WFM' : -bw/2, 'TV-FM' : -bw/2}
 		self.am_filt_dict_high = am_filt_dict_high = {'AM' : bw/2, 'USB' : bw/2, 'LSB': -bw/12, 'NFM1' : bw/2, 'NFM2' : bw/2, 'WFM' : bw/2, 'TV-FM' : bw/2}
 		self.adjusted = adjusted = "" if int(srate) % int(wbfm) == 0 else " (adjusted)"
 
@@ -345,23 +345,6 @@ class multimode(grc_wxgui.top_block_gui):
 			self.set_freq(x)
 		
 		self.wxgui_waterfallsink2_0.set_callback(wxgui_waterfallsink2_0_callback)
-		self.wxgui_fftsink2_0_0 = fftsink2.fft_sink_c(
-			self.Main.GetPage(1).GetWin(),
-			baseband_freq=0,
-			y_per_div=10,
-			y_divs=10,
-			ref_level=0,
-			ref_scale=2.0,
-			sample_rate=audio_int_rate,
-			fft_size=2048,
-			fft_rate=4,
-			average=True,
-			avg_alpha=0.250,
-			title="Detailed Spectrum",
-			peak_hold=False,
-			win=window.hamming,
-		)
-		self.Main.GetPage(1).Add(self.wxgui_fftsink2_0_0.win)
 		self.wxgui_fftsink2_0 = fftsink2.fft_sink_c(
 			self.Main.GetPage(0).GetWin(),
 			baseband_freq=mh.get_last_returned(freq_update),
@@ -584,7 +567,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self.connect((self.gr_complex_to_real_0, 0), (self.gr_multiply_const_vxx_0_0, 0))
 		self.connect((self.low_pass_filter_3, 0), (self.wxgui_waterfallsink2_0_0, 0))
 		self.connect((self.low_pass_filter_1, 0), (self.low_pass_filter_3, 0))
-		self.connect((self.low_pass_filter_3, 0), (self.wxgui_fftsink2_0_0, 0))
 
 	def get_ahw(self):
 		return self.ahw
@@ -846,10 +828,10 @@ class multimode(grc_wxgui.top_block_gui):
 		self.gr_multiply_const_vxx_0_0_0.set_k((1.0 if self.mode in self.am_modes else 0.0, ))
 		self.set_k(self.quad_rate/(2*math.pi*self.deviation_dict[self.mode]))
 		self.gr_multiply_const_vxx_2.set_k((1.0 if self.mode in self.fm_modes else 0.0, ))
-		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1.0, self.audio_int_rate, self.am_filt_dict_low[self.mode], self.am_filt_dict_high[self.mode], self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 		self.gr_multiply_const_vxx_0_0.set_k((1.25 if self.mode in self.ssb_modes else 0.0, ))
 		self._mode_chooser.set_value(self.mode)
 		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/2.0, firdes.WIN_HAMMING, 6.76))
+		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1.0, self.audio_int_rate, self.am_filt_dict_low[self.mode], self.am_filt_dict_high[self.mode], self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 
 	def get_logpower(self):
 		return self.logpower
@@ -883,7 +865,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self._bw_text_box.set_value(self.bw)
 		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1.0, self.audio_int_rate, self.am_filt_dict_low[self.mode], self.am_filt_dict_high[self.mode], self.bw/3.5, firdes.WIN_HAMMING, 6.76))
 		self.set_am_filt_dict_high({'AM' : self.bw/2, 'USB' : self.bw/2, 'LSB': -self.bw/12, 'NFM1' : self.bw/2, 'NFM2' : self.bw/2, 'WFM' : self.bw/2, 'TV-FM' : self.bw/2})
-		self.set_am_filt_dict_low({'AM' : -self.bw/2, 'USB' : self.bw/12, 'LSB': -self.bw/2, 'NFM1' : -self.bw/2, 'NFM2' : self.bw/2, 'WFM' : -self.bw/2, 'TV-FM' : -self.bw/2})
+		self.set_am_filt_dict_low({'AM' : -self.bw/2, 'USB' : self.bw/12, 'LSB': -self.bw/2, 'NFM1' : -self.bw/2, 'NFM2' : -self.bw/2, 'WFM' : -self.bw/2, 'TV-FM' : -self.bw/2})
 
 	def get_xfine(self):
 		return self.xfine
@@ -1050,7 +1032,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self.band_pass_filter_1.set_taps(firdes.band_pass(1.25, self.audio_int_rate, 100, 5.5e3, 2.0e3, firdes.WIN_HAMMING, 6.76))
 		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.audio_int_rate))
 		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1.0, self.audio_int_rate, self.am_filt_dict_low[self.mode], self.am_filt_dict_high[self.mode], self.bw/3.5, firdes.WIN_HAMMING, 6.76))
-		self.wxgui_fftsink2_0_0.set_sample_rate(self.audio_int_rate)
 		self.wxgui_waterfallsink2_0_0.set_sample_rate(self.audio_int_rate)
 
 	def get_am_modes(self):
