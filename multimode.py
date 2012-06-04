@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Mon Jun  4 17:40:22 2012
+# Generated: Mon Jun  4 17:52:52 2012
 ##################################################
 
 from gnuradio import audio
@@ -73,7 +73,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.quad_rate = quad_rate = wbfm
 		self.mode = mode = dmode
 		self.logpower = logpower = math.log10(rf_power+1.0e-12)*10.0
-		self.israte = israte = 1.0e6
+		self.israte = israte = srate
 		self.deviation_dict = deviation_dict = {'NFM1' : 5.0e3, 'NFM2' : 2.0e3, 'WFM' : 80e3, 'TV-FM' : 25e3, 'AM' : 9e3, 'USB' : 9e3, 'LSB' : 9e3}
 		self.cur_freq = cur_freq = mh.scan_freq_out(sc_ena,sc_low,sc_high,freq,ifreq,scan_power+1.0e-14,thresh,sc_incr,scan_rate,sc_listm,sc_list)
 		self.bw = bw = mbw
@@ -501,7 +501,7 @@ class multimode(grc_wxgui.top_block_gui):
 			parent=self.Main.GetPage(0).GetWin(),
 			value=self.israte,
 			callback=self.set_israte,
-			label="srate",
+			label="Samp Rate",
 			choices=[1.0e6,1.4e6,1.8e6,2.0e6,2.4e6,2.8e6],
 			labels=["1M", "1.4M", "1.8M", "2.0M", "2.4M", "2.8M"],
 		)
@@ -626,6 +626,7 @@ class multimode(grc_wxgui.top_block_gui):
 	def set_srate(self, srate):
 		self.srate = srate
 		self.set_adjusted("" if int(self.srate) % int(self.wbfm) == 0 else " (adjusted)")
+		self.set_israte(self.srate)
 
 	def get_upclo(self):
 		return self.upclo
@@ -707,9 +708,9 @@ class multimode(grc_wxgui.top_block_gui):
 		self.set_quad_rate(self.wbfm)
 		self.low_pass_filter_2.set_taps(firdes.low_pass(1, self.wbfm, 11.5e3, 4e3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/2.0, firdes.WIN_HAMMING, 6.76))
-		self.set_samp_rate(int(int(self.israte/self.wbfm)*self.wbfm))
 		self.low_pass_filter_3.set_taps(firdes.low_pass(1, self.wbfm, 11.5e3, 5.5e3, firdes.WIN_HAMMING, 6.76))
 		self.gr_keep_one_in_n_1.set_n(int(self.samp_rate/self.wbfm))
+		self.set_samp_rate(int(int(self.israte/self.wbfm)*self.wbfm))
 
 	def get_thresh(self):
 		return self.thresh
@@ -837,8 +838,8 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_israte(self, israte):
 		self.israte = israte
-		self._israte_chooser.set_value(self.israte)
 		self.set_samp_rate(int(int(self.israte/self.wbfm)*self.wbfm))
+		self._israte_chooser.set_value(self.israte)
 
 	def get_deviation_dict(self):
 		return self.deviation_dict

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Mon Jun  4 17:40:21 2012</timestamp>
+  <timestamp>Mon Jun  4 17:52:52 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -3272,80 +3272,6 @@
     </param>
   </block>
   <block>
-    <key>variable_chooser</key>
-    <param>
-      <key>id</key>
-      <value>israte</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>srate</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>1.0e6</value>
-    </param>
-    <param>
-      <key>choices</key>
-      <value>[1.0e6,1.4e6,1.8e6,2.0e6,2.4e6,2.8e6]</value>
-    </param>
-    <param>
-      <key>labels</key>
-      <value>["1M", "1.4M", "1.8M", "2.0M", "2.4M", "2.8M"]</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>drop_down</value>
-    </param>
-    <param>
-      <key>style</key>
-      <value>wx.RA_HORIZONTAL</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value>1,4,1,1</value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value>Main,0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(173, 1543)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>int(int(israte/wbfm)*wbfm)</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(12, 189)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>band_pass_filter</key>
     <param>
       <key>id</key>
@@ -3850,6 +3776,80 @@
     <param>
       <key>_coordinate</key>
       <value>(493, 1195)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>int(int(israte/wbfm)*wbfm)</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(12, 190)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_chooser</key>
+    <param>
+      <key>id</key>
+      <value>israte</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Samp Rate</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>srate</value>
+    </param>
+    <param>
+      <key>choices</key>
+      <value>[1.0e6,1.4e6,1.8e6,2.0e6,2.4e6,2.8e6]</value>
+    </param>
+    <param>
+      <key>labels</key>
+      <value>["1M", "1.4M", "1.8M", "2.0M", "2.4M", "2.8M"]</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>drop_down</value>
+    </param>
+    <param>
+      <key>style</key>
+      <value>wx.RA_HORIZONTAL</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value>1,4,1,1</value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value>Main,0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(173, 1543)</value>
     </param>
     <param>
       <key>_rotation</key>
