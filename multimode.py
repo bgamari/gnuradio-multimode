@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Mon Jun  4 18:51:53 2012
+# Generated: Mon Jun  4 18:58:13 2012
 ##################################################
 
 from gnuradio import audio
@@ -489,6 +489,8 @@ class multimode(grc_wxgui.top_block_gui):
 		self.osmosdr_source_c_0.set_gain(25 if iagc == 1 else rfgain, 0)
 		self.low_pass_filter_3 = gr.fir_filter_ccf(int(wbfm/audio_int_rate), firdes.low_pass(
 			1, wbfm, 11.5e3, 7.5e3, firdes.WIN_HAMMING, 6.76))
+		self.low_pass_filter_2_0 = gr.fir_filter_fff(1, firdes.low_pass(
+			1.25, audio_int_rate, 6.5e3, 2.5e3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_2 = gr.fir_filter_fff(int(wbfm/audio_int_rate), firdes.low_pass(
 			1, wbfm, 11.5e3, 4.5e3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_1 = gr.fir_filter_ccf(5, firdes.low_pass(
@@ -528,8 +530,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self.gr_agc2_xx_0 = gr.agc2_cc(1e-2, 1e-3, 0.75, 1.0, 0.0)
 		self.gr_add_xx_0 = gr.add_vff(1)
 		self.blks2_fm_deemph_0 = blks2.fm_deemph(fs=audio_int_rate, tau=75e-6)
-		self.band_pass_filter_1 = gr.fir_filter_fff(1, firdes.band_pass(
-			1.25, audio_int_rate, 100, 6.0e3, 2.5e3, firdes.WIN_HAMMING, 6.76))
 		self.band_pass_filter_0 = gr.fir_filter_ccc(1, firdes.complex_band_pass(
 			1.0, audio_int_rate, am_filt_dict_low[mode], am_filt_dict_high[mode], bw/2.5, firdes.WIN_HAMMING, 6.76))
 		self.audio_sink_0 = audio.sink(int(arate), ahw, True)
@@ -553,8 +553,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self.connect((self.gr_multiply_const_vxx_0_0_0, 0), (self.gr_add_xx_0, 2))
 		self.connect((self.gr_freq_xlating_fir_filter_xxx_0_1, 0), (self.low_pass_filter_1, 0))
 		self.connect((self.gr_freq_xlating_fir_filter_xxx_0_1, 0), (self.wxgui_fftsink2_0, 0))
-		self.connect((self.gr_complex_to_mag_squared_0, 0), (self.band_pass_filter_1, 0))
-		self.connect((self.band_pass_filter_1, 0), (self.gr_multiply_const_vxx_0_0_0, 0))
 		self.connect((self.gr_agc2_xx_0, 0), (self.low_pass_filter_0, 0))
 		self.connect((self.gr_keep_one_in_n_0, 0), (self.display_probe, 0))
 		self.connect((self.gr_keep_one_in_n_0, 0), (self.rf_probe, 0))
@@ -568,6 +566,8 @@ class multimode(grc_wxgui.top_block_gui):
 		self.connect((self.low_pass_filter_1, 0), (self.gr_fractional_interpolator_xx_1, 0))
 		self.connect((self.gr_fractional_interpolator_xx_1, 0), (self.gr_agc2_xx_0, 0))
 		self.connect((self.gr_fractional_interpolator_xx_1, 0), (self.low_pass_filter_3, 0))
+		self.connect((self.gr_complex_to_mag_squared_0, 0), (self.low_pass_filter_2_0, 0))
+		self.connect((self.low_pass_filter_2_0, 0), (self.gr_multiply_const_vxx_0_0_0, 0))
 
 	def get_ahw(self):
 		return self.ahw
@@ -789,11 +789,11 @@ class multimode(grc_wxgui.top_block_gui):
 		self.wbfm = wbfm
 		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.audio_int_rate))
 		self.set_k(self.wbfm/(2*math.pi*self.deviation_dict[self.mode]))
-		self.low_pass_filter_2.set_taps(firdes.low_pass(1, self.wbfm, 11.5e3, 4.5e3, firdes.WIN_HAMMING, 6.76))
 		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/1.85, firdes.WIN_HAMMING, 6.76))
-		self.set_samp_rate(int(int(self.israte/self.wbfm)*self.wbfm))
 		self.low_pass_filter_3.set_taps(firdes.low_pass(1, self.wbfm, 11.5e3, 7.5e3, firdes.WIN_HAMMING, 6.76))
 		self.gr_fractional_interpolator_xx_1.set_interp_ratio(int(self.samp_rate/5)/self.wbfm)
+		self.set_samp_rate(int(int(self.israte/self.wbfm)*self.wbfm))
+		self.low_pass_filter_2.set_taps(firdes.low_pass(1, self.wbfm, 11.5e3, 4.5e3, firdes.WIN_HAMMING, 6.76))
 
 	def get_rf_d_power(self):
 		return self.rf_d_power
@@ -807,13 +807,13 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_mode(self, mode):
 		self.mode = mode
-		self.gr_multiply_const_vxx_0_0_0.set_k((1.0 if self.mode in self.am_modes else 0.0, ))
 		self.gr_multiply_const_vxx_2.set_k((1.0 if self.mode in self.fm_modes else 0.0, ))
 		self.gr_multiply_const_vxx_0_0.set_k((1.25 if self.mode in self.ssb_modes else 0.0, ))
 		self.set_k(self.wbfm/(2*math.pi*self.deviation_dict[self.mode]))
 		self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.wbfm, self.deviation_dict[self.mode]*1.15, self.deviation_dict[self.mode]/1.85, firdes.WIN_HAMMING, 6.76))
 		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1.0, self.audio_int_rate, self.am_filt_dict_low[self.mode], self.am_filt_dict_high[self.mode], self.bw/2.5, firdes.WIN_HAMMING, 6.76))
 		self._mode_chooser.set_value(self.mode)
+		self.gr_multiply_const_vxx_0_0_0.set_k((1.0 if self.mode in self.am_modes else 0.0, ))
 
 	def get_logpower(self):
 		return self.logpower
@@ -1025,9 +1025,9 @@ class multimode(grc_wxgui.top_block_gui):
 		self.audio_int_rate = audio_int_rate
 		self.wxgui_waterfallsink2_0_0.set_sample_rate(self.audio_int_rate)
 		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.audio_int_rate))
-		self.band_pass_filter_1.set_taps(firdes.band_pass(1.25, self.audio_int_rate, 100, 6.0e3, 2.5e3, firdes.WIN_HAMMING, 6.76))
 		self.band_pass_filter_0.set_taps(firdes.complex_band_pass(1.0, self.audio_int_rate, self.am_filt_dict_low[self.mode], self.am_filt_dict_high[self.mode], self.bw/2.5, firdes.WIN_HAMMING, 6.76))
 		self.gr_fractional_interpolator_xx_0.set_interp_ratio(self.audio_int_rate/self.arate)
+		self.low_pass_filter_2_0.set_taps(firdes.low_pass(1.25, self.audio_int_rate, 6.5e3, 2.5e3, firdes.WIN_HAMMING, 6.76))
 
 	def get_am_modes(self):
 		return self.am_modes
