@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Tue Jun  5 16:49:32 2012
+# Generated: Tue Jun  5 19:15:03 2012
 ##################################################
 
 from gnuradio import audio
@@ -94,7 +94,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.k = k = wbfm/(2*math.pi*deviation_dict[mode])
 		self.iagc = iagc = agc
 		self.freq_update = freq_update = 0
-		self.fm_mode_labels = fm_mode_labels = ["NFM1(5kHz)", "NFM2(2.5Khz)", "WFM(80Khz)", "TV-FM(25Khz)"]
+		self.fm_mode_labels = fm_mode_labels = ["NFM1(5kHz)", "NFM2(2.5kHz)", "WFM(75kHz)", "TV-FM(25kHz)"]
 		self.fine = fine = ftune
 		self.audio_int_rate = audio_int_rate = 25e3
 		self.am_modes = am_modes = ["AM"]
