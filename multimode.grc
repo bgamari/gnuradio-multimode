@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Mon Jun  4 22:51:30 2012</timestamp>
+  <timestamp>Mon Jun  4 23:17:52 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -1623,29 +1623,6 @@
     </param>
   </block>
   <block>
-    <key>note</key>
-    <param>
-      <key>id</key>
-      <value>note_3</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>note</key>
-      <value>set  to ifreq and regen</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1503, 607)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>variable_static_text</key>
     <param>
       <key>id</key>
@@ -2585,37 +2562,6 @@
     </param>
   </block>
   <block>
-    <key>gr_multiply_const_vxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_multiply_const_vxx_1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>const</key>
-      <value>0.0 if muted else volume/4.5</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1346, 430)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>variable</key>
     <param>
       <key>id</key>
@@ -2632,61 +2578,6 @@
     <param>
       <key>_coordinate</key>
       <value>(663, 504)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>low_pass_filter</key>
-    <param>
-      <key>id</key>
-      <value>low_pass_filter_1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>fir_filter_ccf</value>
-    </param>
-    <param>
-      <key>decim</key>
-      <value>int(samp_rate/wbfm)</value>
-    </param>
-    <param>
-      <key>interp</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>gain</key>
-      <value>1.5</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>cutoff_freq</key>
-      <value>98e3</value>
-    </param>
-    <param>
-      <key>width</key>
-      <value>55e3</value>
-    </param>
-    <param>
-      <key>win</key>
-      <value>firdes.WIN_HAMMING</value>
-    </param>
-    <param>
-      <key>beta</key>
-      <value>6.76</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(67, 598)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3159,37 +3050,6 @@
     </param>
   </block>
   <block>
-    <key>gr_fractional_interpolator_xx</key>
-    <param>
-      <key>id</key>
-      <value>gr_fractional_interpolator_xx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>phase_shift</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>interp_ratio</key>
-      <value>audio_int_rate/arate</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1324, 338)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_wavfile_sink</key>
     <param>
       <key>id</key>
@@ -3256,68 +3116,6 @@
     </param>
   </block>
   <block>
-    <key>gr_freq_xlating_fir_filter_xxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_freq_xlating_fir_filter_xxx_0_1_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>ccc</value>
-    </param>
-    <param>
-      <key>decim</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>taps</key>
-      <value>shift_taps</value>
-    </param>
-    <param>
-      <key>center_freq</key>
-      <value>-bw/2 if mode == "LSB" else 0.0</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>wbfm</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(308, 385)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>shift_taps</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>firdes.low_pass(1.5,wbfm,deviation_dict[mode]*1.10,deviation_dict[mode]/1.85,firdes.WIN_HAMMING,6.76) if mode in fm_modes else firdes.low_pass(1.5,wbfm,12.5e3,5.0e3,firdes.WIN_HAMMING,6.76)</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(307, 484)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_keep_one_in_n</key>
     <param>
       <key>id</key>
@@ -3376,6 +3174,68 @@
     </param>
   </block>
   <block>
+    <key>gr_fractional_interpolator_xx</key>
+    <param>
+      <key>id</key>
+      <value>gr_fractional_interpolator_xx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>phase_shift</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>interp_ratio</key>
+      <value>audio_int_rate/arate</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1438, 122)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_multiply_const_vxx</key>
+    <param>
+      <key>id</key>
+      <value>gr_multiply_const_vxx_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>const</key>
+      <value>0.0 if muted else volume/4.5</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1496, 297)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>low_pass_filter</key>
     <param>
       <key>id</key>
@@ -3411,7 +3271,7 @@
     </param>
     <param>
       <key>width</key>
-      <value>bw/3.5</value>
+      <value>bw/3.0</value>
     </param>
     <param>
       <key>win</key>
@@ -3424,6 +3284,123 @@
     <param>
       <key>_coordinate</key>
       <value>(539, 96)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>low_pass_filter</key>
+    <param>
+      <key>id</key>
+      <value>low_pass_filter_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>fir_filter_ccf</value>
+    </param>
+    <param>
+      <key>decim</key>
+      <value>int(samp_rate/wbfm)</value>
+    </param>
+    <param>
+      <key>interp</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>gain</key>
+      <value>1.5</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>cutoff_freq</key>
+      <value>(wbfm/2)-1.5e3</value>
+    </param>
+    <param>
+      <key>width</key>
+      <value>wbfm/3.0</value>
+    </param>
+    <param>
+      <key>win</key>
+      <value>firdes.WIN_HAMMING</value>
+    </param>
+    <param>
+      <key>beta</key>
+      <value>6.76</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(316, 600)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_freq_xlating_fir_filter_xxx</key>
+    <param>
+      <key>id</key>
+      <value>gr_freq_xlating_fir_filter_xxx_0_1_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>ccc</value>
+    </param>
+    <param>
+      <key>decim</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>main_taps</value>
+    </param>
+    <param>
+      <key>center_freq</key>
+      <value>-bw/2 if mode == "LSB" else 0.0</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>wbfm</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(308, 385)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>main_taps</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>firdes.low_pass(1.5,wbfm,deviation_dict[mode]*1.10,deviation_dict[mode]/1.85,firdes.WIN_HAMMING,6.76) if mode in fm_modes else firdes.low_pass(1.5,wbfm,12.5e3,6.0e3,firdes.WIN_HAMMING,6.76)</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(307, 484)</value>
     </param>
     <param>
       <key>_rotation</key>
