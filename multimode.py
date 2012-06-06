@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Wed Jun  6 19:10:54 2012
+# Generated: Wed Jun  6 19:48:35 2012
 ##################################################
 
 from gnuradio import audio
@@ -57,7 +57,6 @@ class multimode(grc_wxgui.top_block_gui):
 		##################################################
 		# Variables
 		##################################################
-		self.wbfm = wbfm = 200e3
 		self.sc_list_str = sc_list_str = flist
 		self.zoom = zoom = 1
 		self.thresh = thresh = mthresh
@@ -69,10 +68,11 @@ class multimode(grc_wxgui.top_block_gui):
 		self.sc_incr = sc_incr = 12.5e3
 		self.sc_high = sc_high = 300e6
 		self.sc_ena = sc_ena = False
-		self.samp_rate = samp_rate = int(int(srate/wbfm)*wbfm)
+		self.samp_rate = samp_rate = int(mh.get_good_rate(devinfo,srate))
 		self.rf_power = rf_power = 0
 		self.ifreq = ifreq = freq
 		self.zoomed_lp = zoomed_lp = (samp_rate/2.1)/zoom
+		self.wbfm = wbfm = 200e3
 		self.rf_d_power = rf_d_power = 0
 		self.mode = mode = dmode
 		self.logpower = logpower = math.log10(rf_power+1.0e-14)*10.0
@@ -369,7 +369,7 @@ class multimode(grc_wxgui.top_block_gui):
 			parent=self.Main.GetPage(0).GetWin(),
 			value=self.variable_static_text_0_0,
 			callback=self.set_variable_static_text_0_0,
-			label="Actual Samp Rate",
+			label="Actual srate",
 			converter=forms.float_converter(),
 		)
 		self.Main.GetPage(0).GridAdd(self._variable_static_text_0_0_static_text, 1, 5, 1, 1)
@@ -602,7 +602,7 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_srate(self, srate):
 		self.srate = srate
-		self.set_samp_rate(int(int(self.srate/self.wbfm)*self.wbfm))
+		self.set_samp_rate(int(mh.get_good_rate(self.devinfo,self.srate)))
 
 	def get_upclo(self):
 		return self.upclo
@@ -616,6 +616,7 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_devinfo(self, devinfo):
 		self.devinfo = devinfo
+		self.set_samp_rate(int(mh.get_good_rate(self.devinfo,self.srate)))
 
 	def get_agc(self):
 		return self.agc
@@ -679,18 +680,6 @@ class multimode(grc_wxgui.top_block_gui):
 	def set_dfifo(self, dfifo):
 		self.dfifo = dfifo
 		self.gr_file_sink_0.open("/dev/null" if mh.get_mode_type(self.mode) != "DIG" else self.dfifo)
-
-	def get_wbfm(self):
-		return self.wbfm
-
-	def set_wbfm(self, wbfm):
-		self.wbfm = wbfm
-		self.set_samp_rate(int(int(self.srate/self.wbfm)*self.wbfm))
-		self.gr_fft_filter_xxx_2.set_taps((firdes.low_pass(1.0,self.wbfm,11.75e3,5e3,firdes.WIN_HAMMING,6.76)))
-		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.digi_rate))
-		self.gr_fft_filter_xxx_1.set_taps((firdes.low_pass(1.0,self.wbfm,self.bw/2.0,self.bw/3.3,firdes.WIN_HAMMING,6.76)))
-		self.set_main_taps(firdes.low_pass(1.0,self.wbfm,mh.get_mode_deviation(self.mode)*1.10,mh.get_mode_deviation(self.mode)/2.25,firdes.WIN_HAMMING,6.76))
-		self.set_k(self.wbfm/(2*math.pi*mh.get_mode_deviation(self.mode)))
 
 	def get_sc_list_str(self):
 		return self.sc_list_str
@@ -818,6 +807,17 @@ class multimode(grc_wxgui.top_block_gui):
 	def set_zoomed_lp(self, zoomed_lp):
 		self.zoomed_lp = zoomed_lp
 		self.set_zoom_taps(firdes.low_pass(1.0,self.samp_rate,self.zoomed_lp,self.zoomed_lp/3,firdes.WIN_HAMMING,6.76))
+
+	def get_wbfm(self):
+		return self.wbfm
+
+	def set_wbfm(self, wbfm):
+		self.wbfm = wbfm
+		self.gr_fft_filter_xxx_2.set_taps((firdes.low_pass(1.0,self.wbfm,11.75e3,5e3,firdes.WIN_HAMMING,6.76)))
+		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.digi_rate))
+		self.gr_fft_filter_xxx_1.set_taps((firdes.low_pass(1.0,self.wbfm,self.bw/2.0,self.bw/3.3,firdes.WIN_HAMMING,6.76)))
+		self.set_main_taps(firdes.low_pass(1.0,self.wbfm,mh.get_mode_deviation(self.mode)*1.10,mh.get_mode_deviation(self.mode)/2.25,firdes.WIN_HAMMING,6.76))
+		self.set_k(self.wbfm/(2*math.pi*mh.get_mode_deviation(self.mode)))
 
 	def get_rf_d_power(self):
 		return self.rf_d_power

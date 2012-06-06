@@ -1,4 +1,5 @@
 import math
+import re
 scan_low=0.0
 scan_high=0.0
 current_freq=0.0
@@ -131,3 +132,38 @@ def get_mode_type(mode):
     x = MODES[mode]
     return (x[1])
 
+def get_good_rate(devtype,rate):
+    uhd_clock = -1
+    if int(rate) % int(200e3) != 0:
+        rate += 200e3
+    if re.search("rtl_tcp=", devtype, flags=0) != None:
+        return (int(rate/200e3)*200e3)
+    if re.search("rtl=", devtype, flags=0) != None:
+        if (rate < 1.0e6):
+            return 1.0e6
+        if (rate > 2.8e6):
+            return 2.8e6
+        return (int(rate/200e3)*200e3)
+    if re.search("osmosdr=", devtype, flags=0) != None:
+        return (1.0e6)
+    if re.search("uhd=.*type=usrp1", devtype, flags=0) != None:
+        uhd_clock=64e6
+    if re.search("uhd=.*addr=", devtype, flags=0) != None:
+        uhd_clock=100e6
+    if re.search("uhd=.*type=b100", devtype, flags=0) != None:
+        uhd_clock=64e6
+    
+    if (uhd_clock > 0):
+        selected_rate = 1.0e6
+        rates = []
+        des_rate = int(rate/200e3)*200e3
+        for i in range(1,512):
+            uhd_rate = uhd_clock/i
+            if (int(uhd_rate) % int(200e3) == 0):
+                rates.append(int(uhd_rate))
+        for r in rates:
+            if (r >= des_rate):
+                selected_rate = r
+        return (selected_rate)
+                    
+    return 1.0e6

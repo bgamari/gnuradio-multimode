@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Wed Jun  6 19:06:37 2012</timestamp>
+  <timestamp>Wed Jun  6 19:48:34 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -1893,29 +1893,6 @@
     </param>
   </block>
   <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>int(int(srate/wbfm)*wbfm)</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(13, 190)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>notebook</key>
     <param>
       <key>id</key>
@@ -3489,6 +3466,29 @@
     </param>
   </block>
   <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>int(mh.get_good_rate(devinfo,srate))</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(12, 189)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>variable_static_text</key>
     <param>
       <key>id</key>
@@ -3500,7 +3500,7 @@
     </param>
     <param>
       <key>label</key>
-      <value>Actual Samp Rate</value>
+      <value>Actual srate</value>
     </param>
     <param>
       <key>value</key>
