@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Wed Jun  6 18:33:31 2012
+# Generated: Wed Jun  6 19:10:54 2012
 ##################################################
 
 from gnuradio import audio
@@ -81,6 +81,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.xfine = xfine = xftune
 		self.volume = volume = vol
 		self.variable_static_text_1 = variable_static_text_1 = cur_freq
+		self.variable_static_text_0_0 = variable_static_text_0_0 = samp_rate
 		self.variable_static_text_0 = variable_static_text_0 = float(int(math.log10(rf_d_power+1.0e-14)*100.0)/10.0)
 		self.upc_offset = upc_offset = upclo
 		self.upc = upc = upce
@@ -102,7 +103,7 @@ class multimode(grc_wxgui.top_block_gui):
 		##################################################
 		# Blocks
 		##################################################
-		self.rf_probe = gr.probe_avg_mag_sqrd_c(0, 0.05)
+		self.rf_probe = gr.probe_avg_mag_sqrd_c(0, 0.015)
 		self.Main = self.Main = wx.Notebook(self.GetWin(), style=wx.NB_TOP)
 		self.Main.AddPage(grc_wxgui.Panel(self.Main), "Main Controls")
 		self.Main.AddPage(grc_wxgui.Panel(self.Main), "Scan/Upconv Controls")
@@ -292,7 +293,7 @@ class multimode(grc_wxgui.top_block_gui):
 			proportion=1,
 		)
 		self.Main.GetPage(0).GridAdd(_fine_sizer, 0, 2, 1, 1)
-		self.display_probe = gr.probe_avg_mag_sqrd_c(0, 0.005)
+		self.display_probe = gr.probe_avg_mag_sqrd_c(0, 0.002)
 		_bw_sizer = wx.BoxSizer(wx.VERTICAL)
 		self._bw_text_box = forms.text_box(
 			parent=self.Main.GetPage(0).GetWin(),
@@ -364,6 +365,14 @@ class multimode(grc_wxgui.top_block_gui):
 			converter=forms.float_converter(),
 		)
 		self.Main.GetPage(1).GridAdd(self._variable_static_text_1_static_text, 0, 5, 1, 2)
+		self._variable_static_text_0_0_static_text = forms.static_text(
+			parent=self.Main.GetPage(0).GetWin(),
+			value=self.variable_static_text_0_0,
+			callback=self.set_variable_static_text_0_0,
+			label="Actual Samp Rate",
+			converter=forms.float_converter(),
+		)
+		self.Main.GetPage(0).GridAdd(self._variable_static_text_0_0_static_text, 1, 5, 1, 1)
 		self._variable_static_text_0_static_text = forms.static_text(
 			parent=self.Main.GetPage(0).GetWin(),
 			value=self.variable_static_text_0,
@@ -786,6 +795,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.set_zoomed_lp((self.samp_rate/2.1)/self.zoom)
 		self.wxgui_fftsink2_0.set_sample_rate(self.samp_rate/self.zoom)
 		self.wxgui_waterfallsink2_0.set_sample_rate(self.samp_rate/self.zoom)
+		self.set_variable_static_text_0_0(self.samp_rate)
 
 	def get_rf_power(self):
 		return self.rf_power
@@ -877,6 +887,13 @@ class multimode(grc_wxgui.top_block_gui):
 	def set_variable_static_text_1(self, variable_static_text_1):
 		self.variable_static_text_1 = variable_static_text_1
 		self._variable_static_text_1_static_text.set_value(self.variable_static_text_1)
+
+	def get_variable_static_text_0_0(self):
+		return self.variable_static_text_0_0
+
+	def set_variable_static_text_0_0(self, variable_static_text_0_0):
+		self.variable_static_text_0_0 = variable_static_text_0_0
+		self._variable_static_text_0_0_static_text.set_value(self.variable_static_text_0_0)
 
 	def get_variable_static_text_0(self):
 		return self.variable_static_text_0
