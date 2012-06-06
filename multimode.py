@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Tue Jun  5 23:33:35 2012
+# Generated: Wed Jun  6 18:33:31 2012
 ##################################################
 
 from gnuradio import audio
@@ -27,7 +27,7 @@ import wx
 
 class multimode(grc_wxgui.top_block_gui):
 
-	def __init__(self, ahw="default", freq=150.0e6, ppm=0.0, vol=1.0, ftune=0.0, xftune=0.0, srate=1.0e6, upclo=0.0, devinfo="rtl=0", agc=0, arate=48.0e3, upce=0, mbw=2.0e3, mthresh=-10.0, flist="", dmode="NFM1", offs=50.e3):
+	def __init__(self, ahw="default", freq=150.0e6, ppm=0.0, vol=1.0, ftune=0.0, xftune=0.0, srate=1.0e6, upclo=0.0, devinfo="rtl=0", agc=0, arate=48.0e3, upce=0, mbw=2.0e3, mthresh=-10.0, dmode="NFM1", offs=50.e3, flist="", dfifo="multimode_fifo"):
 		grc_wxgui.top_block_gui.__init__(self, title="Multimode Radio Receiver")
 		_icon_path = "/usr/share/icons/hicolor/32x32/apps/gnuradio-grc.png"
 		self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
@@ -49,14 +49,17 @@ class multimode(grc_wxgui.top_block_gui):
 		self.upce = upce
 		self.mbw = mbw
 		self.mthresh = mthresh
-		self.flist = flist
 		self.dmode = dmode
 		self.offs = offs
+		self.flist = flist
+		self.dfifo = dfifo
 
 		##################################################
 		# Variables
 		##################################################
+		self.wbfm = wbfm = 200e3
 		self.sc_list_str = sc_list_str = flist
+		self.zoom = zoom = 1
 		self.thresh = thresh = mthresh
 		self.scan_rate = scan_rate = 15
 		self.scan_power = scan_power = 0
@@ -66,38 +69,35 @@ class multimode(grc_wxgui.top_block_gui):
 		self.sc_incr = sc_incr = 12.5e3
 		self.sc_high = sc_high = 300e6
 		self.sc_ena = sc_ena = False
+		self.samp_rate = samp_rate = int(int(srate/wbfm)*wbfm)
 		self.rf_power = rf_power = 0
 		self.ifreq = ifreq = freq
-		self.bw = bw = mbw
-		self.wbfm = wbfm = 200e3
+		self.zoomed_lp = zoomed_lp = (samp_rate/2.1)/zoom
 		self.rf_d_power = rf_d_power = 0
 		self.mode = mode = dmode
 		self.logpower = logpower = math.log10(rf_power+1.0e-14)*10.0
-		self.fm_modes = fm_modes = ["NFM1", "NFM2", "WFM", "TV-FM"]
-		self.deviation_dict = deviation_dict = {'NFM1' : 5.0e3, 'NFM2' : 2.5e3, 'WFM' : 75e3, 'TV-FM' : 25e3, 'AM' : bw/2, 'USB' :bw/2, 'LSB' : bw/2}
 		self.cur_freq = cur_freq = mh.scan_freq_out(sc_ena,sc_low,sc_high,freq,ifreq,scan_power+1.0e-14,thresh,sc_incr,scan_rate,sc_listm,sc_list)
+		self.zoom_taps = zoom_taps = firdes.low_pass(1.0,samp_rate,zoomed_lp,zoomed_lp/3,firdes.WIN_HAMMING,6.76)
 		self.xfine = xfine = xftune
 		self.volume = volume = vol
 		self.variable_static_text_1 = variable_static_text_1 = cur_freq
 		self.variable_static_text_0 = variable_static_text_0 = float(int(math.log10(rf_d_power+1.0e-14)*100.0)/10.0)
 		self.upc_offset = upc_offset = upclo
 		self.upc = upc = upce
-		self.ssb_modes = ssb_modes = ["USB", "LSB"]
 		self.sc_list_len = sc_list_len = len(sc_list)
-		self.samp_rate = samp_rate = int(int(srate/wbfm)*wbfm)
 		self.rfgain = rfgain = 25
 		self.record_file = record_file = "recording.wav"
 		self.record = record = False
 		self.offset = offset = offs
 		self.muted = muted = 0.0 if logpower >= thresh else 1
-		self.main_taps = main_taps = firdes.low_pass(1.5,wbfm,deviation_dict[mode]*1.10,deviation_dict[mode]/1.85,firdes.WIN_HAMMING,6.76) if mode in fm_modes else firdes.low_pass(1.5,wbfm,12.5e3,6.0e3,firdes.WIN_HAMMING,6.76)
-		self.k = k = wbfm/(2*math.pi*deviation_dict[mode])
+		self.main_taps = main_taps = firdes.low_pass(1.0,wbfm,mh.get_mode_deviation(mode)*1.10,mh.get_mode_deviation(mode)/2.25,firdes.WIN_HAMMING,6.76)
+		self.k = k = wbfm/(2*math.pi*mh.get_mode_deviation(mode))
 		self.iagc = iagc = agc
 		self.freq_update = freq_update = 0
-		self.fm_mode_labels = fm_mode_labels = ["NFM1(5kHz)", "NFM2(2.5kHz)", "WFM(75kHz)", "TV-FM(25kHz)"]
 		self.fine = fine = ftune
+		self.digi_rate = digi_rate = 50e3
+		self.bw = bw = mbw
 		self.audio_int_rate = audio_int_rate = 25e3
-		self.am_modes = am_modes = ["AM"]
 
 		##################################################
 		# Blocks
@@ -107,6 +107,15 @@ class multimode(grc_wxgui.top_block_gui):
 		self.Main.AddPage(grc_wxgui.Panel(self.Main), "Main Controls")
 		self.Main.AddPage(grc_wxgui.Panel(self.Main), "Scan/Upconv Controls")
 		self.Add(self.Main)
+		self._zoom_chooser = forms.drop_down(
+			parent=self.Main.GetPage(0).GetWin(),
+			value=self.zoom,
+			callback=self.set_zoom,
+			label="Spectral Zoom Ratio",
+			choices=[1, 2, 5, 10, 20],
+			labels=[],
+		)
+		self.Main.GetPage(0).GridAdd(self._zoom_chooser, 1, 4, 1, 1)
 		_xfine_sizer = wx.BoxSizer(wx.VERTICAL)
 		self._xfine_text_box = forms.text_box(
 			parent=self.Main.GetPage(0).GetWin(),
@@ -238,8 +247,8 @@ class multimode(grc_wxgui.top_block_gui):
 			value=self.mode,
 			callback=self.set_mode,
 			label="Mode",
-			choices=fm_modes+am_modes+ssb_modes,
-			labels=fm_mode_labels+am_modes+ssb_modes,
+			choices=mh.get_modes_values(),
+			labels=mh.get_modes_names(),
 		)
 		self.Main.GetPage(0).GridAdd(self._mode_chooser, 0, 4, 1, 1)
 		self._iagc_check_box = forms.check_box(
@@ -313,7 +322,7 @@ class multimode(grc_wxgui.top_block_gui):
 			dynamic_range=40,
 			ref_level=0,
 			ref_scale=2.0,
-			sample_rate=samp_rate,
+			sample_rate=samp_rate/zoom,
 			fft_size=1024,
 			fft_rate=4,
 			average=True,
@@ -333,7 +342,7 @@ class multimode(grc_wxgui.top_block_gui):
 			y_divs=10,
 			ref_level=0,
 			ref_scale=2.0,
-			sample_rate=samp_rate,
+			sample_rate=samp_rate/zoom,
 			fft_size=1024,
 			fft_rate=4,
 			average=True,
@@ -480,14 +489,19 @@ class multimode(grc_wxgui.top_block_gui):
 		self.Main.GetPage(0).GridAdd(self._ifreq_text_box, 0, 1, 1, 1)
 		self.gr_wavfile_sink_0 = gr.wavfile_sink("/dev/null" if record == False else record_file, 1, int(audio_int_rate), 8)
 		self.gr_quadrature_demod_cf_0 = gr.quadrature_demod_cf(k)
-		self.gr_multiply_const_vxx_2 = gr.multiply_const_vff((1.0 if mode in fm_modes else 0.0, ))
+		self.gr_multiply_const_vxx_2 = gr.multiply_const_vff((1.0 if mh.get_mode_type(mode) == "FM" else 0.0, ))
 		self.gr_multiply_const_vxx_1 = gr.multiply_const_vff((0.0 if muted else volume/4.5, ))
-		self.gr_multiply_const_vxx_0_0_0 = gr.multiply_const_vff((1.0 if mode in am_modes else 0.0, ))
-		self.gr_multiply_const_vxx_0_0 = gr.multiply_const_vff((1.25 if mode in ssb_modes else 0.0, ))
-		self.gr_multiply_const_vxx_0 = gr.multiply_const_vcc(((1.0/math.sqrt(deviation_dict[mode])*250), ))
+		self.gr_multiply_const_vxx_0_0_0 = gr.multiply_const_vff((1.25 if mh.get_mode_type(mode) == "AM" else 0.0, ))
+		self.gr_multiply_const_vxx_0_0 = gr.multiply_const_vff((1.25 if mh.get_mode_type(mode) == "SSB" else 0.0, ))
+		self.gr_multiply_const_vxx_0 = gr.multiply_const_vcc(((1.0/math.sqrt(mh.get_mode_deviation(mode))*250), ))
+		self.gr_keep_one_in_n_0_0 = gr.keep_one_in_n(gr.sizeof_gr_complex*1, zoom)
+		self.gr_keep_one_in_n_0 = gr.keep_one_in_n(gr.sizeof_gr_complex*1, int(wbfm/digi_rate))
 		self.gr_freq_xlating_fir_filter_xxx_0_1_0 = gr.freq_xlating_fir_filter_ccc(1, (main_taps), -bw/2 if mode == "LSB" else 0.0, wbfm)
 		self.gr_freq_xlating_fir_filter_xxx_0_1 = gr.freq_xlating_fir_filter_ccc(1, (1.0, ), (offset+fine+xfine)/(samp_rate/1.0e6), samp_rate)
 		self.gr_fractional_interpolator_xx_0 = gr.fractional_interpolator_ff(0, audio_int_rate/arate)
+		self.gr_file_sink_0 = gr.file_sink(gr.sizeof_gr_complex*1, "/dev/null" if mh.get_mode_type(mode) != "DIG" else dfifo)
+		self.gr_file_sink_0.set_unbuffered(True)
+		self.gr_fft_filter_xxx_3 = gr.fft_filter_ccc(1, (zoom_taps), 1)
 		self.gr_fft_filter_xxx_2 = gr.fft_filter_fff(int(wbfm/audio_int_rate), (firdes.low_pass(1.0,wbfm,11.75e3,5e3,firdes.WIN_HAMMING,6.76)), 1)
 		self.gr_fft_filter_xxx_1 = gr.fft_filter_ccc(int(wbfm/audio_int_rate), (firdes.low_pass(1.0,wbfm,bw/2.0,bw/3.3,firdes.WIN_HAMMING,6.76)), 1)
 		self.gr_fft_filter_xxx_0 = gr.fft_filter_ccc(int(samp_rate/wbfm), (firdes.low_pass(1.0,samp_rate,98.5e3,66e3,firdes.WIN_HAMMING,6.76)), 1)
@@ -511,8 +525,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self.connect((self.gr_multiply_const_vxx_0_0_0, 0), (self.gr_add_xx_0, 2))
 		self.connect((self.gr_feedforward_agc_cc_0, 0), (self.gr_complex_to_real_0, 0))
 		self.connect((self.gr_complex_to_real_0, 0), (self.gr_multiply_const_vxx_0_0, 0))
-		self.connect((self.gr_freq_xlating_fir_filter_xxx_0_1, 0), (self.wxgui_fftsink2_0, 0))
-		self.connect((self.gr_freq_xlating_fir_filter_xxx_0_1, 0), (self.wxgui_waterfallsink2_0, 0))
 		self.connect((self.gr_multiply_const_vxx_2, 0), (self.gr_add_xx_0, 0))
 		self.connect((self.gr_complex_to_mag_squared_0, 0), (self.gr_multiply_const_vxx_0_0_0, 0))
 		self.connect((self.gr_freq_xlating_fir_filter_xxx_0_1_0, 0), (self.gr_quadrature_demod_cf_0, 0))
@@ -527,6 +539,12 @@ class multimode(grc_wxgui.top_block_gui):
 		self.connect((self.gr_fft_filter_xxx_1, 0), (self.gr_feedforward_agc_cc_0, 0))
 		self.connect((self.gr_quadrature_demod_cf_0, 0), (self.gr_fft_filter_xxx_2, 0))
 		self.connect((self.gr_fft_filter_xxx_2, 0), (self.blks2_fm_deemph_0, 0))
+		self.connect((self.gr_freq_xlating_fir_filter_xxx_0_1_0, 0), (self.gr_keep_one_in_n_0, 0))
+		self.connect((self.gr_keep_one_in_n_0, 0), (self.gr_file_sink_0, 0))
+		self.connect((self.gr_freq_xlating_fir_filter_xxx_0_1, 0), (self.gr_fft_filter_xxx_3, 0))
+		self.connect((self.gr_fft_filter_xxx_3, 0), (self.gr_keep_one_in_n_0_0, 0))
+		self.connect((self.gr_keep_one_in_n_0_0, 0), (self.wxgui_fftsink2_0, 0))
+		self.connect((self.gr_keep_one_in_n_0_0, 0), (self.wxgui_waterfallsink2_0, 0))
 
 	def get_ahw(self):
 		return self.ahw
@@ -539,8 +557,8 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_freq(self, freq):
 		self.freq = freq
-		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
 		self.set_ifreq(self.freq)
+		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
 
 	def get_ppm(self):
 		return self.ppm
@@ -625,13 +643,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self.mthresh = mthresh
 		self.set_thresh(self.mthresh)
 
-	def get_flist(self):
-		return self.flist
-
-	def set_flist(self, flist):
-		self.flist = flist
-		self.set_sc_list_str(self.flist)
-
 	def get_dmode(self):
 		return self.dmode
 
@@ -646,6 +657,32 @@ class multimode(grc_wxgui.top_block_gui):
 		self.offs = offs
 		self.set_offset(self.offs)
 
+	def get_flist(self):
+		return self.flist
+
+	def set_flist(self, flist):
+		self.flist = flist
+		self.set_sc_list_str(self.flist)
+
+	def get_dfifo(self):
+		return self.dfifo
+
+	def set_dfifo(self, dfifo):
+		self.dfifo = dfifo
+		self.gr_file_sink_0.open("/dev/null" if mh.get_mode_type(self.mode) != "DIG" else self.dfifo)
+
+	def get_wbfm(self):
+		return self.wbfm
+
+	def set_wbfm(self, wbfm):
+		self.wbfm = wbfm
+		self.set_samp_rate(int(int(self.srate/self.wbfm)*self.wbfm))
+		self.gr_fft_filter_xxx_2.set_taps((firdes.low_pass(1.0,self.wbfm,11.75e3,5e3,firdes.WIN_HAMMING,6.76)))
+		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.digi_rate))
+		self.gr_fft_filter_xxx_1.set_taps((firdes.low_pass(1.0,self.wbfm,self.bw/2.0,self.bw/3.3,firdes.WIN_HAMMING,6.76)))
+		self.set_main_taps(firdes.low_pass(1.0,self.wbfm,mh.get_mode_deviation(self.mode)*1.10,mh.get_mode_deviation(self.mode)/2.25,firdes.WIN_HAMMING,6.76))
+		self.set_k(self.wbfm/(2*math.pi*mh.get_mode_deviation(self.mode)))
+
 	def get_sc_list_str(self):
 		return self.sc_list_str
 
@@ -654,15 +691,26 @@ class multimode(grc_wxgui.top_block_gui):
 		self.set_sc_list(eval("["+self.sc_list_str+"]"))
 		self._sc_list_str_text_box.set_value(self.sc_list_str)
 
+	def get_zoom(self):
+		return self.zoom
+
+	def set_zoom(self, zoom):
+		self.zoom = zoom
+		self.gr_keep_one_in_n_0_0.set_n(self.zoom)
+		self.set_zoomed_lp((self.samp_rate/2.1)/self.zoom)
+		self.wxgui_fftsink2_0.set_sample_rate(self.samp_rate/self.zoom)
+		self.wxgui_waterfallsink2_0.set_sample_rate(self.samp_rate/self.zoom)
+		self._zoom_chooser.set_value(self.zoom)
+
 	def get_thresh(self):
 		return self.thresh
 
 	def set_thresh(self, thresh):
 		self.thresh = thresh
-		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
 		self._thresh_slider.set_value(self.thresh)
 		self._thresh_text_box.set_value(self.thresh)
 		self.set_muted(0.0 if self.logpower >= self.thresh else 1)
+		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
 
 	def get_scan_rate(self):
 		return self.scan_rate
@@ -683,48 +731,61 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_sc_low(self, sc_low):
 		self.sc_low = sc_low
-		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
 		self._sc_low_text_box.set_value(self.sc_low)
+		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
 
 	def get_sc_listm(self):
 		return self.sc_listm
 
 	def set_sc_listm(self, sc_listm):
 		self.sc_listm = sc_listm
-		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
 		self._sc_listm_check_box.set_value(self.sc_listm)
+		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
 
 	def get_sc_list(self):
 		return self.sc_list
 
 	def set_sc_list(self, sc_list):
 		self.sc_list = sc_list
-		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
 		self.set_sc_list_len(len(self.sc_list))
+		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
 
 	def get_sc_incr(self):
 		return self.sc_incr
 
 	def set_sc_incr(self, sc_incr):
 		self.sc_incr = sc_incr
-		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
 		self._sc_incr_chooser.set_value(self.sc_incr)
+		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
 
 	def get_sc_high(self):
 		return self.sc_high
 
 	def set_sc_high(self, sc_high):
 		self.sc_high = sc_high
-		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
 		self._sc_high_text_box.set_value(self.sc_high)
+		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
 
 	def get_sc_ena(self):
 		return self.sc_ena
 
 	def set_sc_ena(self, sc_ena):
 		self.sc_ena = sc_ena
-		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
 		self._sc_ena_check_box.set_value(self.sc_ena)
+		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
+
+	def get_samp_rate(self):
+		return self.samp_rate
+
+	def set_samp_rate(self, samp_rate):
+		self.samp_rate = samp_rate
+		self.osmosdr_source_c_0.set_sample_rate(self.samp_rate)
+		self.gr_fft_filter_xxx_0.set_taps((firdes.low_pass(1.0,self.samp_rate,98.5e3,66e3,firdes.WIN_HAMMING,6.76)))
+		self.gr_freq_xlating_fir_filter_xxx_0_1.set_center_freq((self.offset+self.fine+self.xfine)/(self.samp_rate/1.0e6))
+		self.set_zoom_taps(firdes.low_pass(1.0,self.samp_rate,self.zoomed_lp,self.zoomed_lp/3,firdes.WIN_HAMMING,6.76))
+		self.set_zoomed_lp((self.samp_rate/2.1)/self.zoom)
+		self.wxgui_fftsink2_0.set_sample_rate(self.samp_rate/self.zoom)
+		self.wxgui_waterfallsink2_0.set_sample_rate(self.samp_rate/self.zoom)
 
 	def get_rf_power(self):
 		return self.rf_power
@@ -738,30 +799,15 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_ifreq(self, ifreq):
 		self.ifreq = ifreq
-		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
 		self._ifreq_text_box.set_value(self.ifreq)
+		self.set_cur_freq(mh.scan_freq_out(self.sc_ena,self.sc_low,self.sc_high,self.freq,self.ifreq,self.scan_power+1.0e-14,self.thresh,self.sc_incr,self.scan_rate,self.sc_listm,self.sc_list))
 
-	def get_bw(self):
-		return self.bw
+	def get_zoomed_lp(self):
+		return self.zoomed_lp
 
-	def set_bw(self, bw):
-		self.bw = bw
-		self._bw_slider.set_value(self.bw)
-		self._bw_text_box.set_value(self.bw)
-		self.set_deviation_dict({'NFM1' : 5.0e3, 'NFM2' : 2.5e3, 'WFM' : 75e3, 'TV-FM' : 25e3, 'AM' : self.bw/2, 'USB' :self.bw/2, 'LSB' : self.bw/2})
-		self.gr_freq_xlating_fir_filter_xxx_0_1_0.set_center_freq(-self.bw/2 if self.mode == "LSB" else 0.0)
-		self.gr_fft_filter_xxx_1.set_taps((firdes.low_pass(1.0,self.wbfm,self.bw/2.0,self.bw/3.3,firdes.WIN_HAMMING,6.76)))
-
-	def get_wbfm(self):
-		return self.wbfm
-
-	def set_wbfm(self, wbfm):
-		self.wbfm = wbfm
-		self.set_samp_rate(int(int(self.srate/self.wbfm)*self.wbfm))
-		self.set_k(self.wbfm/(2*math.pi*self.deviation_dict[self.mode]))
-		self.set_main_taps(firdes.low_pass(1.5,self.wbfm,self.deviation_dict[self.mode]*1.10,self.deviation_dict[self.mode]/1.85,firdes.WIN_HAMMING,6.76) if self.mode in self.fm_modes else firdes.low_pass(1.5,self.wbfm,12.5e3,6.0e3,firdes.WIN_HAMMING,6.76))
-		self.gr_fft_filter_xxx_2.set_taps((firdes.low_pass(1.0,self.wbfm,11.75e3,5e3,firdes.WIN_HAMMING,6.76)))
-		self.gr_fft_filter_xxx_1.set_taps((firdes.low_pass(1.0,self.wbfm,self.bw/2.0,self.bw/3.3,firdes.WIN_HAMMING,6.76)))
+	def set_zoomed_lp(self, zoomed_lp):
+		self.zoomed_lp = zoomed_lp
+		self.set_zoom_taps(firdes.low_pass(1.0,self.samp_rate,self.zoomed_lp,self.zoomed_lp/3,firdes.WIN_HAMMING,6.76))
 
 	def get_rf_d_power(self):
 		return self.rf_d_power
@@ -775,14 +821,15 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_mode(self, mode):
 		self.mode = mode
+		self.gr_multiply_const_vxx_0.set_k(((1.0/math.sqrt(mh.get_mode_deviation(self.mode))*250), ))
+		self.gr_file_sink_0.open("/dev/null" if mh.get_mode_type(self.mode) != "DIG" else self.dfifo)
+		self.gr_multiply_const_vxx_0_0.set_k((1.25 if mh.get_mode_type(self.mode) == "SSB" else 0.0, ))
+		self.gr_multiply_const_vxx_0_0_0.set_k((1.25 if mh.get_mode_type(self.mode) == "AM" else 0.0, ))
+		self.gr_multiply_const_vxx_2.set_k((1.0 if mh.get_mode_type(self.mode) == "FM" else 0.0, ))
 		self._mode_chooser.set_value(self.mode)
-		self.gr_multiply_const_vxx_0_0_0.set_k((1.0 if self.mode in self.am_modes else 0.0, ))
-		self.gr_multiply_const_vxx_2.set_k((1.0 if self.mode in self.fm_modes else 0.0, ))
-		self.gr_multiply_const_vxx_0_0.set_k((1.25 if self.mode in self.ssb_modes else 0.0, ))
-		self.gr_multiply_const_vxx_0.set_k(((1.0/math.sqrt(self.deviation_dict[self.mode])*250), ))
-		self.set_k(self.wbfm/(2*math.pi*self.deviation_dict[self.mode]))
 		self.gr_freq_xlating_fir_filter_xxx_0_1_0.set_center_freq(-self.bw/2 if self.mode == "LSB" else 0.0)
-		self.set_main_taps(firdes.low_pass(1.5,self.wbfm,self.deviation_dict[self.mode]*1.10,self.deviation_dict[self.mode]/1.85,firdes.WIN_HAMMING,6.76) if self.mode in self.fm_modes else firdes.low_pass(1.5,self.wbfm,12.5e3,6.0e3,firdes.WIN_HAMMING,6.76))
+		self.set_main_taps(firdes.low_pass(1.0,self.wbfm,mh.get_mode_deviation(self.mode)*1.10,mh.get_mode_deviation(self.mode)/2.25,firdes.WIN_HAMMING,6.76))
+		self.set_k(self.wbfm/(2*math.pi*mh.get_mode_deviation(self.mode)))
 
 	def get_logpower(self):
 		return self.logpower
@@ -791,23 +838,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self.logpower = logpower
 		self.set_muted(0.0 if self.logpower >= self.thresh else 1)
 
-	def get_fm_modes(self):
-		return self.fm_modes
-
-	def set_fm_modes(self, fm_modes):
-		self.fm_modes = fm_modes
-		self.gr_multiply_const_vxx_2.set_k((1.0 if self.mode in self.fm_modes else 0.0, ))
-		self.set_main_taps(firdes.low_pass(1.5,self.wbfm,self.deviation_dict[self.mode]*1.10,self.deviation_dict[self.mode]/1.85,firdes.WIN_HAMMING,6.76) if self.mode in self.fm_modes else firdes.low_pass(1.5,self.wbfm,12.5e3,6.0e3,firdes.WIN_HAMMING,6.76))
-
-	def get_deviation_dict(self):
-		return self.deviation_dict
-
-	def set_deviation_dict(self, deviation_dict):
-		self.deviation_dict = deviation_dict
-		self.gr_multiply_const_vxx_0.set_k(((1.0/math.sqrt(self.deviation_dict[self.mode])*250), ))
-		self.set_k(self.wbfm/(2*math.pi*self.deviation_dict[self.mode]))
-		self.set_main_taps(firdes.low_pass(1.5,self.wbfm,self.deviation_dict[self.mode]*1.10,self.deviation_dict[self.mode]/1.85,firdes.WIN_HAMMING,6.76) if self.mode in self.fm_modes else firdes.low_pass(1.5,self.wbfm,12.5e3,6.0e3,firdes.WIN_HAMMING,6.76))
-
 	def get_cur_freq(self):
 		return self.cur_freq
 
@@ -815,6 +845,13 @@ class multimode(grc_wxgui.top_block_gui):
 		self.cur_freq = cur_freq
 		self.set_variable_static_text_1(self.cur_freq)
 		self.osmosdr_source_c_0.set_center_freq(self.cur_freq+self.offset+(self.upc_offset*float(self.upc)), 0)
+
+	def get_zoom_taps(self):
+		return self.zoom_taps
+
+	def set_zoom_taps(self, zoom_taps):
+		self.zoom_taps = zoom_taps
+		self.gr_fft_filter_xxx_3.set_taps((self.zoom_taps))
 
 	def get_xfine(self):
 		return self.xfine
@@ -864,29 +901,11 @@ class multimode(grc_wxgui.top_block_gui):
 		self._upc_check_box.set_value(self.upc)
 		self.osmosdr_source_c_0.set_center_freq(self.cur_freq+self.offset+(self.upc_offset*float(self.upc)), 0)
 
-	def get_ssb_modes(self):
-		return self.ssb_modes
-
-	def set_ssb_modes(self, ssb_modes):
-		self.ssb_modes = ssb_modes
-		self.gr_multiply_const_vxx_0_0.set_k((1.25 if self.mode in self.ssb_modes else 0.0, ))
-
 	def get_sc_list_len(self):
 		return self.sc_list_len
 
 	def set_sc_list_len(self, sc_list_len):
 		self.sc_list_len = sc_list_len
-
-	def get_samp_rate(self):
-		return self.samp_rate
-
-	def set_samp_rate(self, samp_rate):
-		self.samp_rate = samp_rate
-		self.wxgui_waterfallsink2_0.set_sample_rate(self.samp_rate)
-		self.osmosdr_source_c_0.set_sample_rate(self.samp_rate)
-		self.wxgui_fftsink2_0.set_sample_rate(self.samp_rate)
-		self.gr_freq_xlating_fir_filter_xxx_0_1.set_center_freq((self.offset+self.fine+self.xfine)/(self.samp_rate/1.0e6))
-		self.gr_fft_filter_xxx_0.set_taps((firdes.low_pass(1.0,self.samp_rate,98.5e3,66e3,firdes.WIN_HAMMING,6.76)))
 
 	def get_rfgain(self):
 		return self.rfgain
@@ -958,14 +977,8 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_freq_update(self, freq_update):
 		self.freq_update = freq_update
-		self.wxgui_waterfallsink2_0.set_baseband_freq(mh.get_last_returned(self.freq_update))
 		self.wxgui_fftsink2_0.set_baseband_freq(mh.get_last_returned(self.freq_update))
-
-	def get_fm_mode_labels(self):
-		return self.fm_mode_labels
-
-	def set_fm_mode_labels(self, fm_mode_labels):
-		self.fm_mode_labels = fm_mode_labels
+		self.wxgui_waterfallsink2_0.set_baseband_freq(mh.get_last_returned(self.freq_update))
 
 	def get_fine(self):
 		return self.fine
@@ -976,19 +989,29 @@ class multimode(grc_wxgui.top_block_gui):
 		self._fine_text_box.set_value(self.fine)
 		self.gr_freq_xlating_fir_filter_xxx_0_1.set_center_freq((self.offset+self.fine+self.xfine)/(self.samp_rate/1.0e6))
 
+	def get_digi_rate(self):
+		return self.digi_rate
+
+	def set_digi_rate(self, digi_rate):
+		self.digi_rate = digi_rate
+		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.digi_rate))
+
+	def get_bw(self):
+		return self.bw
+
+	def set_bw(self, bw):
+		self.bw = bw
+		self._bw_slider.set_value(self.bw)
+		self._bw_text_box.set_value(self.bw)
+		self.gr_fft_filter_xxx_1.set_taps((firdes.low_pass(1.0,self.wbfm,self.bw/2.0,self.bw/3.3,firdes.WIN_HAMMING,6.76)))
+		self.gr_freq_xlating_fir_filter_xxx_0_1_0.set_center_freq(-self.bw/2 if self.mode == "LSB" else 0.0)
+
 	def get_audio_int_rate(self):
 		return self.audio_int_rate
 
 	def set_audio_int_rate(self, audio_int_rate):
 		self.audio_int_rate = audio_int_rate
 		self.gr_fractional_interpolator_xx_0.set_interp_ratio(self.audio_int_rate/self.arate)
-
-	def get_am_modes(self):
-		return self.am_modes
-
-	def set_am_modes(self, am_modes):
-		self.am_modes = am_modes
-		self.gr_multiply_const_vxx_0_0_0.set_k((1.0 if self.mode in self.am_modes else 0.0, ))
 
 if __name__ == '__main__':
 	parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
@@ -1020,13 +1043,15 @@ if __name__ == '__main__':
 		help="Set AM/SSB Demod Bandwidth [default=%default]")
 	parser.add_option("", "--mthresh", dest="mthresh", type="eng_float", default=eng_notation.num_to_str(-10.0),
 		help="Set Mute Threshold (dB) [default=%default]")
-	parser.add_option("", "--flist", dest="flist", type="string", default="",
-		help="Set Frequency Scan List [default=%default]")
 	parser.add_option("", "--dmode", dest="dmode", type="string", default="NFM1",
 		help="Set Demod Mode [default=%default]")
 	parser.add_option("", "--offs", dest="offs", type="eng_float", default=eng_notation.num_to_str(50.e3),
 		help="Set LO Offset [default=%default]")
+	parser.add_option("", "--flist", dest="flist", type="string", default="",
+		help="Set Frequency Scan List [default=%default]")
+	parser.add_option("", "--dfifo", dest="dfifo", type="string", default="multimode_fifo",
+		help="Set FIFO for Digital Modes [default=%default]")
 	(options, args) = parser.parse_args()
-	tb = multimode(ahw=options.ahw, freq=options.freq, ppm=options.ppm, vol=options.vol, ftune=options.ftune, xftune=options.xftune, srate=options.srate, upclo=options.upclo, devinfo=options.devinfo, agc=options.agc, arate=options.arate, upce=options.upce, mbw=options.mbw, mthresh=options.mthresh, flist=options.flist, dmode=options.dmode, offs=options.offs)
+	tb = multimode(ahw=options.ahw, freq=options.freq, ppm=options.ppm, vol=options.vol, ftune=options.ftune, xftune=options.xftune, srate=options.srate, upclo=options.upclo, devinfo=options.devinfo, agc=options.agc, arate=options.arate, upce=options.upce, mbw=options.mbw, mthresh=options.mthresh, dmode=options.dmode, offs=options.offs, flist=options.flist, dfifo=options.dfifo)
 	tb.Run(True, 300)
 
