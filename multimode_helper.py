@@ -10,7 +10,7 @@ last_returned=0.0
 last_freq1=0.0
 last_freq2=0.0
 current_index=0
-FM_MODES={"NFM1" : (0, "FM", 5.0e3), "NFM2" : (1, "FM", 2.5e3), "WFM" : (2, "FM", 75.0e3), "NTSC-FM" :
+FM_MODES={"NFM1" : (0, "FM", 5.0e3), "NFM2" : (1, "FM", 2.5e3), "WFM" : (2, "FM", 80.0e3), "NTSC-FM" :
     (3, "FM", 25.0e3), "PAL-FM" : (4, "FM", 50.0e3)}
 AM_MODES={"AM" : (5, "AM", 12.5e3), "USB" : (6, "SSB", 12.5e3), "LSB" : (7, "SSB", 12.5e3)}
 DIG_MODES={"DIGITAL": (8, "DIG", 23.5e3)}

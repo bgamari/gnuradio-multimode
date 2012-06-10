@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Wed Jun  6 19:48:35 2012
+# Generated: Sun Jun 10 16:38:34 2012
 ##################################################
 
 from gnuradio import audio
@@ -91,7 +91,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.record = record = False
 		self.offset = offset = offs
 		self.muted = muted = 0.0 if logpower >= thresh else 1
-		self.main_taps = main_taps = firdes.low_pass(1.0,wbfm,mh.get_mode_deviation(mode)*1.10,mh.get_mode_deviation(mode)/2.25,firdes.WIN_HAMMING,6.76)
+		self.main_taps = main_taps = firdes.low_pass(1.0,wbfm,mh.get_mode_deviation(mode)*1.10,mh.get_mode_deviation(mode)/1.85,firdes.WIN_HAMMING,6.76)
 		self.k = k = wbfm/(2*math.pi*mh.get_mode_deviation(mode))
 		self.iagc = iagc = agc
 		self.freq_update = freq_update = 0
@@ -511,7 +511,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.gr_file_sink_0 = gr.file_sink(gr.sizeof_gr_complex*1, "/dev/null" if mh.get_mode_type(mode) != "DIG" else dfifo)
 		self.gr_file_sink_0.set_unbuffered(True)
 		self.gr_fft_filter_xxx_3 = gr.fft_filter_ccc(1, (zoom_taps), 1)
-		self.gr_fft_filter_xxx_2 = gr.fft_filter_fff(int(wbfm/audio_int_rate), (firdes.low_pass(1.0,wbfm,11.75e3,5e3,firdes.WIN_HAMMING,6.76)), 1)
+		self.gr_fft_filter_xxx_2_0 = gr.fft_filter_fff(int(wbfm/audio_int_rate), (firdes.low_pass(1.0,wbfm,11.75e3,6e3,firdes.WIN_HAMMING,6.76)), 1)
 		self.gr_fft_filter_xxx_1 = gr.fft_filter_ccc(int(wbfm/audio_int_rate), (firdes.low_pass(1.0,wbfm,bw/2.0,bw/3.3,firdes.WIN_HAMMING,6.76)), 1)
 		self.gr_fft_filter_xxx_0 = gr.fft_filter_ccc(int(samp_rate/wbfm), (firdes.low_pass(1.0,samp_rate,98.5e3,66e3,firdes.WIN_HAMMING,6.76)), 1)
 		self.gr_feedforward_agc_cc_0 = gr.feedforward_agc_cc(1024, 0.75)
@@ -530,7 +530,6 @@ class multimode(grc_wxgui.top_block_gui):
 		self.connect((self.gr_multiply_const_vxx_1, 0), (self.audio_sink_0, 1))
 		self.connect((self.gr_feedforward_agc_cc_0, 0), (self.gr_complex_to_mag_squared_0, 0))
 		self.connect((self.osmosdr_source_c_0, 0), (self.gr_freq_xlating_fir_filter_xxx_0_1, 0))
-		self.connect((self.blks2_fm_deemph_0, 0), (self.gr_multiply_const_vxx_2, 0))
 		self.connect((self.gr_multiply_const_vxx_0_0_0, 0), (self.gr_add_xx_0, 2))
 		self.connect((self.gr_feedforward_agc_cc_0, 0), (self.gr_complex_to_real_0, 0))
 		self.connect((self.gr_complex_to_real_0, 0), (self.gr_multiply_const_vxx_0_0, 0))
@@ -546,14 +545,15 @@ class multimode(grc_wxgui.top_block_gui):
 		self.connect((self.gr_fft_filter_xxx_0, 0), (self.gr_freq_xlating_fir_filter_xxx_0_1_0, 0))
 		self.connect((self.gr_freq_xlating_fir_filter_xxx_0_1_0, 0), (self.gr_fft_filter_xxx_1, 0))
 		self.connect((self.gr_fft_filter_xxx_1, 0), (self.gr_feedforward_agc_cc_0, 0))
-		self.connect((self.gr_quadrature_demod_cf_0, 0), (self.gr_fft_filter_xxx_2, 0))
-		self.connect((self.gr_fft_filter_xxx_2, 0), (self.blks2_fm_deemph_0, 0))
 		self.connect((self.gr_freq_xlating_fir_filter_xxx_0_1_0, 0), (self.gr_keep_one_in_n_0, 0))
 		self.connect((self.gr_keep_one_in_n_0, 0), (self.gr_file_sink_0, 0))
 		self.connect((self.gr_freq_xlating_fir_filter_xxx_0_1, 0), (self.gr_fft_filter_xxx_3, 0))
 		self.connect((self.gr_fft_filter_xxx_3, 0), (self.gr_keep_one_in_n_0_0, 0))
 		self.connect((self.gr_keep_one_in_n_0_0, 0), (self.wxgui_fftsink2_0, 0))
 		self.connect((self.gr_keep_one_in_n_0_0, 0), (self.wxgui_waterfallsink2_0, 0))
+		self.connect((self.blks2_fm_deemph_0, 0), (self.gr_multiply_const_vxx_2, 0))
+		self.connect((self.gr_quadrature_demod_cf_0, 0), (self.gr_fft_filter_xxx_2_0, 0))
+		self.connect((self.gr_fft_filter_xxx_2_0, 0), (self.blks2_fm_deemph_0, 0))
 
 	def get_ahw(self):
 		return self.ahw
@@ -813,11 +813,11 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_wbfm(self, wbfm):
 		self.wbfm = wbfm
-		self.gr_fft_filter_xxx_2.set_taps((firdes.low_pass(1.0,self.wbfm,11.75e3,5e3,firdes.WIN_HAMMING,6.76)))
-		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.digi_rate))
 		self.gr_fft_filter_xxx_1.set_taps((firdes.low_pass(1.0,self.wbfm,self.bw/2.0,self.bw/3.3,firdes.WIN_HAMMING,6.76)))
-		self.set_main_taps(firdes.low_pass(1.0,self.wbfm,mh.get_mode_deviation(self.mode)*1.10,mh.get_mode_deviation(self.mode)/2.25,firdes.WIN_HAMMING,6.76))
 		self.set_k(self.wbfm/(2*math.pi*mh.get_mode_deviation(self.mode)))
+		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.digi_rate))
+		self.set_main_taps(firdes.low_pass(1.0,self.wbfm,mh.get_mode_deviation(self.mode)*1.10,mh.get_mode_deviation(self.mode)/1.85,firdes.WIN_HAMMING,6.76))
+		self.gr_fft_filter_xxx_2_0.set_taps((firdes.low_pass(1.0,self.wbfm,11.75e3,6e3,firdes.WIN_HAMMING,6.76)))
 
 	def get_rf_d_power(self):
 		return self.rf_d_power
@@ -833,13 +833,13 @@ class multimode(grc_wxgui.top_block_gui):
 		self.mode = mode
 		self.gr_multiply_const_vxx_0.set_k(((1.0/math.sqrt(mh.get_mode_deviation(self.mode))*250), ))
 		self.gr_file_sink_0.open("/dev/null" if mh.get_mode_type(self.mode) != "DIG" else self.dfifo)
+		self._mode_chooser.set_value(self.mode)
+		self.gr_freq_xlating_fir_filter_xxx_0_1_0.set_center_freq(-self.bw/2 if self.mode == "LSB" else 0.0)
+		self.set_k(self.wbfm/(2*math.pi*mh.get_mode_deviation(self.mode)))
+		self.set_main_taps(firdes.low_pass(1.0,self.wbfm,mh.get_mode_deviation(self.mode)*1.10,mh.get_mode_deviation(self.mode)/1.85,firdes.WIN_HAMMING,6.76))
 		self.gr_multiply_const_vxx_0_0.set_k((1.25 if mh.get_mode_type(self.mode) == "SSB" else 0.0, ))
 		self.gr_multiply_const_vxx_0_0_0.set_k((1.25 if mh.get_mode_type(self.mode) == "AM" else 0.0, ))
 		self.gr_multiply_const_vxx_2.set_k((1.0 if mh.get_mode_type(self.mode) == "FM" else 0.0, ))
-		self._mode_chooser.set_value(self.mode)
-		self.gr_freq_xlating_fir_filter_xxx_0_1_0.set_center_freq(-self.bw/2 if self.mode == "LSB" else 0.0)
-		self.set_main_taps(firdes.low_pass(1.0,self.wbfm,mh.get_mode_deviation(self.mode)*1.10,mh.get_mode_deviation(self.mode)/2.25,firdes.WIN_HAMMING,6.76))
-		self.set_k(self.wbfm/(2*math.pi*mh.get_mode_deviation(self.mode)))
 
 	def get_logpower(self):
 		return self.logpower
