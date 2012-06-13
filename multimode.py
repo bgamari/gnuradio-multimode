@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Sun Jun 10 16:38:34 2012
+# Generated: Wed Jun 13 16:32:59 2012
 ##################################################
 
 from gnuradio import audio
@@ -98,7 +98,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.fine = fine = ftune
 		self.digi_rate = digi_rate = 50e3
 		self.bw = bw = mbw
-		self.audio_int_rate = audio_int_rate = 25e3
+		self.audio_int_rate = audio_int_rate = 40e3
 
 		##################################################
 		# Blocks
@@ -511,7 +511,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.gr_file_sink_0 = gr.file_sink(gr.sizeof_gr_complex*1, "/dev/null" if mh.get_mode_type(mode) != "DIG" else dfifo)
 		self.gr_file_sink_0.set_unbuffered(True)
 		self.gr_fft_filter_xxx_3 = gr.fft_filter_ccc(1, (zoom_taps), 1)
-		self.gr_fft_filter_xxx_2_0 = gr.fft_filter_fff(int(wbfm/audio_int_rate), (firdes.low_pass(1.0,wbfm,11.75e3,6e3,firdes.WIN_HAMMING,6.76)), 1)
+		self.gr_fft_filter_xxx_2_0 = gr.fft_filter_fff(int(wbfm/audio_int_rate), (firdes.low_pass(1.0,wbfm,15.0e3,7e3,firdes.WIN_HAMMING,6.76)), 1)
 		self.gr_fft_filter_xxx_1 = gr.fft_filter_ccc(int(wbfm/audio_int_rate), (firdes.low_pass(1.0,wbfm,bw/2.0,bw/3.3,firdes.WIN_HAMMING,6.76)), 1)
 		self.gr_fft_filter_xxx_0 = gr.fft_filter_ccc(int(samp_rate/wbfm), (firdes.low_pass(1.0,samp_rate,98.5e3,66e3,firdes.WIN_HAMMING,6.76)), 1)
 		self.gr_feedforward_agc_cc_0 = gr.feedforward_agc_cc(1024, 0.75)
@@ -813,11 +813,11 @@ class multimode(grc_wxgui.top_block_gui):
 
 	def set_wbfm(self, wbfm):
 		self.wbfm = wbfm
-		self.gr_fft_filter_xxx_1.set_taps((firdes.low_pass(1.0,self.wbfm,self.bw/2.0,self.bw/3.3,firdes.WIN_HAMMING,6.76)))
 		self.set_k(self.wbfm/(2*math.pi*mh.get_mode_deviation(self.mode)))
 		self.gr_keep_one_in_n_0.set_n(int(self.wbfm/self.digi_rate))
 		self.set_main_taps(firdes.low_pass(1.0,self.wbfm,mh.get_mode_deviation(self.mode)*1.10,mh.get_mode_deviation(self.mode)/1.85,firdes.WIN_HAMMING,6.76))
-		self.gr_fft_filter_xxx_2_0.set_taps((firdes.low_pass(1.0,self.wbfm,11.75e3,6e3,firdes.WIN_HAMMING,6.76)))
+		self.gr_fft_filter_xxx_1.set_taps((firdes.low_pass(1.0,self.wbfm,self.bw/2.0,self.bw/3.3,firdes.WIN_HAMMING,6.76)))
+		self.gr_fft_filter_xxx_2_0.set_taps((firdes.low_pass(1.0,self.wbfm,15.0e3,7e3,firdes.WIN_HAMMING,6.76)))
 
 	def get_rf_d_power(self):
 		return self.rf_d_power
@@ -1020,8 +1020,8 @@ class multimode(grc_wxgui.top_block_gui):
 		self.bw = bw
 		self._bw_slider.set_value(self.bw)
 		self._bw_text_box.set_value(self.bw)
-		self.gr_fft_filter_xxx_1.set_taps((firdes.low_pass(1.0,self.wbfm,self.bw/2.0,self.bw/3.3,firdes.WIN_HAMMING,6.76)))
 		self.gr_freq_xlating_fir_filter_xxx_0_1_0.set_center_freq(-self.bw/2 if self.mode == "LSB" else 0.0)
+		self.gr_fft_filter_xxx_1.set_taps((firdes.low_pass(1.0,self.wbfm,self.bw/2.0,self.bw/3.3,firdes.WIN_HAMMING,6.76)))
 
 	def get_audio_int_rate(self):
 		return self.audio_int_rate

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sun Jun 10 16:38:34 2012</timestamp>
+  <timestamp>Wed Jun 13 16:32:59 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -512,29 +512,6 @@
     <param>
       <key>_coordinate</key>
       <value>(599, 1081)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>audio_int_rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>25e3</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(112, 129)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2970,41 +2947,6 @@
     </param>
   </block>
   <block>
-    <key>gr_fft_filter_xxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_fft_filter_xxx_1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>ccc</value>
-    </param>
-    <param>
-      <key>decim</key>
-      <value>int(wbfm/audio_int_rate)</value>
-    </param>
-    <param>
-      <key>taps</key>
-      <value>firdes.low_pass(1.0,wbfm,bw/2.0,bw/3.3,firdes.WIN_HAMMING,6.76)</value>
-    </param>
-    <param>
-      <key>nthreads</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(551, 60)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_freq_xlating_fir_filter_xxx</key>
     <param>
       <key>id</key>
@@ -3292,37 +3234,6 @@
     </param>
   </block>
   <block>
-    <key>gr_fractional_interpolator_xx</key>
-    <param>
-      <key>id</key>
-      <value>gr_fractional_interpolator_xx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>phase_shift</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>interp_ratio</key>
-      <value>audio_int_rate/arate</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1438, 122)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_multiply_const_vxx</key>
     <param>
       <key>id</key>
@@ -3470,41 +3381,6 @@
     </param>
   </block>
   <block>
-    <key>gr_fft_filter_xxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_fft_filter_xxx_2_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>fff</value>
-    </param>
-    <param>
-      <key>decim</key>
-      <value>int(wbfm/audio_int_rate)</value>
-    </param>
-    <param>
-      <key>taps</key>
-      <value>firdes.low_pass(1.0,wbfm,11.75e3,6e3,firdes.WIN_HAMMING,6.76)</value>
-    </param>
-    <param>
-      <key>nthreads</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(794, 617)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>blks2_fm_deemph</key>
     <param>
       <key>id</key>
@@ -3525,6 +3401,130 @@
     <param>
       <key>_coordinate</key>
       <value>(1017, 659)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>audio_int_rate</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>40e3</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(112, 129)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_fractional_interpolator_xx</key>
+    <param>
+      <key>id</key>
+      <value>gr_fractional_interpolator_xx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>phase_shift</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>interp_ratio</key>
+      <value>audio_int_rate/arate</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1438, 122)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_fft_filter_xxx</key>
+    <param>
+      <key>id</key>
+      <value>gr_fft_filter_xxx_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>ccc</value>
+    </param>
+    <param>
+      <key>decim</key>
+      <value>int(wbfm/audio_int_rate)</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>firdes.low_pass(1.0,wbfm,bw/2.0,bw/3.3,firdes.WIN_HAMMING,6.76)</value>
+    </param>
+    <param>
+      <key>nthreads</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(551, 59)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_fft_filter_xxx</key>
+    <param>
+      <key>id</key>
+      <value>gr_fft_filter_xxx_2_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>fff</value>
+    </param>
+    <param>
+      <key>decim</key>
+      <value>int(wbfm/audio_int_rate)</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>firdes.low_pass(1.0,wbfm,15.0e3,7e3,firdes.WIN_HAMMING,6.76)</value>
+    </param>
+    <param>
+      <key>nthreads</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(794, 617)</value>
     </param>
     <param>
       <key>_rotation</key>
