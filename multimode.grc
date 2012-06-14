@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Wed Jun 13 16:32:59 2012</timestamp>
+  <timestamp>Thu Jun 14 18:21:51 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -3381,6 +3381,29 @@
     </param>
   </block>
   <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>audio_int_rate</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>40e3</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(112, 129)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>blks2_fm_deemph</key>
     <param>
       <key>id</key>
@@ -3401,29 +3424,6 @@
     <param>
       <key>_coordinate</key>
       <value>(1017, 659)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>audio_int_rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>40e3</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(112, 129)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3516,7 +3516,7 @@
     </param>
     <param>
       <key>taps</key>
-      <value>firdes.low_pass(1.0,wbfm,15.0e3,7e3,firdes.WIN_HAMMING,6.76)</value>
+      <value>firdes.low_pass(1.0,wbfm,13.5e3,5.5e3,firdes.WIN_HAMMING,6.76)</value>
     </param>
     <param>
       <key>nthreads</key>
