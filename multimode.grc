@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Fri Jun 15 19:12:41 2012</timestamp>
+  <timestamp>Fri Jun 15 19:15:59 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -3555,7 +3555,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>firdes.low_pass(1.0,wbfm,mh.get_mode_deviation(mode)*1.05,mh.get_mode_deviation(mode)/4.0,firdes.WIN_HAMMING,6.76)</value>
+      <value>firdes.low_pass(1.0,wbfm,mh.get_mode_deviation(mode)*1.05,mh.get_mode_deviation(mode)/3.0,firdes.WIN_HAMMING,6.76)</value>
     </param>
     <param>
       <key>_coordinate</key>

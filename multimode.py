@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Fri Jun 15 19:12:42 2012
+# Generated: Fri Jun 15 19:15:59 2012
 ##################################################
 
 from gnuradio import audio
@@ -92,7 +92,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.record = record = False
 		self.offset = offset = offs
 		self.muted = muted = 0.0 if logpower >= thresh else 1
-		self.main_taps = main_taps = firdes.low_pass(1.0,wbfm,mh.get_mode_deviation(mode)*1.05,mh.get_mode_deviation(mode)/4.0,firdes.WIN_HAMMING,6.76)
+		self.main_taps = main_taps = firdes.low_pass(1.0,wbfm,mh.get_mode_deviation(mode)*1.05,mh.get_mode_deviation(mode)/3.0,firdes.WIN_HAMMING,6.76)
 		self.k = k = wbfm/(2*math.pi*mh.get_mode_deviation(mode))
 		self.iagc = iagc = agc
 		self.freq_update = freq_update = 0
@@ -824,7 +824,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.gr_fft_filter_xxx_1.set_taps((firdes.low_pass(1.0,self.wbfm,self.bw/2.0,self.bw/3.3,firdes.WIN_HAMMING,6.76)))
 		self.set_k(self.wbfm/(2*math.pi*mh.get_mode_deviation(self.mode)))
 		self.gr_fft_filter_xxx_2_0.set_taps((firdes.low_pass(1.0,self.wbfm,14.5e3,5.5e3,firdes.WIN_HAMMING,6.76)))
-		self.set_main_taps(firdes.low_pass(1.0,self.wbfm,mh.get_mode_deviation(self.mode)*1.05,mh.get_mode_deviation(self.mode)/4.0,firdes.WIN_HAMMING,6.76))
+		self.set_main_taps(firdes.low_pass(1.0,self.wbfm,mh.get_mode_deviation(self.mode)*1.05,mh.get_mode_deviation(self.mode)/3.0,firdes.WIN_HAMMING,6.76))
 
 	def get_rf_d_power(self):
 		return self.rf_d_power
@@ -846,7 +846,7 @@ class multimode(grc_wxgui.top_block_gui):
 		self.gr_multiply_const_vxx_2.set_k((1.0 if mh.get_mode_type(self.mode) == "FM" else 0.0, ))
 		self.set_k(self.wbfm/(2*math.pi*mh.get_mode_deviation(self.mode)))
 		self.gr_freq_xlating_fir_filter_xxx_0_1_0.set_center_freq(-self.bw/2 if self.mode == "LSB" else 0.0)
-		self.set_main_taps(firdes.low_pass(1.0,self.wbfm,mh.get_mode_deviation(self.mode)*1.05,mh.get_mode_deviation(self.mode)/4.0,firdes.WIN_HAMMING,6.76))
+		self.set_main_taps(firdes.low_pass(1.0,self.wbfm,mh.get_mode_deviation(self.mode)*1.05,mh.get_mode_deviation(self.mode)/3.0,firdes.WIN_HAMMING,6.76))
 
 	def get_logpower(self):
 		return self.logpower
