@@ -122,9 +122,11 @@ def get_modes_values():
                 nmlist.append(x)
     return nmlist
 
-def get_mode_deviation(mode):
+def get_mode_deviation(mode,bw):
     MODES = dict(FM_MODES.items() + AM_MODES.items() + DIG_MODES.items())
     x = MODES[mode]
+    if x[1] == "SSB" or x[1] == "AM":
+		return bw/2
     return (x[2])
 
 def get_mode_type(mode):

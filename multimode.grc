@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sat Jun 16 14:31:10 2012</timestamp>
+  <timestamp>Mon Jun 18 19:44:01 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -1570,41 +1570,6 @@
     </param>
   </block>
   <block>
-    <key>parameter</key>
-    <param>
-      <key>id</key>
-      <value>dmode</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Demod Mode</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>NFM1</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>string</value>
-    </param>
-    <param>
-      <key>short_id</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(943, 1288)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>variable_function_probe</key>
     <param>
       <key>id</key>
@@ -2195,33 +2160,6 @@
     </param>
   </block>
   <block>
-    <key>gr_feedforward_agc_cc</key>
-    <param>
-      <key>id</key>
-      <value>gr_feedforward_agc_cc_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>num_samples</key>
-      <value>1024</value>
-    </param>
-    <param>
-      <key>reference</key>
-      <value>0.75</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(698, 281)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>variable</key>
     <param>
       <key>id</key>
@@ -2412,57 +2350,6 @@
     <param>
       <key>_coordinate</key>
       <value>(1037, 293)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_chooser</key>
-    <param>
-      <key>id</key>
-      <value>mode</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Mode</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>dmode</value>
-    </param>
-    <param>
-      <key>choices</key>
-      <value>mh.get_modes_values()</value>
-    </param>
-    <param>
-      <key>labels</key>
-      <value>mh.get_modes_names()</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>drop_down</value>
-    </param>
-    <param>
-      <key>style</key>
-      <value>wx.RA_HORIZONTAL</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value>0,4,1,1</value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value>Main,0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(437, 891)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2986,99 +2873,6 @@
     </param>
   </block>
   <block>
-    <key>gr_multiply_const_vxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_multiply_const_vxx_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>const</key>
-      <value>1.25 if mh.get_mode_type(mode) == "SSB" else 0.0</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1062, 57)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_multiply_const_vxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_multiply_const_vxx_0_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>const</key>
-      <value>1.25 if mh.get_mode_type(mode) == "AM" else 0.0</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1060, 460)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_multiply_const_vxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_multiply_const_vxx_2</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>const</key>
-      <value>1.0 if mh.get_mode_type(mode) == "FM" else 0.0</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1119, 549)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>variable</key>
     <param>
       <key>id</key>
@@ -3095,64 +2889,6 @@
     <param>
       <key>_coordinate</key>
       <value>(112, 129)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_fractional_interpolator_xx</key>
-    <param>
-      <key>id</key>
-      <value>gr_fractional_interpolator_xx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>phase_shift</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>interp_ratio</key>
-      <value>audio_int_rate/arate</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1438, 122)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blks2_fm_deemph</key>
-    <param>
-      <key>id</key>
-      <value>blks2_fm_deemph_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>audio_int_rate</value>
-    </param>
-    <param>
-      <key>tau</key>
-      <value>deemph</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1017, 659)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3233,68 +2969,6 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>k</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>wbfm/(2*math.pi*mh.get_mode_deviation(mode))</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(584, 550)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_freq_xlating_fir_filter_xxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_freq_xlating_fir_filter_xxx_0_1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>ccc</value>
-    </param>
-    <param>
-      <key>decim</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>taps</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>center_freq</key>
-      <value>(offset+fine+xfine+ssbo)/(samp_rate/1.0e6)</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(298, 786)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
       <value>zoomed_lp</value>
     </param>
     <param>
@@ -3338,6 +3012,394 @@
     </param>
   </block>
   <block>
+    <key>gr_multiply_const_vxx</key>
+    <param>
+      <key>id</key>
+      <value>gr_multiply_const_vxx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>const</key>
+      <value>(1.0/math.sqrt(mh.get_mode_deviation(mode,bw))*250)</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(323, 272)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_feedforward_agc_cc</key>
+    <param>
+      <key>id</key>
+      <value>gr_feedforward_agc_cc_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>num_samples</key>
+      <value>1024</value>
+    </param>
+    <param>
+      <key>reference</key>
+      <value>0.75</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(698, 281)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>main_taps</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>firdes.low_pass(1.0,wbfm,mh.get_mode_deviation(mode,bw)*1.05,mh.get_mode_deviation(mode,bw)/2.0,firdes.WIN_HAMMING,6.76)</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(327, 467)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_multiply_const_vxx</key>
+    <param>
+      <key>id</key>
+      <value>gr_multiply_const_vxx_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>const</key>
+      <value>0.85 if mh.get_mode_type(mode) == "SSB" else 0.0</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1062, 57)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_multiply_const_vxx</key>
+    <param>
+      <key>id</key>
+      <value>gr_multiply_const_vxx_0_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>const</key>
+      <value>0.85 if mh.get_mode_type(mode) == "AM" else 0.0</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1060, 460)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_freq_xlating_fir_filter_xxx</key>
+    <param>
+      <key>id</key>
+      <value>gr_freq_xlating_fir_filter_xxx_0_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>ccc</value>
+    </param>
+    <param>
+      <key>decim</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>center_freq</key>
+      <value>(offset+fine+xfine)/(samp_rate/1.0e6)</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(297, 787)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_fractional_interpolator_xx</key>
+    <param>
+      <key>id</key>
+      <value>gr_fractional_interpolator_xx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>phase_shift</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>interp_ratio</key>
+      <value>audio_int_rate/arate</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1439, 124)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>parameter</key>
+    <param>
+      <key>id</key>
+      <value>dmode</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Demod Mode</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>NFM1</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>string</value>
+    </param>
+    <param>
+      <key>short_id</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(943, 1288)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_chooser</key>
+    <param>
+      <key>id</key>
+      <value>mode</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Mode</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>dmode</value>
+    </param>
+    <param>
+      <key>choices</key>
+      <value>mh.get_modes_values()</value>
+    </param>
+    <param>
+      <key>labels</key>
+      <value>mh.get_modes_names()</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>drop_down</value>
+    </param>
+    <param>
+      <key>style</key>
+      <value>wx.RA_HORIZONTAL</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value>0,4,1,1</value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value>Main,0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(437, 890)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>aratio</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>int(wbfm/audio_int_rate)</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(583, 496)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_fft_filter_xxx</key>
+    <param>
+      <key>id</key>
+      <value>gr_fft_filter_xxx_2</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>ccc</value>
+    </param>
+    <param>
+      <key>decim</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>main_taps</value>
+    </param>
+    <param>
+      <key>nthreads</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(343, 380)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_multiply_const_vxx</key>
+    <param>
+      <key>id</key>
+      <value>gr_multiply_const_vxx_2</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>const</key>
+      <value>1.0 if mh.get_mode_type(mode) == "FM" else 0.0</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1117, 548)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>gr_keep_one_in_n</key>
     <param>
       <key>id</key>
@@ -3362,60 +3424,6 @@
     <param>
       <key>_coordinate</key>
       <value>(611, 362)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_quadrature_demod_cf</key>
-    <param>
-      <key>id</key>
-      <value>gr_quadrature_demod_cf_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>gain</key>
-      <value>k</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(573, 626)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_multiply_const_vxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_multiply_const_vxx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>const</key>
-      <value>(1.0/math.sqrt(mh.get_mode_deviation(mode))*250)</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(323, 272)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3458,6 +3466,64 @@
     </param>
   </block>
   <block>
+    <key>gr_keep_one_in_n</key>
+    <param>
+      <key>id</key>
+      <value>gr_keep_one_in_n_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>n</key>
+      <value>aratio</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(570, 177)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blks2_fm_deemph</key>
+    <param>
+      <key>id</key>
+      <value>blks2_fm_deemph_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>audio_int_rate</value>
+    </param>
+    <param>
+      <key>tau</key>
+      <value>deemph</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1058, 662)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>gr_fft_filter_xxx</key>
     <param>
       <key>id</key>
@@ -3473,7 +3539,7 @@
     </param>
     <param>
       <key>decim</key>
-      <value>int(wbfm/audio_int_rate)</value>
+      <value>5</value>
     </param>
     <param>
       <key>taps</key>
@@ -3485,7 +3551,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(794, 617)</value>
+      <value>(792, 534)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3493,69 +3559,22 @@
     </param>
   </block>
   <block>
-    <key>gr_fft_filter_xxx</key>
+    <key>gr_quadrature_demod_cf</key>
     <param>
       <key>id</key>
-      <value>gr_fft_filter_xxx_1</value>
+      <value>gr_quadrature_demod_cf_0</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>type</key>
-      <value>ccc</value>
-    </param>
-    <param>
-      <key>decim</key>
-      <value>int(wbfm/audio_int_rate)</value>
-    </param>
-    <param>
-      <key>taps</key>
-      <value>firdes.low_pass(1.0,wbfm,bw/2.0,bw/3.3,firdes.WIN_HAMMING,6.76)</value>
-    </param>
-    <param>
-      <key>nthreads</key>
-      <value>1</value>
+      <key>gain</key>
+      <value>k</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(551, 59)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_fft_filter_xxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_fft_filter_xxx_2</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>ccc</value>
-    </param>
-    <param>
-      <key>decim</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>taps</key>
-      <value>main_taps</value>
-    </param>
-    <param>
-      <key>nthreads</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(342, 380)</value>
+      <value>(611, 650)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3566,7 +3585,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>main_taps</value>
+      <value>k</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -3574,11 +3593,11 @@
     </param>
     <param>
       <key>value</key>
-      <value>firdes.low_pass(1.0,wbfm,mh.get_mode_deviation(mode)*1.05,mh.get_mode_deviation(mode)/2.5,firdes.WIN_HAMMING,6.76)</value>
+      <value>wbfm/(2*math.pi*mh.get_mode_deviation(mode,bw))</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(325, 567)</value>
+      <value>(623, 582)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3682,12 +3701,6 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_fft_filter_xxx_1</source_block_id>
-    <sink_block_id>gr_feedforward_agc_cc_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>gr_keep_one_in_n_0</source_block_id>
     <sink_block_id>gr_file_sink_0</sink_block_id>
     <source_key>0</source_key>
@@ -3730,20 +3743,8 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_fft_filter_xxx_2_0</source_block_id>
-    <sink_block_id>blks2_fm_deemph_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>gr_fft_filter_xxx_2</source_block_id>
     <sink_block_id>gr_keep_one_in_n_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>gr_fft_filter_xxx_2</source_block_id>
-    <sink_block_id>gr_quadrature_demod_cf_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -3760,8 +3761,26 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>gr_keep_one_in_n_1</source_block_id>
+    <sink_block_id>gr_feedforward_agc_cc_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
     <source_block_id>gr_fft_filter_xxx_2</source_block_id>
-    <sink_block_id>gr_fft_filter_xxx_1</sink_block_id>
+    <sink_block_id>gr_keep_one_in_n_1</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>gr_fft_filter_xxx_2</source_block_id>
+    <sink_block_id>gr_quadrature_demod_cf_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>gr_fft_filter_xxx_2_0</source_block_id>
+    <sink_block_id>blks2_fm_deemph_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
