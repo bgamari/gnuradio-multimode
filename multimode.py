@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Mon Jun 18 19:44:02 2012
+# Generated: Wed Jun 20 22:28:53 2012
 ##################################################
 
 from gnuradio import audio
@@ -116,7 +116,7 @@ class multimode(grc_wxgui.top_block_gui):
 			value=self.zoom,
 			callback=self.set_zoom,
 			label="Spectral Zoom Ratio",
-			choices=[1, 2, 5, 10, 20],
+			choices=[1, 2, 5, 10, 20, 50, 100],
 			labels=[],
 		)
 		self.Main.GetPage(0).GridAdd(self._zoom_chooser, 1, 4, 1, 1)
@@ -706,8 +706,8 @@ class multimode(grc_wxgui.top_block_gui):
 		self.gr_keep_one_in_n_0_0.set_n(self.zoom)
 		self.wxgui_fftsink2_0.set_sample_rate(self.samp_rate/self.zoom)
 		self.wxgui_waterfallsink2_0.set_sample_rate(self.samp_rate/self.zoom)
-		self._zoom_chooser.set_value(self.zoom)
 		self.set_zoomed_lp((self.samp_rate/2.1)/self.zoom)
+		self._zoom_chooser.set_value(self.zoom)
 
 	def get_thresh(self):
 		return self.thresh
@@ -791,9 +791,9 @@ class multimode(grc_wxgui.top_block_gui):
 		self.wxgui_fftsink2_0.set_sample_rate(self.samp_rate/self.zoom)
 		self.wxgui_waterfallsink2_0.set_sample_rate(self.samp_rate/self.zoom)
 		self.set_variable_static_text_0_0(self.samp_rate)
-		self.set_zoomed_lp((self.samp_rate/2.1)/self.zoom)
 		self.gr_freq_xlating_fir_filter_xxx_0_1.set_center_freq((self.offset+self.fine+self.xfine)/(self.samp_rate/1.0e6))
 		self.gr_fft_filter_xxx_0.set_taps((firdes.low_pass(1.0,self.samp_rate,98.5e3,66e3,firdes.WIN_HAMMING,6.76)))
+		self.set_zoomed_lp((self.samp_rate/2.1)/self.zoom)
 
 	def get_rf_power(self):
 		return self.rf_power
