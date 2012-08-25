@@ -9,6 +9,6 @@ install:
 	@echo this will allow multimode to work correctly
 
 tarball:
-	tar czvf multimode.tar.gz $(THESTUFF)
+	tar czvf multimode-$(VERSION).tar.gz $(THESTUFF)
 	
 	
