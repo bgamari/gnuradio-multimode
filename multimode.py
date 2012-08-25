@@ -3,7 +3,7 @@
 # Gnuradio Python Flow Graph
 # Title: Multimode Radio Receiver
 # Author: Marcus D. Leech (patchvonbraun), Science Radio Laboratories, Inc.
-# Generated: Wed Jun 20 22:28:53 2012
+# Generated: Sun Aug  5 19:22:15 2012
 ##################################################
 
 from gnuradio import audio
@@ -485,12 +485,14 @@ class multimode(grc_wxgui.top_block_gui):
 		_rf_d_power_thread = threading.Thread(target=_rf_d_power_probe)
 		_rf_d_power_thread.daemon = True
 		_rf_d_power_thread.start()
-		self.osmosdr_source_c_0 = osmosdr.source_c( args="nchan=" + str(1) + " " + devinfo  )
+		self.osmosdr_source_c_0 = osmosdr.source_c( args="nchan=" + str(1) + " " + devinfo )
 		self.osmosdr_source_c_0.set_sample_rate(samp_rate)
 		self.osmosdr_source_c_0.set_center_freq(cur_freq+offset+(upc_offset*float(upc)), 0)
 		self.osmosdr_source_c_0.set_freq_corr(ppm, 0)
 		self.osmosdr_source_c_0.set_gain_mode(iagc, 0)
 		self.osmosdr_source_c_0.set_gain(25 if iagc == 1 else rfgain, 0)
+		self.osmosdr_source_c_0.set_if_gain(20, 0)
+			
 		self._ifreq_text_box = forms.text_box(
 			parent=self.Main.GetPage(0).GetWin(),
 			value=self.ifreq,
