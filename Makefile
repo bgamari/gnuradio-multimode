@@ -13,5 +13,3 @@ multimode.py: multimode.grc
 
 tarball:
 	tar czvf multimode-$(VERSION).tar.gz $(THESTUFF)
-	
-	
