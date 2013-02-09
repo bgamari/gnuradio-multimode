@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Wed Jun 20 22:28:53 2012</timestamp>
+  <timestamp>Tue Oct 30 19:04:18 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -1331,61 +1331,6 @@
     </param>
   </block>
   <block>
-    <key>variable_slider</key>
-    <param>
-      <key>id</key>
-      <value>offset</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>LO Offset</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>offs</value>
-    </param>
-    <param>
-      <key>min</key>
-      <value>25e3</value>
-    </param>
-    <param>
-      <key>max</key>
-      <value>500e3</value>
-    </param>
-    <param>
-      <key>num_steps</key>
-      <value>200</value>
-    </param>
-    <param>
-      <key>style</key>
-      <value>wx.SL_HORIZONTAL</value>
-    </param>
-    <param>
-      <key>converver</key>
-      <value>float_converter</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value>1,3,1,1</value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value>Main,0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(639, 1319)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>variable_text_box</key>
     <param>
       <key>id</key>
@@ -1742,41 +1687,6 @@
     </param>
   </block>
   <block>
-    <key>parameter</key>
-    <param>
-      <key>id</key>
-      <value>offs</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>LO Offset</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>50.e3</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>eng_float</value>
-    </param>
-    <param>
-      <key>short_id</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(516, 1508)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>variable</key>
     <param>
       <key>id</key>
@@ -1890,141 +1800,6 @@
     <param>
       <key>_coordinate</key>
       <value>(827, 466)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>osmosdr_source_c</key>
-    <param>
-      <key>id</key>
-      <value>osmosdr_source_c_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>fc32</value>
-    </param>
-    <param>
-      <key>args</key>
-      <value>devinfo</value>
-    </param>
-    <param>
-      <key>nchan</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>sample_rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>freq0</key>
-      <value>cur_freq+offset+(upc_offset*float(upc))</value>
-    </param>
-    <param>
-      <key>corr0</key>
-      <value>ppm</value>
-    </param>
-    <param>
-      <key>gain0</key>
-      <value>25 if iagc == 1 else rfgain</value>
-    </param>
-    <param>
-      <key>gain_mode0</key>
-      <value>iagc</value>
-    </param>
-    <param>
-      <key>ant0</key>
-      <value></value>
-    </param>
-    <param>
-      <key>freq1</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr1</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>gain1</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>gain_mode1</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant1</key>
-      <value></value>
-    </param>
-    <param>
-      <key>freq2</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr2</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>gain2</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>gain_mode2</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant2</key>
-      <value></value>
-    </param>
-    <param>
-      <key>freq3</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr3</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>gain3</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>gain_mode3</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant3</key>
-      <value></value>
-    </param>
-    <param>
-      <key>freq4</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr4</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>gain4</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>gain_mode4</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant4</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(4, 352)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2176,52 +1951,6 @@
     <param>
       <key>_coordinate</key>
       <value>(96, 272)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>cur_freq</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>mh.scan_freq_out(sc_ena,sc_low,sc_high,freq,ifreq,scan_power+1.0e-14,thresh,sc_incr,scan_rate,sc_listm,sc_list)</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(130, 488)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>digi_rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>50e3</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(6, 483)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2404,41 +2133,6 @@
     <param>
       <key>_coordinate</key>
       <value>(674, 838)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_fft_filter_xxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_fft_filter_xxx_3</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>ccc</value>
-    </param>
-    <param>
-      <key>decim</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>taps</key>
-      <value>zoom_taps</value>
-    </param>
-    <param>
-      <key>nthreads</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(688, 753)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3050,76 +2744,6 @@
     </param>
   </block>
   <block>
-    <key>gr_multiply_const_vxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_multiply_const_vxx_0_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>const</key>
-      <value>0.85 if mh.get_mode_type(mode) == "AM" else 0.0</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1060, 460)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_freq_xlating_fir_filter_xxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_freq_xlating_fir_filter_xxx_0_1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>ccc</value>
-    </param>
-    <param>
-      <key>decim</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>taps</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>center_freq</key>
-      <value>(offset+fine+xfine)/(samp_rate/1.0e6)</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(297, 787)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_fractional_interpolator_xx</key>
     <param>
       <key>id</key>
@@ -3357,41 +2981,6 @@
     </param>
   </block>
   <block>
-    <key>gr_fft_filter_xxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_fft_filter_xxx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>ccc</value>
-    </param>
-    <param>
-      <key>decim</key>
-      <value>int(samp_rate/wbfm)</value>
-    </param>
-    <param>
-      <key>taps</key>
-      <value>firdes.low_pass(1.0,samp_rate,98.5e3,66e3,firdes.WIN_HAMMING,6.76)</value>
-    </param>
-    <param>
-      <key>nthreads</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(326, 638)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_keep_one_in_n</key>
     <param>
       <key>id</key>
@@ -3604,6 +3193,308 @@
       <value>0</value>
     </param>
   </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>digi_rate</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>50e3</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(7, 497)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>cur_freq</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>mh.scan_freq_out(sc_ena,sc_low,sc_high,freq,ifreq,scan_power+1.0e-14,thresh,sc_incr,scan_rate,sc_listm,sc_list)</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(99, 495)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_fft_filter_xxx</key>
+    <param>
+      <key>id</key>
+      <value>gr_fft_filter_xxx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>ccc</value>
+    </param>
+    <param>
+      <key>decim</key>
+      <value>int(samp_rate/wbfm)</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>firdes.low_pass(1.0,samp_rate,98.5e3,66e3,firdes.WIN_HAMMING,6.76)</value>
+    </param>
+    <param>
+      <key>nthreads</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(326, 638)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_fft_filter_xxx</key>
+    <param>
+      <key>id</key>
+      <value>gr_fft_filter_xxx_3</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>ccc</value>
+    </param>
+    <param>
+      <key>decim</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>zoom_taps</value>
+    </param>
+    <param>
+      <key>nthreads</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(688, 753)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>osmosdr_source_c</key>
+    <param>
+      <key>id</key>
+      <value>osmosdr_source_c_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>fc32</value>
+    </param>
+    <param>
+      <key>args</key>
+      <value>devinfo+",offset_tune=1"</value>
+    </param>
+    <param>
+      <key>nchan</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>sample_rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>freq0</key>
+      <value>cur_freq+(upc_offset*float(upc))+fine+xfine</value>
+    </param>
+    <param>
+      <key>corr0</key>
+      <value>ppm</value>
+    </param>
+    <param>
+      <key>gain_mode0</key>
+      <value>iagc</value>
+    </param>
+    <param>
+      <key>gain0</key>
+      <value>25 if iagc == 1 else rfgain</value>
+    </param>
+    <param>
+      <key>if_gain0</key>
+      <value>24</value>
+    </param>
+    <param>
+      <key>ant0</key>
+      <value></value>
+    </param>
+    <param>
+      <key>freq1</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>corr1</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>gain_mode1</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>gain1</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>if_gain1</key>
+      <value>24</value>
+    </param>
+    <param>
+      <key>ant1</key>
+      <value></value>
+    </param>
+    <param>
+      <key>freq2</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>corr2</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>gain_mode2</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>gain2</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>if_gain2</key>
+      <value>24</value>
+    </param>
+    <param>
+      <key>ant2</key>
+      <value></value>
+    </param>
+    <param>
+      <key>freq3</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>corr3</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>gain_mode3</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>gain3</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>if_gain3</key>
+      <value>24</value>
+    </param>
+    <param>
+      <key>ant3</key>
+      <value></value>
+    </param>
+    <param>
+      <key>freq4</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>corr4</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>gain_mode4</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>gain4</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>if_gain4</key>
+      <value>24</value>
+    </param>
+    <param>
+      <key>ant4</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(5, 335)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_multiply_const_vxx</key>
+    <param>
+      <key>id</key>
+      <value>gr_multiply_const_vxx_0_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>const</key>
+      <value>0.55 if mh.get_mode_type(mode) == "AM" else 0.0</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1060, 459)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
   <connection>
     <source_block_id>gr_multiply_const_vxx_0_0</source_block_id>
     <sink_block_id>gr_add_xx_0</sink_block_id>
@@ -3631,12 +3522,6 @@
   <connection>
     <source_block_id>gr_feedforward_agc_cc_0</source_block_id>
     <sink_block_id>gr_complex_to_mag_squared_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>osmosdr_source_c_0</source_block_id>
-    <sink_block_id>gr_freq_xlating_fir_filter_xxx_0_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -3695,20 +3580,8 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_freq_xlating_fir_filter_xxx_0_1</source_block_id>
-    <sink_block_id>gr_fft_filter_xxx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>gr_keep_one_in_n_0</source_block_id>
     <sink_block_id>gr_file_sink_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>gr_freq_xlating_fir_filter_xxx_0_1</source_block_id>
-    <sink_block_id>gr_fft_filter_xxx_3</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -3781,6 +3654,18 @@
   <connection>
     <source_block_id>gr_fft_filter_xxx_2_0</source_block_id>
     <sink_block_id>blks2_fm_deemph_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>osmosdr_source_c_0</source_block_id>
+    <sink_block_id>gr_fft_filter_xxx_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>osmosdr_source_c_0</source_block_id>
+    <sink_block_id>gr_fft_filter_xxx_3</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
